@@ -15,12 +15,10 @@ package {
       _head = new FlxSprite(FlxG.width / 2, FlxG.height / 2);
       _head.makeGraphic(16,16);
       _head.facing = FlxObject.RIGHT;
-      _head.moves = true;
-      _head.velocity.x = 16;
-      add(_head);
-  
+
       _body = makeBody();
 
+      add(_head);
       add(_body);
     }
 
@@ -32,8 +30,6 @@ package {
         var part:FlxSprite;
         part = new FlxSprite(_head.x - (i * 16), _head.y);
         part.makeGraphic(16,16);
-        part.velocity.x = 16;
-        part.moves = true;
         group.add(part);
       } 
       return group;      
@@ -92,6 +88,7 @@ package {
       } 
 
       _timer += FlxG.elapsed;
+
       if(_timer >= _speed){
         move();
         _timer -= _speed;
