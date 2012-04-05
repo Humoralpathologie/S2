@@ -22,6 +22,10 @@ package {
       add(_body);
     }
 
+    public function head():FlxSprite {
+      return _head;
+    }
+
     private function makeBody():FlxGroup {
       var group:FlxGroup;
       group = new FlxGroup();
