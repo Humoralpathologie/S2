@@ -32,8 +32,18 @@ package {
     private function eat(snakeHead:FlxSprite, food:FlxSprite):void {
       FlxG.shake();
       _shells.at(food);
-      _shells.start();
-      food.kill();
+      _shells.start(true, 3);
+      randomPlace(food);
+    }
+
+    private function randomPlace(food:FlxSprite):void{
+      var wTiles:int = FlxG.width / 16;
+      var hTiles:int = FlxG.height / 16;
+  
+      do {
+        food.x = int((Math.random() * wTiles)) * 16;
+        food.y = int((Math.random() * hTiles)) * 16;
+      } while(food.overlaps(_snake.head()));
     }
 
     private function initialFood():FlxGroup{
