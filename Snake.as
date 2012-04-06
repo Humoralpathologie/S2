@@ -6,11 +6,13 @@ package {
     private var _body:FlxGroup;
     private var _timer:Number;
     private var _speed:Number;
+    private var _mps:Number;
     
     public function Snake(movesPerSecond:Number = 1) { 
       super();
 
-      _speed = 1 / movesPerSecond;
+      _mps = movesPerSecond;
+      _speed = 1 / _mps;
       _timer = 0;
 
       _head = new FlxSprite(32,32);
@@ -25,6 +27,13 @@ package {
 
     public function head():FlxSprite {
       return _head;
+    }
+
+    public function faster():void {
+      if(_mps < 30)
+        _mps += 1;
+      
+      _speed = 1 / _mps;
     }
 
     private function makeBody():FlxGroup {

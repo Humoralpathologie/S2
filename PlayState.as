@@ -33,6 +33,7 @@ package {
       FlxG.shake();
       _shells.at(food);
       _shells.start(true, 3);
+      _snake.faster();
       randomPlace(food);
     }
 
