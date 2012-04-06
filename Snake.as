@@ -12,7 +12,7 @@ package {
       _speed = 1 / movesPerSecond;
       _timer = 0;
 
-      _head = new FlxSprite(FlxG.width / 2, FlxG.height / 2);
+      _head = new FlxSprite(32,32);
       _head.makeGraphic(16,16);
       _head.facing = FlxObject.RIGHT;
 
