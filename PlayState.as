@@ -8,7 +8,6 @@ package {
   
     private var _snake:Snake;
     private var _food:FlxGroup;
-    private var _oneFood:FlxSprite;
     private var _shells:FlxEmitter;
     
     override public function create():void {
@@ -19,16 +18,19 @@ package {
       _shells = new FlxEmitter();
       _shells.makeParticles(Shell,4);
 
-      _oneFood = _food.members[0];
-
       add(_snake);
-      add(_oneFood);
+      add(_food);
       add(_shells);
       
     }
 
     override public function update():void {
-      FlxG.overlap(_snake.head(), _oneFood, eat);
+      for(var i:int = 0; i < _food.members.length; i++){
+        var food:FlxSprite;
+        food = _food.members[i];
+        if(_snake.head().overlaps(food))
+          eat(_snake.head(), food);
+      }
       super.update();
     }
 
