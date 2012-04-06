@@ -12,7 +12,7 @@ package {
     
     override public function create():void {
     
-      _snake = new Snake(2);
+      _snake = new Snake(8);
       _food = initialFood();
 
       _shells = new FlxEmitter();
@@ -25,12 +25,7 @@ package {
     }
 
     override public function update():void {
-      for(var i:int = 0; i < _food.members.length; i++){
-        var food:FlxSprite;
-        food = _food.members[i];
-        if(_snake.head().overlaps(food))
-          eat(_snake.head(), food);
-      }
+      FlxG.overlap(_snake.head(), _food, eat);
       super.update();
     }
 
@@ -44,7 +39,7 @@ package {
     private function initialFood():FlxGroup{
       var group:FlxGroup = new FlxGroup;
       var food:FlxSprite = new FlxSprite(16*5,16*5);
-      food.makeGraphic(16,16,0xff00ff00);//loadGraphic(Egg);
+      food.loadGraphic(Egg);
       group.add(food);
       return group;
     }

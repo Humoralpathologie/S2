@@ -8,6 +8,7 @@ package {
     private var _speed:Number;
     
     public function Snake(movesPerSecond:Number = 1) { 
+      super();
 
       _speed = 1 / movesPerSecond;
       _timer = 0;
@@ -53,30 +54,31 @@ package {
         }
       }
 
-      _head.velocity.x = 0;
-      _head.velocity.y = 0;
+      var xSpeed:int = 0;
+      var ySpeed:int = 0;
 
       switch(_head.facing) {
         case FlxObject.RIGHT:
-          _head.velocity.x = 16;
+          xSpeed = 16;
           break;
         case FlxObject.LEFT:
-          _head.velocity.x = -16;
+          xSpeed = -16;
           break;
         case FlxObject.UP:
-          _head.velocity.y = -16;
+          ySpeed = -16;
           break;
         case FlxObject.DOWN:
-          _head.velocity.y = 16;
+          ySpeed = 16;
           break;
       }
   
-      _head.x += _head.velocity.x;
-      _head.y += _head.velocity.y;
+      _head.x += xSpeed;
+      _head.y += ySpeed;
 
     }
      
     override public function update():void {
+      super.update();
 
       if(FlxG.keys.UP){
         _head.facing = FlxObject.UP;
