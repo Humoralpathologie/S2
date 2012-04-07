@@ -31,7 +31,7 @@ package {
 
     private function eat(snakeHead:FlxSprite, food:FlxSprite):void {
       FlxG.shake();
-      _shells.at(food);
+      _shells.at(snakeHead);
       _shells.start(true, 3);
       _snake.faster();
       randomPlace(food);
