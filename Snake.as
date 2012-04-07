@@ -7,6 +7,7 @@ package {
     private var _timer:Number;
     private var _speed:Number;
     private var _mps:Number;
+    private var _newPart:FlxSprite;
     
     public function Snake(movesPerSecond:Number = 1) { 
       super();
@@ -49,17 +50,28 @@ package {
       return group;      
     }
 
+    public function swallow():void {
+      _newPart = new FlxSprite();
+      _newPart.makeGraphic(16,16, 0xff00ff00);
+    }
+
     private function move():void {
+      if(_newPart){ 
+        _body.add(_newPart);
+        _newPart = null;
+      }  
 
       for(var i:int = _body.members.length - 1 ; i >= 0; i--){
         var part:FlxSprite;
         part = _body.members[i];
-        if(i == 0){
-          part.x = _head.x;
-          part.y = _head.y; 
-        } else {
-          part.x = _body.members[i - 1].x;
-          part.y = _body.members[i - 1].y;
+        if(part) {
+          if(i == 0){
+            part.x = _head.x;
+            part.y = _head.y; 
+          } else {
+            part.x = _body.members[i - 1].x;
+            part.y = _body.members[i - 1].y;
+          }
         }
       }
 

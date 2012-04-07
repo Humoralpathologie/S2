@@ -35,6 +35,7 @@ package {
       _shells.start(true, 3);
       _snake.faster();
       randomPlace(food);
+      _snake.swallow();
     }
 
     private function randomPlace(food:FlxSprite):void{
