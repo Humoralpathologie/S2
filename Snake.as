@@ -8,6 +8,7 @@ package {
     private var _speed:Number;
     private var _mps:Number;
     private var _newPart:FlxSprite;
+    private var _lives:int = 3;
     
     public function Snake(movesPerSecond:Number = 1) { 
       super();
@@ -16,18 +17,39 @@ package {
       _speed = 1 / _mps;
       _timer = 0;
 
-      _head = new FlxSprite(32,32);
+      _head = new FlxSprite(16 * 10, 16 * 10);
       _head.makeGraphic(16,16);
-      _head.facing = FlxObject.RIGHT;
 
-      _body = makeBody();
+      _body = new FlxGroup();
+
+      resurrect();
 
       add(_head);
       add(_body);
     }
 
-    public function head():FlxSprite {
+    public function die():void {
+      alive = false;
+      _lives--;
+    }
+
+    private function resurrect():void {
+      _body.clear();
+      _head.x = 160;
+      _head.y = 160;
+      _head.facing = FlxObject.RIGHT;
+      fillBody(_body);
+      _mps = 8;
+      _speed = 1 / _mps;
+      alive = true;
+    }
+
+    public function get head():FlxSprite {
       return _head;
+    }
+
+    public function get lives():int {
+      return _lives;
     }
 
     public function faster():void {
@@ -37,9 +59,7 @@ package {
       _speed = 1 / _mps;
     }
 
-    private function makeBody():FlxGroup {
-      var group:FlxGroup;
-      group = new FlxGroup();
+    private function fillBody(group:FlxGroup):void {
       var i:int;
       for(i = 1; i <= 4; i++){
         var part:FlxSprite;
@@ -47,7 +67,6 @@ package {
         part.makeGraphic(16,16);
         group.add(part);
       } 
-      return group;      
     }
 
     public function swallow():void {
@@ -92,33 +111,43 @@ package {
           ySpeed = 16;
           break;
       }
-  
+
       _head.x += xSpeed;
       _head.y += ySpeed;
 
+    }
+
+    public function get body():FlxGroup {
+      return _body;
     }
      
     override public function update():void {
       super.update();
 
-      if(FlxG.keys.UP){
-        _head.facing = FlxObject.UP;
-      } else
-      if(FlxG.keys.DOWN){
-        _head.facing = FlxObject.DOWN;
-      } else 
-      if(FlxG.keys.RIGHT){
-        _head.facing = FlxObject.RIGHT;
-      } else 
-      if(FlxG.keys.LEFT){
-        _head.facing = FlxObject.LEFT;
-      } 
 
-      _timer += FlxG.elapsed;
+      if(alive) {
+        if(FlxG.keys.UP){
+          _head.facing = FlxObject.UP;
+        } else
+        if(FlxG.keys.DOWN){
+          _head.facing = FlxObject.DOWN;
+        } else 
+        if(FlxG.keys.RIGHT){
+          _head.facing = FlxObject.RIGHT;
+        } else 
+        if(FlxG.keys.LEFT){
+          _head.facing = FlxObject.LEFT;
+        } 
 
-      if(_timer >= _speed){
-        move();
-        _timer -= _speed;
+        _timer += FlxG.elapsed;
+
+        if(_timer >= _speed){
+          move();
+          _timer -= _speed;
+        }
+      }
+      if(!alive){
+        resurrect();
       }
     }
   }
