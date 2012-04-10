@@ -21,6 +21,8 @@ package {
 
       FlxG.log("Starting game");
 
+      FlxG.mouse.hide();
+
       _score = 0;
       
       _map = new FlxTilemap(); 
