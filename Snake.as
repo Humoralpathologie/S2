@@ -124,30 +124,30 @@ package {
     override public function update():void {
       super.update();
 
+      if(FlxG.keys.UP){
+        _head.facing = FlxObject.UP;
+      } else
+      if(FlxG.keys.DOWN){
+        _head.facing = FlxObject.DOWN;
+      } else 
+      if(FlxG.keys.RIGHT){
+        _head.facing = FlxObject.RIGHT;
+      } else 
+      if(FlxG.keys.LEFT){
+        _head.facing = FlxObject.LEFT;
+      } 
 
-      if(alive) {
-        if(FlxG.keys.UP){
-          _head.facing = FlxObject.UP;
-        } else
-        if(FlxG.keys.DOWN){
-          _head.facing = FlxObject.DOWN;
-        } else 
-        if(FlxG.keys.RIGHT){
-          _head.facing = FlxObject.RIGHT;
-        } else 
-        if(FlxG.keys.LEFT){
-          _head.facing = FlxObject.LEFT;
-        } 
-
-        _timer += FlxG.elapsed;
-
-        if(_timer >= _speed){
+      _timer += FlxG.elapsed;
+      if(_timer >= _speed){
+        if(alive){
+          if(_head.overlaps(_body)){
+            die();
+          }
           move();
-          _timer -= _speed;
+        } else {
+          resurrect();
         }
-      }
-      if(!alive){
-        resurrect();
+        _timer -= _speed;
       }
     }
   }

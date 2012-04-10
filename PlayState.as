@@ -64,11 +64,15 @@ package {
     override public function update():void {
       super.update();
 
+      if(_snake.lives == 0) {
+        FlxG.score = _score;
+        FlxG.switchState(new GameOver);
+      }
+      
+      updateHud();
+
       FlxG.overlap(_snake.head, _food, eat);
       FlxG.collide(_snake.head, _level, hitBoundary);
-      if(_snake.alive){
-        FlxG.collide(_snake.head, _snake.body, hitBoundary);
-      }
     }
 
     private function eat(snakeHead:FlxSprite, food:FlxSprite):void {
@@ -80,19 +84,11 @@ package {
       _snake.faster();
       _snake.swallow();
       _score++;
-      updateHud();
     }
 
     private function hitBoundary(snakeHead:FlxObject, tile:FlxObject):void {
       FlxG.log("Hitting at " + tile.x + ", " + tile.y);
-      if(_snake.lives == 0) {
-        FlxG.score = _score;
-        FlxG.switchState(new GameOver);
-      }
-      else {
-        _snake.die(); 
-        updateHud();
-      }
+      _snake.die(); 
     }
 
     private function randomPlace(food:FlxSprite):void{
