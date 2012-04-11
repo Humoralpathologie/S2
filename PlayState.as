@@ -45,17 +45,7 @@ package {
       add(_food);
       add(_shells);
       add(_hud);
-
-      FlxKongregate.init(apiHasLoaded);
       
-    }
-
-    private function apiHasLoaded():void
-    {
-      FlxKongregate.connect();
-      FlxG.log(FlxKongregate.isLocal);
-      FlxG.log(FlxKongregate.getUserName);
-      updateHud();
     }
 
     private function updateHud():void {
@@ -107,7 +97,7 @@ package {
       do {
         food.x = int(1 + (Math.random() * wTiles)) * 16;
         food.y = int(6 + (Math.random() * hTiles)) * 16;
-      } while(food.overlaps(_snake.head));
+      } while(food.overlaps(_snake));
     }
 
     private function initialFood():FlxGroup{
