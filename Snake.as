@@ -96,19 +96,29 @@ package {
 
       var xSpeed:int = 0;
       var ySpeed:int = 0;
-
+      
       switch(_head.facing) {
         case FlxObject.RIGHT:
-          xSpeed = 16;
+          if (_head.facing !== FlxObject.LEFT) {
+            xSpeed = 16;
+          } else {
+  
+          }
           break;
         case FlxObject.LEFT:
-          xSpeed = -16;
+          if (_head.facing !== FlxObject.RIGHT) {
+            xSpeed = -16;
+          };
           break;
         case FlxObject.UP:
-          ySpeed = -16;
+          if (_head.facing !== FlxObject.DOWN) {
+            ySpeed = -16;
+          };
           break;
         case FlxObject.DOWN:
-          ySpeed = 16;
+          if (_head.facing !== FlxObject.UP) {
+            ySpeed = 16;
+          };
           break;
       }
 
@@ -124,16 +134,16 @@ package {
     override public function update():void {
       super.update();
 
-      if(FlxG.keys.UP){
+      if(FlxG.keys.UP && _head.facing != FlxObject.DOWN){
         _head.facing = FlxObject.UP;
       } else
-      if(FlxG.keys.DOWN){
+      if(FlxG.keys.DOWN && _head.facing != FlxObject.UP){
         _head.facing = FlxObject.DOWN;
       } else 
-      if(FlxG.keys.RIGHT){
+      if(FlxG.keys.RIGHT && _head.facing != FlxObject.LEFT){
         _head.facing = FlxObject.RIGHT;
       } else 
-      if(FlxG.keys.LEFT){
+      if(FlxG.keys.LEFT && _head.facing != FlxObject.RIGHT){
         _head.facing = FlxObject.LEFT;
       } 
 
