@@ -99,26 +99,16 @@ package {
       
       switch(_head.facing) {
         case FlxObject.RIGHT:
-          if (_head.facing !== FlxObject.LEFT) {
             xSpeed = 16;
-          } else {
-  
-          }
           break;
         case FlxObject.LEFT:
-          if (_head.facing !== FlxObject.RIGHT) {
             xSpeed = -16;
-          };
           break;
         case FlxObject.UP:
-          if (_head.facing !== FlxObject.DOWN) {
             ySpeed = -16;
-          };
           break;
         case FlxObject.DOWN:
-          if (_head.facing !== FlxObject.UP) {
             ySpeed = 16;
-          };
           break;
       }
 

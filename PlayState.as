@@ -21,6 +21,8 @@ package {
 
       FlxG.log("Starting game");
 
+      FlxG.mouse.hide();
+
       _score = 0;
       
       _map = new FlxTilemap(); 
@@ -64,14 +66,20 @@ package {
     override public function update():void {
       super.update();
 
-      if(_snake.lives == 0) {
+      if(_snake.lives < 0) {
         FlxG.score = _score;
         FlxG.switchState(new GameOver);
       }
       
       updateHud();
 
-      FlxG.overlap(_snake.head, _food, eat);
+      // I tried to use FlxG.overlap for this, but sometimes, the callback will
+      // be called twice. This works, so leave it like this.
+      for(var i:int = 0; i < _food.length; i++){
+        if(_snake.head.overlaps(_food.members[i])){
+          eat(_snake.head, _food.members[i]);
+        }
+      }
       FlxG.collide(_snake.head, _level, hitBoundary);
     }
 
