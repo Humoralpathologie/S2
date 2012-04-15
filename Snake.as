@@ -37,7 +37,6 @@ package {
 
       resurrect();
 
-
       add(_body);
       add(_head);
     }
@@ -80,8 +79,8 @@ package {
       var i:int;
       for(i = 1; i <= 4; i++){
         var part:FlxSprite;
-        part = new FlxSprite(_head.x - (i * 15), _head.y);
         if(i == 4) {
+          part = new FlxSprite(_head.x - (i * 15), _head.y);
           // This should be somewhere else.
           part.loadGraphic(Tail, true, false, 15, 15);
           part.addAnimation('left',[0,1],7);
@@ -90,11 +89,7 @@ package {
           part.addAnimation('down',[6,7],7);
           _tail = part;
         } else {
-          //part.makeGraphic(15,15);
-          part.loadGraphic(Eggs,true,false,15,15);
-          part.addAnimation('eggone',[0]);
-          part.addAnimation('eggtwo',[1]);
-          part.addAnimation('eggthree',[2]);
+          part = new Egg(i % 3, _head.x - (i * 15), _head.y);
         }
         part.facing = FlxObject.RIGHT;
         group.add(part);
