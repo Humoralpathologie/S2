@@ -70,6 +70,9 @@ package {
           eat(_snake.head, _food.members[i]);
         }
       }
+      if(_snake.alive && !_snake.head.onScreen()) {
+        _snake.die();
+      }
     }
 
     private function initPointHUD(egg:Egg, points:int):void { 
