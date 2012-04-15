@@ -14,6 +14,7 @@ package {
     private var _map:FlxTilemap;
     private var _level:FlxGroup;
     private var _background:FlxSprite;
+    private var _bonusTimer:Number = 0;
     
     override public function create():void {
 
@@ -53,6 +54,7 @@ package {
 
     override public function update():void {
       super.update();
+      _bonusTimer -= FlxG.elapsed;
 
       if(_snake.lives < 0) {
         FlxG.score = _score;
@@ -70,8 +72,7 @@ package {
       }
     }
 
-    private function initPointHUD(egg:Egg):void { 
-      var points:int = egg.points; 
+    private function initPointHUD(egg:Egg, points:int):void { 
       _pointHud = new Tween(0.5, 20, egg.x, egg.y, 40, points.toString()); 
       add(_pointHud);  
     } 
@@ -81,17 +82,24 @@ package {
       spawnFood();
       FlxG.shake();
 
+      // TODO: This allocates too much objects. Think about how to reduce this.
       var shells:FlxEmitter = egg.shells;
+      var points:int = 0;
       shells.at(snakeHead);
       shells.start(true, 3);
       add(shells);
 
-      initPointHUD(egg);
       _food.remove(egg, true);
       
       _snake.faster();
       _snake.swallow(egg);
-      _score += egg.points;
+      points += egg.points;
+      if(_bonusTimer > 0) {
+        points += 2;
+      }
+      _score += points;
+      initPointHUD(egg, points);
+      _bonusTimer = 2;
     }
 
     private function hitBoundary(snakeHead:FlxObject, tile:FlxObject):void {
