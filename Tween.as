@@ -9,7 +9,7 @@ package {
     public function Tween(Delay:Number, Size:int, X:Number, Y:Number, Width:uint, Text:String = null, EmbeddedFont:Boolean = true ){
       super(X, Y, Width, Text, EmbeddedFont);
       size = Size;
-      this.blend = 'difference';
+      this.blend = 'hardlight';
 
       _timer = 0;
       _delay = Delay;
