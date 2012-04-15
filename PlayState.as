@@ -4,10 +4,6 @@ package {
   
   public class PlayState extends FlxState {
 
-    [Embed(source='assets/images/eggA.png')] protected var EggA:Class;
-    [Embed(source='assets/images/eggB.png')] protected var EggB:Class;
-    [Embed(source='assets/images/eggC.png')] protected var EggC:Class;
-    [Embed(source='assets/images/shell.png')] protected var ShellB:Class;
     [Embed(source='assets/background.png')] protected var Background:Class;
   
     private var _snake:Snake;
@@ -74,13 +70,11 @@ package {
       }
     }
 
-   private function initPointHUD(egg:Egg):void{ 
+    private function initPointHUD(egg:Egg):void { 
       var points:int = egg.points; 
       _pointHud = new Tween(0.5, 20, egg.x, egg.y, 40, points.toString()); 
       add(_pointHud);  
-       
     } 
-
 
     private function eat(snakeHead:FlxSprite, egg:Egg):void {
       FlxG.log("Eating at " + snakeHead.x + ", " + snakeHead.y);
@@ -90,6 +84,7 @@ package {
       var shells:FlxEmitter = egg.shells;
       shells.at(snakeHead);
       shells.start(true, 3);
+      add(shells);
 
       initPointHUD(egg);
       _food.remove(egg, true);
@@ -104,27 +99,8 @@ package {
       _snake.die(); 
     }
 
-    private function spawnFood():void{
-      /*
-      var food:FlxSprite = new FlxSprite;
-      food.loadGraphic(Eggs,true,false,15,15);
-      food.addAnimation('eggone',[0]);
-      food.addAnimation('eggtwo',[1]);
-      food.addAnimation('eggthree',[2]);
-      switch(Math.floor(Math.random() * 3)) {
-        case 0:
-          food.play('eggone');
-          break;
-        case 1:
-          food.play('eggtwo');
-          break;
-        case 2:
-          food.play('eggthree');
-          break
-      }*/
-     
-      var eggs:Array = [new Egg(EggA, ShellB), new Egg(EggB, ShellB), new Egg(EggC, ShellB)];
-      var egg:Egg = eggs[Math.floor(Math.random() * 3)]; 
+    private function spawnFood():void {
+      var egg:Egg = new Egg(Math.floor(Math.random() * 3));
 
       var wTiles:int = FlxG.width / 15;
       var hTiles:int = FlxG.height / 15;

@@ -2,24 +2,29 @@ package {
   import org.flixel.*;
 
   public class Egg extends FlxSprite {
+
+    [Embed(source='assets/images/eggA.png')] protected static var EggA:Class;
+    [Embed(source='assets/images/eggB.png')] protected static var EggB:Class;
+    [Embed(source='assets/images/eggC.png')] protected static var EggC:Class;
+    [Embed(source='assets/images/shell.png')] protected static var ShellB:Class;
+
+    private static var eggGraphics:Array = [EggA, EggB, EggC];
+    private static var shellGraphics:Array = [ShellB, ShellB, ShellB];
    
     private var _points:int;
+    private var _eggType:int;
     private var _shells:FlxEmitter;
-    private var _type:Class;
-    private var _shellType:Class;
     
-    public function Egg(EggType:Class, ShellType:Class, point:int = 2, X:int = 160, Y:int = 160){
-      super(X, Y);
+    public function Egg(eggType:int = 0, x:int = 0, y:int = 0 ){
+      super(x, y);
       
-      //_type = EggType;
-      //_shellType = ShellType;
-
-      loadGraphic(EggType);
+      _eggType = eggType;
+      loadGraphic(eggGraphics[eggType]);
 
       _shells = new FlxEmitter();
-      _shells.makeParticles(ShellType, 4);
+      _shells.makeParticles(shellGraphics[eggType], 4);
 
-      _points = point;
+      _points = 2; // Can be switched later by eggType
 
     }
 
@@ -30,18 +35,5 @@ package {
     public function get points():int{
       return _points;
     }
-
-    public function randomPlace(snake:Snake):void{
-      var wTiles:int = FlxG.width / 16;
-      var hTiles:int = FlxG.height / 16;
-      wTiles -= 2; // Left and right;
-      hTiles -= 7; // 6 top, 1 bottom;
-      do {
-        this.x = int(1 + (Math.random() * wTiles)) * 16;
-        this.y = int(6 + (Math.random() * hTiles)) * 16;
-      } while(this.overlaps(snake));
-      
-    } 
-
   }
 }
