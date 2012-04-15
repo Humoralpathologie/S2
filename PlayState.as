@@ -15,6 +15,7 @@ package {
     private var _level:FlxGroup;
     private var _background:FlxSprite;
     private var _bonusTimer:Number = 0;
+    private var _bonusBar:FlxSprite;
     
     override public function create():void {
 
@@ -34,10 +35,16 @@ package {
       _hud = new FlxText(32,32,400,'0');
       _hud.size = 16;
 
+      _bonusBar = new FlxSprite(450,32);
+      _bonusBar.makeGraphic(1,8,0xffff0000);
+      _bonusBar.origin.x = _bonusBar.origin.y = 0;
+      _bonusBar.scale.x = 0;
+
       add(_background);
       add(_food);
       add(_snake);
       add(_hud);
+      add(_bonusBar);
       
     }
 
@@ -62,7 +69,14 @@ package {
       }
       
       updateHud();
+      if(_bonusTimer > 0) {
+        _bonusBar.scale.x = (_bonusTimer / 2) * 25;
+      } else {
+        _bonusBar.scale.x = 0;
+      }
 
+      _bonusBar.x = _snake.head.x - 5;
+      _bonusBar.y = _snake.head.y - 24;
       // I tried to use FlxG.overlap for this, but sometimes, the callback will
       // be called twice. This works, so leave it like this.
       for(var i:int = 0; i < _food.length; i++){
