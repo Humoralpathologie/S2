@@ -73,6 +73,7 @@ package {
         _bonusBar.scale.x = (_bonusTimer / 2) * 25;
       } else {
         _bonusBar.scale.x = 0;
+        _snake.checkCombos();
       }
 
       _bonusBar.x = _snake.head.x - 5;
@@ -97,9 +98,8 @@ package {
     private function eat(snakeHead:FlxSprite, egg:Egg):void {
       FlxG.log("Eating at " + snakeHead.x + ", " + snakeHead.y);
       spawnFood();
-      FlxG.shake();
 
-      // TODO: This allocates too much objects. Think about how to reduce this.
+      // TODO: This allocates too many objects. Think about how to reduce this.
       var shells:FlxEmitter = egg.shells;
       var points:int = 0;
       shells.at(snakeHead);
@@ -111,12 +111,30 @@ package {
       _snake.faster();
       _snake.swallow(egg);
       points += egg.points;
+
       if(_bonusTimer > 0) {
         points += 2;
       }
+
       _score += points;
       initPointHUD(egg, points);
       _bonusTimer = 2;
+    
+      var combos:Array = _snake.checkCombos();
+      if(combos.length > 0) {
+        if(combos[combos.length - 1][0].type == egg.type) {
+          FlxG.log("LONGER");
+        } else {
+          FlxG.log("KILLKOMBO");
+          var remEgg:Egg;
+          for(var i:int = 0; i < combos[combos.length - 1].length; i++) {
+            remEgg = combos[combos.length - 1][i];
+            initPointHUD(remEgg, 5);
+            _score += 5;
+            _snake.body.remove(remEgg, true);
+          } 
+        }
+      }
     }
 
     private function hitBoundary(snakeHead:FlxObject, tile:FlxObject):void {
@@ -137,6 +155,5 @@ package {
       } while(egg.overlaps(_snake));
       _food.add(egg);
     }
-     
   }
 }

@@ -35,5 +35,9 @@ package {
     public function get points():int{
       return _points;
     }
+
+    public function get type():int {
+      return _eggType;
+    }
   }
 }
