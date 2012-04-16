@@ -131,7 +131,7 @@ package {
           var remEgg:Egg;
           for(var i:int = 0; i < combos[combos.length - 1].length; i++) {
             remEgg = combos[combos.length - 1][i];
-            initPointHUD(remEgg, 5);
+            initPointHUD(remEgg, '+5', 0xffff0000, 1.5, 2); 
             _score += 5;
             _snake.body.remove(remEgg, true);
           } 
