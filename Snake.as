@@ -41,6 +41,27 @@ package {
       add(_head);
     }
 
+    public function checkCombos():Array {
+      var combos:Array = [[_body.members[0]]];
+      var currentType:int = 0;
+      for(var j:int = 1; j < _body.length - 1; j++){
+        var egg:Egg = (_body.members[j] as Egg);
+        var currArr:Array = combos[combos.length - 1];
+        if(egg.type == currArr[0].type) {
+          currArr.push(egg);
+        } else {
+          combos.push([egg]);
+        }
+      }
+  
+      var largerThanThree:Function = function(el:Array, i:int, arr:Array):Boolean { 
+        return el.length >= 3;
+      };
+
+      combos = combos.filter(largerThanThree);
+      return combos;
+    }
+
     public function die():void {
       alive = false;
       _lives--;
