@@ -5,21 +5,25 @@ package {
   public class Tween extends FlxText {
     private var _timer:Number;
     private var _delay:Number;
+    private var _speed:int;
 
-    public function Tween(Delay:Number, Size:int, X:Number, Y:Number, Width:uint, Text:String = null, EmbeddedFont:Boolean = true ){
-      super(X, Y, Width, Text, EmbeddedFont);
+    public function Tween(Delay:Number, Size:int, X:Number, Y:Number, Width:uint, Color:uint = 0xffffff, Text:String = null, Speed:int = 1){
+      super(X, Y, Width, Text);
       size = Size;
+      color = Color;
       this.blend = 'hardlight';
 
       _timer = 0;
       _delay = Delay;
+      
+      _speed = Speed;
     }
     
     override public function update():void {
       super.update();
         
-      x += 1;
-      y -= 1;
+      x += _speed;
+      y -= _speed;
       
       _timer += FlxG.elapsed;
       if(_timer >= _delay) {

@@ -89,8 +89,8 @@ package {
       }
     }
 
-    private function initPointHUD(egg:Egg, points:int):void { 
-      _pointHud = new Tween(0.5, 20, egg.x, egg.y, 40, points.toString()); 
+    private function initPointHUD(egg:Egg, points:String, Color:uint = 0xffffffff, Delay:Number = 0.5, Speed:int = 1):void { 
+      _pointHud = new Tween(Delay, 20, egg.x, egg.y, 40, Color, points, Speed); 
       add(_pointHud);  
     } 
 
@@ -112,10 +112,12 @@ package {
       _snake.swallow(egg);
       points += egg.points;
       if(_bonusTimer > 0) {
-        points += 2;
+        initPointHUD(egg, '+2', 0xffedf249, 1.5, 2); 
+        _score += 2;
+        
       }
       _score += points;
-      initPointHUD(egg, points);
+      initPointHUD(egg, egg.points.toString());
       _bonusTimer = 2;
     }
 
