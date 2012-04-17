@@ -15,6 +15,7 @@ package {
     private var _newPart:FlxSprite;
     private var _lives:int = 3;
     private var _previousFacing:uint = FlxObject.RIGHT;
+    private var _tailCam:FlxCamera;
     
     public function Snake(movesPerSecond:Number = 1) { 
       super();
@@ -38,8 +39,15 @@ package {
 
       resurrect();
 
+      _tailCam = new FlxCamera(300,30,30,30,2);
+      tailCam.follow(_body.members[2]);
+
       add(_body);
       add(_head);
+    }
+
+    public function get tailCam():FlxCamera {
+      return _tailCam;
     }
 
     public function checkCombos():Array {
@@ -144,6 +152,7 @@ package {
         _body.remove(_tail);
         _body.add(_newPart);
         _body.add(_tail);
+        _tailCam.follow(_newPart);
         _newPart = null;
       }  
 

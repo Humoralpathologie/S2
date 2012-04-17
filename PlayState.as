@@ -43,6 +43,9 @@ package {
       add(_background);
       add(_food);
       add(_snake);
+      add(_snake.tailCam);
+      FlxG.addCamera(_snake.tailCam);
+      
       add(_hud);
       add(_bonusBar);
       
