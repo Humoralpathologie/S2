@@ -14,6 +14,7 @@ package {
     private var _mps:Number;
     private var _newPart:FlxSprite;
     private var _lives:int = 3;
+    private var _previousFacing:uint = FlxObject.RIGHT;
     
     public function Snake(movesPerSecond:Number = 1) { 
       super();
@@ -72,6 +73,7 @@ package {
       _head.x = 150;
       _head.y = 150;
       _head.facing = FlxObject.RIGHT;
+      _previousFacing = _head.facing;
       _head.play('right');
       _head.offset.x = 0;
       _head.offset.y = 15;
@@ -136,6 +138,7 @@ package {
     }
 
     private function move():void {
+      _previousFacing = _head.facing;
       if(_newPart){ 
         var swap:FlxSprite;
         _body.remove(_tail);
@@ -205,25 +208,25 @@ package {
     override public function update():void {
       super.update();
 
-      if(FlxG.keys.UP && _head.facing != FlxObject.DOWN){
+      if(FlxG.keys.UP && _previousFacing != FlxObject.DOWN){
         _head.facing = FlxObject.UP;
         _head.offset.x = 4;
         _head.offset.y = 15;
         _head.play('up');
       } else
-      if(FlxG.keys.DOWN && _head.facing != FlxObject.UP){
+      if(FlxG.keys.DOWN && _previousFacing != FlxObject.UP){
         _head.facing = FlxObject.DOWN;
         _head.offset.x = 4;
         _head.offset.y = 0;
         _head.play('down');
       } else 
-      if(FlxG.keys.RIGHT && _head.facing != FlxObject.LEFT){
+      if(FlxG.keys.RIGHT && _previousFacing != FlxObject.LEFT){
         _head.facing = FlxObject.RIGHT;
         _head.offset.x = 0;
         _head.offset.y = 15;
         _head.play('right');
       } else 
-      if(FlxG.keys.LEFT && _head.facing != FlxObject.RIGHT){
+      if(FlxG.keys.LEFT && _previousFacing != FlxObject.RIGHT){
         _head.facing = FlxObject.LEFT;
         _head.offset.x = 15;
         _head.offset.y = 15;
