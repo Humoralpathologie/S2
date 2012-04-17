@@ -149,5 +149,10 @@ package {
       } while(egg.overlaps(_snake));
       _food.add(egg);
     }
+    
+    override public function destroy():void {
+      remove(_snake.tailCam);
+      super.destroy();
+    }
   }
 }
