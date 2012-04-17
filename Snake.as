@@ -36,11 +36,9 @@ package {
       _head.height = 15;
 
       _body = new FlxGroup();
+      _tailCam = new FlxCamera(300,30,30,30,2);
 
       resurrect();
-
-      _tailCam = new FlxCamera(300,30,30,30,2);
-      tailCam.follow(_body.members[2]);
 
       add(_body);
       add(_head);
@@ -71,6 +69,36 @@ package {
       return combos;
     }
 
+    private function tailEgg():Egg {
+      if(_body.length >= 2){
+        return _body.members[_body.length - 2];
+      } else {
+        return null;
+      }
+    }
+
+    // Checks for combos, removes the comboed eggs from the body and returns an array of them.
+    // Could be a lot nicer.
+    public function doCombos(egg:Egg):Array {
+      var combos:Array = checkCombos();
+      var currentCombo:Array
+      if(combos.length >= 1){
+        currentCombo = combos[combos.length - 1];
+        if(currentCombo[0].type == egg.type){
+          // Remove nothing, wait for next
+          currentCombo = [];
+        } else {
+          // Remove the combo
+          for(var i:int = 0; i < currentCombo.length; i++){
+            _body.remove(currentCombo[i], true);
+          }
+        }
+      } else {
+        currentCombo = [];
+      }
+      return currentCombo;
+    }
+
     public function die():void {
       alive = false;
       _lives--;
@@ -89,6 +117,7 @@ package {
       _mps = 8;
       _speed = 1 / _mps;
       alive = true;
+      _tailCam.follow(tailEgg());
     }
 
     public function get head():FlxSprite {
