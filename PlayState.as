@@ -52,6 +52,9 @@ package {
       add(_portal2);
       add(_food);
       add(_snake);
+      add(_snake.tailCam);
+      FlxG.addCamera(_snake.tailCam);
+      
       add(_hud);
       add(_bonusBar);
       
@@ -100,7 +103,6 @@ package {
         _bonusBar.scale.x = (_bonusTimer / 2) * 25;
       } else {
         _bonusBar.scale.x = 0;
-        _snake.checkCombos();
       }
 
       _bonusBar.x = _snake.head.x - 5;

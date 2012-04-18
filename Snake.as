@@ -14,6 +14,8 @@ package {
     private var _mps:Number;
     private var _newPart:FlxSprite;
     private var _lives:int = 3;
+    private var _previousFacing:uint = FlxObject.RIGHT;
+    private var _tailCam:FlxCamera;
     
     public function Snake(movesPerSecond:Number = 1) { 
       super();
@@ -34,11 +36,16 @@ package {
       _head.height = 15;
 
       _body = new FlxGroup();
+      _tailCam = new FlxCamera(300,30,30,30,2);
 
       resurrect();
 
       add(_body);
       add(_head);
+    }
+
+    public function get tailCam():FlxCamera {
+      return _tailCam;
     }
 
     public function checkCombos():Array {
@@ -62,6 +69,36 @@ package {
       return combos;
     }
 
+    private function tailEgg():Egg {
+      if(_body.length >= 2){
+        return _body.members[_body.length - 2];
+      } else {
+        return null;
+      }
+    }
+
+    // Checks for combos, removes the comboed eggs from the body and returns an array of them.
+    // Could be a lot nicer.
+    public function doCombos(egg:Egg):Array {
+      var combos:Array = checkCombos();
+      var currentCombo:Array
+      if(combos.length >= 1){
+        currentCombo = combos[combos.length - 1];
+        if(currentCombo[0].type == egg.type){
+          // Remove nothing, wait for next
+          currentCombo = [];
+        } else {
+          // Remove the combo
+          for(var i:int = 0; i < currentCombo.length; i++){
+            _body.remove(currentCombo[i], true);
+          }
+        }
+      } else {
+        currentCombo = [];
+      }
+      return currentCombo;
+    }
+
     public function die():void {
       alive = false;
       _lives--;
@@ -72,6 +109,7 @@ package {
       _head.x = 150;
       _head.y = 150;
       _head.facing = FlxObject.RIGHT;
+      _previousFacing = _head.facing;
       _head.play('right');
       _head.offset.x = 0;
       _head.offset.y = 15;
@@ -79,6 +117,7 @@ package {
       _mps = 8;
       _speed = 1 / _mps;
       alive = true;
+      _tailCam.follow(tailEgg());
     }
 
     public function get head():FlxSprite {
@@ -136,11 +175,13 @@ package {
     }
 
     private function move():void {
+      _previousFacing = _head.facing;
       if(_newPart){ 
         var swap:FlxSprite;
         _body.remove(_tail);
         _body.add(_newPart);
         _body.add(_tail);
+        _tailCam.follow(_newPart);
         _newPart = null;
       }  
 
@@ -205,25 +246,25 @@ package {
     override public function update():void {
       super.update();
 
-      if(FlxG.keys.UP && _head.facing != FlxObject.DOWN){
+      if(FlxG.keys.UP && _previousFacing != FlxObject.DOWN){
         _head.facing = FlxObject.UP;
         _head.offset.x = 4;
         _head.offset.y = 15;
         _head.play('up');
       } else
-      if(FlxG.keys.DOWN && _head.facing != FlxObject.UP){
+      if(FlxG.keys.DOWN && _previousFacing != FlxObject.UP){
         _head.facing = FlxObject.DOWN;
         _head.offset.x = 4;
         _head.offset.y = 0;
         _head.play('down');
       } else 
-      if(FlxG.keys.RIGHT && _head.facing != FlxObject.LEFT){
+      if(FlxG.keys.RIGHT && _previousFacing != FlxObject.LEFT){
         _head.facing = FlxObject.RIGHT;
         _head.offset.x = 0;
         _head.offset.y = 15;
         _head.play('right');
       } else 
-      if(FlxG.keys.LEFT && _head.facing != FlxObject.RIGHT){
+      if(FlxG.keys.LEFT && _previousFacing != FlxObject.RIGHT){
         _head.facing = FlxObject.LEFT;
         _head.offset.x = 15;
         _head.offset.y = 15;
