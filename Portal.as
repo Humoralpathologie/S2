@@ -14,37 +14,33 @@ package {
       } else {
         loadGraphic(RedP, true, false, 32, 32);
       };
-      offset.x = 11;
-      offset.y = 11;
       width = 10;
       height = 10;
+      offset.x = 11;
+      offset.y = 11;
 
       addAnimation('twinkle', [0,1,2,3], 3);
          
     }     
 
     public function teleport(snake:Snake, portal2:Portal):void{
-      snake.head.reset(portal2.x, portal2.y);
-
+      snake.nextPos = new FlxPoint(portal2.x, portal2.y);
+      
       switch(snake.head.facing){
         case FlxObject.DOWN:
           snake.head.facing = FlxObject.UP;
-          snake.head.play('up');
         break;
  
         case FlxObject.UP:
           snake.head.facing = FlxObject.DOWN;
-          snake.head.play('down');
         break;
 
         case FlxObject.RIGHT:
           snake.head.facing = FlxObject.LEFT;
-          snake.head.play('left');
         break;
   
         case FlxObject.LEFT:
           snake.head.facing = FlxObject.RIGHT;
-          snake.head.play('right');
         break;
       } 
 
