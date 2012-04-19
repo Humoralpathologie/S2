@@ -19,14 +19,13 @@ package {
       }
 
       _snakeTitleFX = FlxSpecialFX.sineWave();     
+      _snakeTitleFX.start();
       _snakeTitleText = new FlxText(120,50,400,'SNAKE');
       _snakeTitleText.size = 100;
       _snakeTitleText.antialiasing = true;
       _snakeTitleText.alignment = 'center';
-  
-      _snakeTitleSprite = _snakeTitleFX.createFromFlxSprite(_snakeTitleText, SineWaveFX.WAVETYPE_VERTICAL_SINE,32, _snakeTitleText.width, 8);
 
-      _snakeTitleFX.start();
+      _snakeTitleSprite = _snakeTitleFX.createFromFlxSprite(_snakeTitleText, SineWaveFX.WAVETYPE_VERTICAL_SINE,32, _snakeTitleText.width, 8);
 
       add(_snakeTitleSprite);
 

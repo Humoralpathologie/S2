@@ -64,9 +64,9 @@ package org.flixel.plugin.photonstorm.FX
 			
 			canvas = new BitmapData(width, height, true, 0x0);
 			
-			colours = FlxColor.getHSVColorWheel();
+			//colours = FlxColor.getHSVColorWheel();
 			
-			//colours = FlxColor.getHSVColorWheel(140);	// now supports alpha :)
+			colours = FlxColor.getHSVColorWheel(140);	// now supports alpha :)
 			//colours = FlxGradient.createGradientArray(1, 360, [0xff000000, 0xff000000, 0xff000000, 0x00000000, 0xff000000], 2);	//	Lovely black reveal for over an image
 			//colours = FlxGradient.createGradientArray(1, 360, [0xff0000FF, 0xff000000, 0xff8F107C, 0xff00FFFF, 0xff0000FF], 1); // lovely purple black blue thingy
 			

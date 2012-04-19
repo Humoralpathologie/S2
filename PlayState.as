@@ -1,6 +1,8 @@
 package {
   import org.flixel.*;
   import org.flixel.plugin.photonstorm.API.FlxKongregate;
+  import org.flixel.plugin.photonstorm.*;
+  import org.flixel.plugin.photonstorm.FX.*;
   
   public class PlayState extends FlxState {
 
@@ -18,10 +20,17 @@ package {
     private var _bonusBar:FlxSprite;
     private var _portal1:Portal;  
     private var _portal2:Portal;  
+    private var _snakePlasma:PlasmaFX;
+    private var _snakePlasmaSprite:FlxSprite;
       
     override public function create():void {
 
       FlxG.log("Starting game");
+
+      if (FlxG.getPlugin(FlxSpecialFX) == null)
+      {
+        FlxG.addPlugin(new FlxSpecialFX);
+      }
 
       _background = new FlxSprite;
       _background.loadGraphic(Background); 
@@ -47,6 +56,9 @@ package {
       _portal2 = new Portal(25, 25, 2);
       _portal2.play('twinkle');
 
+      _snakePlasma = FlxSpecialFX.plasma();
+      _snakePlasmaSprite = _snakePlasma.create(0,0,160,120,8,8);
+
       add(_background);
       add(_portal1);
       add(_portal2);
@@ -58,6 +70,7 @@ package {
       add(_hud);
       add(_bonusBar);
       
+      add(_snakePlasmaSprite);
     }
 
     private function hitPortal():void {
@@ -179,6 +192,7 @@ package {
     
     override public function destroy():void {
       remove(_snake.tailCam);
+      FlxSpecialFX.clear();
       super.destroy();
     }
   }
