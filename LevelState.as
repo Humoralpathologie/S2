@@ -2,7 +2,7 @@ package {
   import org.flixel.*;
   import org.flixel.plugin.photonstorm.API.FlxKongregate;
   
-  public class PlayState extends FlxState {
+  public class LevelState extends FlxState {
 
     [Embed(source='assets/background.png')] protected var Background:Class;
   
@@ -16,6 +16,8 @@ package {
     private var _background:FlxSprite;
     private var _bonusTimer:Number = 0;
     private var _bonusBar:FlxSprite;
+    private var _portal1:Portal;  
+    private var _portal2:Portal;  
       
     override public function create():void {
 
@@ -40,17 +42,41 @@ package {
       _bonusBar.origin.x = _bonusBar.origin.y = 0;
       _bonusBar.scale.x = 0;
 
+
       add(_background);
       add(_food);
       add(_snake);
       add(_snake.tailCam);
       FlxG.addCamera(_snake.tailCam);
+      initialPortals();
       
       add(_hud);
       add(_bonusBar);
       
     }
 
+    private function initialPortals():void {
+      _portal1 = new Portal(25, 10, 1);
+      _portal1.play('twinkle');
+
+      _portal2 = new Portal(10, 28, 2);
+      _portal2.play('twinkle');
+       
+      add(_portal1);
+      add(_portal2);
+
+    }
+
+    private function hitPortal():void {
+      if (_snake.head.overlaps(_portal1) && !_portal1.inUse) {
+        _portal1.teleport(_snake, _portal2);
+        _portal2.inUse = true;
+      }
+      if (_snake.head.overlaps(_portal2) && !_portal2.inUse) {
+        _portal2.teleport(_snake, _portal1);
+        _portal1.inUse = true;
+      }
+    }
 
     private function updateHud():void {
       _hud.text = "Hi, " + FlxKongregate.getUserName +"! Score: " + String(_score) + "\nLives: " + String(_snake.lives);
@@ -64,6 +90,7 @@ package {
     }
 
     override public function update():void {
+      hitPortal();
       super.update();
       _bonusTimer -= FlxG.elapsed;
 
@@ -74,6 +101,10 @@ package {
       
       updateHud();
 
+      if (!_snake.head.overlaps(_portal1) && !_snake.head.overlaps(_portal2)) {
+        _portal1.inUse = false;
+        _portal2.inUse = false;
+      }
 
       if(_bonusTimer > 0) {
         _bonusBar.scale.x = (_bonusTimer / 2) * 25;
@@ -104,6 +135,7 @@ package {
       FlxG.log("Eating at " + snakeHead.x + ", " + snakeHead.y);
       spawnFood();
 
+      
       // TODO: This allocates too many objects. Think about how to reduce this.
       var shells:FlxEmitter = egg.shells;
       var points:int = 0;

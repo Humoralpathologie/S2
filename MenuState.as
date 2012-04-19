@@ -10,6 +10,7 @@ package {
     private var _snakeTitleText:FlxText;
     private var _snakeTitleSprite:FlxSprite;
     private var _playButton:FlxButton;
+    private var _playLevel:FlxButton;    
 
     override public function create():void {
 
@@ -40,11 +41,16 @@ package {
     {
       FlxKongregate.connect();
       _playButton = new FlxButton(FlxG.width/2-40, 300, 'Play Snake!', switchToPlayState); 
+      _playLevel = new FlxButton(FlxG.width/2-40, 300 + 50, 'Portal!', switchToLevelState); 
       add(_playButton);
+      add(_playLevel);
     }
 
     private function switchToPlayState():void {
       FlxG.switchState(new PlayState);
+    }
+    private function switchToLevelState():void {
+      FlxG.switchState(new LevelState);
     }
 
     override public function destroy():void {

@@ -7,7 +7,7 @@ package {
     public var inUse:Boolean; 
    
     public function Portal(wTiles:int, hTiles:int, Type:int){
-      super(wTiles * 15 - 8, hTiles * 15 - 9);
+      super(wTiles * 15, hTiles * 15);
       inUse = false;
       if (Type == 1) {
         loadGraphic(GreenP, true, false, 32, 32);
@@ -24,7 +24,7 @@ package {
     }     
 
     public function teleport(snake:Snake, portal2:Portal):void{
-      snake.head.reset(portal2.x - 10, portal2.y - 10);
+      snake.head.reset(portal2.x, portal2.y);
 
       switch(snake.head.facing){
         case FlxObject.DOWN:
