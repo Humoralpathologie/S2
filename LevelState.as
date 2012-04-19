@@ -3,9 +3,14 @@ package {
   import org.flixel.plugin.photonstorm.API.FlxKongregate;
   
   public class LevelState extends FlxState {
-
+    [Embed(source='assets/SnakeSounds/biss1tiefst.mp3')] protected var BiteSound:Class;
+    [Embed(source='assets/SnakeSounds/bup.mp3')] protected var Bup:Class;
+    
     [Embed(source='assets/background.png')] protected var Background:Class;
   
+    private var _biteSound:FlxSound;
+    private var _bup:FlxSound;
+
     private var _snake:Snake;
     private var _food:FlxGroup;
     private var _pointHud:Tween;
@@ -22,7 +27,13 @@ package {
     override public function create():void {
 
       FlxG.log("Starting game");
+     
+      _bup = new FlxSound;
+      _bup.loadEmbedded(Bup);
 
+      _biteSound = new FlxSound;
+      _biteSound.loadEmbedded(BiteSound);
+      
       _background = new FlxSprite;
       _background.loadGraphic(Background); 
 
@@ -42,7 +53,9 @@ package {
       _bonusBar.origin.x = _bonusBar.origin.y = 0;
       _bonusBar.scale.x = 0;
 
-
+      
+      add(_bup);
+      add(_biteSound);
       add(_background);
       add(_food);
       add(_snake);
@@ -69,10 +82,12 @@ package {
 
     private function hitPortal():void {
       if (_snake.head.overlaps(_portal1) && !_portal1.inUse) {
+        _bup.play();
         _portal1.teleport(_snake, _portal2);
         _portal2.inUse = true;
       }
       if (_snake.head.overlaps(_portal2) && !_portal2.inUse) {
+        _bup.play();
         _portal2.teleport(_snake, _portal1);
         _portal1.inUse = true;
       }
@@ -118,6 +133,7 @@ package {
       // be called twice. This works, so leave it like this.
       for(var i:int = 0; i < _food.length; i++){
         if(_snake.head.overlaps(_food.members[i])){
+          _biteSound.play();
           eat(_snake.head, _food.members[i]);
         }
       }

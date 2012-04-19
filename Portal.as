@@ -24,25 +24,27 @@ package {
     }     
 
     public function teleport(snake:Snake, portal2:Portal):void{
-      snake.nextPos = new FlxPoint(portal2.x, portal2.y);
+      if (portal2) {
+        snake.nextPos = new FlxPoint(portal2.x, portal2.y);
       
-      switch(snake.head.facing){
-        case FlxObject.DOWN:
-          snake.head.facing = FlxObject.UP;
-        break;
+       switch(snake.head.facing){
+          case FlxObject.DOWN:
+            snake.head.facing = FlxObject.UP;
+          break;
  
-        case FlxObject.UP:
-          snake.head.facing = FlxObject.DOWN;
-        break;
+          case FlxObject.UP:
+            snake.head.facing = FlxObject.DOWN;
+          break;
 
-        case FlxObject.RIGHT:
-          snake.head.facing = FlxObject.LEFT;
-        break;
+          case FlxObject.RIGHT:
+            snake.head.facing = FlxObject.LEFT;
+          break;
   
-        case FlxObject.LEFT:
-          snake.head.facing = FlxObject.RIGHT;
-        break;
-      } 
+          case FlxObject.LEFT:
+            snake.head.facing = FlxObject.RIGHT;
+          break;
+        } 
+      }
 
     }
 

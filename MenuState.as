@@ -6,6 +6,9 @@ package {
   
   public class MenuState extends FlxState {
 
+    [Embed(source='assets/SnakeSounds/SuperSnakeLoop.mp3')] protected var Music:Class;
+    
+    private var _sound:FlxSound;
     private var _snakeTitleFX:SineWaveFX;
     private var _snakeTitleText:FlxText;
     private var _snakeTitleSprite:FlxSprite;
@@ -29,6 +32,12 @@ package {
 
       _snakeTitleFX.start();
 
+      _sound = new FlxSound;
+      _sound.loadEmbedded(Music, true);
+      _sound.survive = true;
+      _sound.fadeIn(5);
+      
+      add(_sound);
       add(_snakeTitleSprite);
 
       FlxKongregate.init(apiHasLoaded);
@@ -41,7 +50,7 @@ package {
     {
       FlxKongregate.connect();
       _playButton = new FlxButton(FlxG.width/2-40, 300, 'Play Snake!', switchToPlayState); 
-      _playLevel = new FlxButton(FlxG.width/2-40, 300 + 50, 'Portal!', switchToLevelState); 
+      _playLevel = new FlxButton(FlxG.width/2-40, 300 + 20, 'Portal!', switchToLevelState); 
       add(_playButton);
       add(_playLevel);
     }
