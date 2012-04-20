@@ -15,6 +15,7 @@ package {
     private var _level:FlxGroup;
     private var _background:FlxSprite;
     private var _bonusTimer:Number = 0;
+    private var _bonusTimerPoints:Number = 0;
     private var _bonusBar:FlxSprite;
     private var _portal1:Portal;  
     private var _portal2:Portal;  
@@ -102,6 +103,7 @@ package {
       if(_bonusTimer > 0) {
         _bonusBar.scale.x = (_bonusTimer / 2) * 25;
       } else {
+        _bonusTimerPoints = 0;
         _bonusBar.scale.x = 0;
       }
 
@@ -142,9 +144,9 @@ package {
       points += egg.points;
 
       if(_bonusTimer > 0) {
-        initPointHUD(egg, '+2', 0xffedf249, 1.5, 2); 
-        _score += 2;
-        
+        _bonusTimerPoints += 2;
+        initPointHUD(egg, '+' + String(_bonusTimerPoints), 0xffedf249, 1.5, 2); 
+        _score += _bonusTimerPoints;
       }
 
       _score += points;
