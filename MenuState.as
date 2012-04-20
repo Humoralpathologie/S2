@@ -41,6 +41,8 @@ package {
       FlxKongregate.connect();
       _playButton = new FlxButton(FlxG.width/2-40, 300, 'Play Snake!', switchToState(PlayState)); 
       add(_playButton);
+      _playButton = new FlxButton(FlxG.width/2-40, 340, 'Level 2', switchToState(Level2)); 
+      add(_playButton);
     }
 
     private function switchToState(state:Class):Function {
