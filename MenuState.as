@@ -34,32 +34,36 @@ package {
 
       _sound = new FlxSound;
       _sound.loadEmbedded(Music, true);
-      _sound.survive = true;
-      _sound.fadeIn(5);
       
       add(_sound);
       add(_snakeTitleSprite);
 
       FlxKongregate.init(apiHasLoaded);
-
+      _sound.fadeIn(5);
       FlxG.mouse.show();
+      
+    }
+
+    private function makeButtons():void{
       
     }
 
     private function apiHasLoaded():void
     {
       FlxKongregate.connect();
-      _playButton = new FlxButton(FlxG.width/2-40, 300, 'Play Snake!', switchToPlayState); 
-      _playLevel = new FlxButton(FlxG.width/2-40, 300 + 20, 'Portal!', switchToLevelState); 
+      _playButton = new FlxButton(FlxG.width/2-40, 300, 'Play Snake!', switchToState(PlayState, 'PlayState', 'None', 'None')); 
+      _playLevel = new FlxButton(FlxG.width/2-40, 300 + 20, 'Portal!', switchToState(LevelState, 'Portal', 'None', 'None')); 
       add(_playButton);
       add(_playLevel);
     }
 
-    private function switchToPlayState():void {
-      FlxG.switchState(new PlayState);
-    }
-    private function switchToLevelState():void {
-      FlxG.switchState(new LevelState);
+    private function switchToState(state:Class, title:String, objective:String, timeLimit:String):Function {
+      return function ():void {
+        var levelDescr:LevelDescription = new LevelDescription();
+        levelDescr.initial(state, title, objective, timeLimit);
+        FlxG.switchState(levelDescr);
+      }
+
     }
 
     override public function destroy():void {

@@ -5,6 +5,7 @@ package {
     [Embed(source='assets/head.png')] protected var Head:Class;
     [Embed(source='assets/images/tail.png')] protected var Tail:Class;
     [Embed(source='assets/images/eggs.png')] protected var Eggs:Class;
+    [Embed(source='assets/SnakeSounds/Pickup_Coin.mp3')] protected var Bling:Class;
 
     private var _head:FlxSprite;
     private var _tail:FlxSprite;
@@ -17,6 +18,7 @@ package {
     private var _previousFacing:uint = FlxObject.RIGHT;
     private var _tailCam:FlxCamera;
     private var _nextPos:FlxPoint = null;
+    private var _bling:FlxSound = new FlxSound;    
     
     public function Snake(movesPerSecond:Number = 1) { 
       super();
@@ -28,16 +30,17 @@ package {
       _head = new FlxSprite(15 * 10, 15 * 10);
       //_head.makeGraphic(16,16);
       _head.loadGraphic(Head, true, false, 30, 30);
-      _head.addAnimation('left',[0,1], 2);
-      _head.addAnimation('right',[10,11], 2);
+      _head.addAnimation('left',[0,1,2,3,4,5,6,7,8,9], 10);
+      _head.addAnimation('right',[10,11,12,13,14,15,16,17,18,19], 10);
       _head.addAnimation('right-eat',[10,11,12,13,14,15,16,17,18,19], 10);
-      _head.addAnimation('up',[20,21], 2);
+      _head.addAnimation('up',[20,21,22,23,24,25,26,27,28,29], 10);
       _head.addAnimation('down',[30]);
       _head.width = 15;
       _head.height = 15;
 
       _body = new FlxGroup();
       _tailCam = new FlxCamera(300,30,30,30,2);
+      _bling.loadEmbedded(Bling);
 
       resurrect();
 
@@ -94,6 +97,7 @@ package {
           currentCombo = [];
         } else {
           // Remove the combo
+          _bling.play();
           for(var i:int = 0; i < currentCombo.length; i++){
             _body.remove(currentCombo[i], true);
           }

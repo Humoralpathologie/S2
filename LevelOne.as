@@ -23,7 +23,6 @@ package {
     private var _bonusBar:FlxSprite;
     private var _portal1:Portal;  
     private var _portal2:Portal;  
-    private var _movedPortal:Boolean = false;
       
     override public function create():void {
 
