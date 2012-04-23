@@ -53,6 +53,9 @@ package {
       FlxKongregate.connect();
       _playButton = new FlxButton(FlxG.width/2-40, 300, 'Play Snake!', switchToState(PlayState, 'PlayState', 'None', 'None')); 
       _playLevel = new FlxButton(FlxG.width/2-40, 300 + 20, 'Portal!', switchToState(LevelState, 'Portal', 'None', 'None')); 
+      var _levelOne:FlxButton;
+      _levelOne = new FlxButton(FlxG.width/2-40, 320 + 20, 'Level 1', switchToState(LevelOne, 'Crossroads of Carnage', 'Devour 100 Eggs', 'None'));
+      add(_levelOne);
       add(_playButton);
       add(_playLevel);
     }

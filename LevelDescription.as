@@ -16,20 +16,20 @@ package {
     public function initial(levelState:Class, Title:String, Objective:String, TimeLimit:String):void {
       _LevelState = levelState;
       
-      _middleX = FlxG.width / 2 - 200;      
+      _middleX = FlxG.width / 2 - 300;      
 
-      _title = new FlxText(_middleX, 50, 400, Title);
-      _title.size = 60;
+      _title = new FlxText(_middleX, 50, 600, Title);
+      _title.size = 50;
       _title.antialiasing = true;
       _title.alignment = 'center';
 
-      _objective = new FlxText(_middleX, _title.y + 200, 400, 'Objective: ' + Objective);
+      _objective = new FlxText(_middleX, _title.y + 200, 600, 'Objective: ' + Objective);
       _objective.size = 20;
       _objective.antialiasing = true;
       _objective.alignment = 'center';
 
 
-      _timeLimit = new FlxText(_middleX, _objective.y + 40, 400, 'Time Limit: ' + TimeLimit);
+      _timeLimit = new FlxText(_middleX, _objective.y + 40, 600, 'Time Limit: ' + TimeLimit);
       _timeLimit.size = 20;
       _timeLimit.antialiasing = true;
       _timeLimit.alignment = 'center';
