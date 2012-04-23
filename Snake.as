@@ -158,7 +158,8 @@ package {
           part.addAnimation('down',[6,7],7);
           _tail = part;
         } else {
-          part = new Egg(0, _head.x - (i * 15), _head.y);
+          part = new Egg(i % 3, _head.x - (i * 15), _head.y);
+          (part as Egg).eat();
         }
         part.facing = FlxObject.RIGHT;
         group.add(part);
@@ -186,6 +187,7 @@ package {
     private function move():void {
       _previousFacing = _head.facing;
       if(_newPart){ 
+        (_newPart as Egg).eat();
         var swap:FlxSprite;
         _body.remove(_tail);
         _body.add(_newPart);

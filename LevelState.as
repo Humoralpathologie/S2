@@ -13,7 +13,6 @@ package {
     protected var _snake:Snake;
     protected var _food:FlxGroup;
     protected var _pointHud:Tween;
-    protected var _hud:FlxText;
     protected var _score:int;
     protected var _map:FlxTilemap;
     protected var _level:FlxGroup;
@@ -40,9 +39,12 @@ package {
       _snake = new Snake(8);
       _food = new FlxGroup();
 
+<<<<<<< HEAD
       _hud = new FlxText(32,32,600,'0');
       _hud.size = 16;
 
+=======
+>>>>>>> ad0d988b45b7e98e601957f16bc33986ac23a8c7
       _bonusBar = new FlxSprite(450,32);
       _bonusBar.makeGraphic(1,8,0xffff0000);
       _bonusBar.origin.x = _bonusBar.origin.y = 0;
@@ -64,12 +66,8 @@ package {
       spawnFoods(3);
       add(_food);
       add(_snake);
-      add(_snake.tailCam);
-      FlxG.addCamera(_snake.tailCam);
-      
-      add(_hud);
       add(_bonusBar);
-      
+      addHud();
     }
 
     /* Sort of abstract functions */
@@ -79,9 +77,10 @@ package {
     protected function addObstacles():void {
     }
 
+    protected function addHud():void {
+    }
+
     protected function updateHud():void {
-      _hud.text = "Hi, " + FlxKongregate.getUserName +"! Score: " + String(_score) + "\nLives: " + String(_snake.lives);
-      _hud.y = ((64 - _hud.height) / 2) + 16;
     }
 
     protected function spawnFoods(count:int):void {
@@ -103,9 +102,6 @@ package {
 
       _bonusTimer -= FlxG.elapsed;
 
-      if(_snake.lives < 0) {
-        levelOver();
-      }
 
       if(_bonusTimer > 0) {
         _bonusBar.scale.x = (_bonusTimer / 2) * 25;
@@ -128,6 +124,9 @@ package {
       }
       if(_snake.alive && _snake.head.overlaps(_obstacles)) {
         _snake.die();
+      }
+      if(_snake.lives < 0) {
+        levelOver();
       }
 
       updateHud();
@@ -174,11 +173,6 @@ package {
       }
     }
 
-    protected function hitBoundary(snakeHead:FlxObject, tile:FlxObject):void {
-      FlxG.log("Hitting at " + tile.x + ", " + tile.y);
-      _snake.die(); 
-    }
-
     protected function spawnFood():void {
       reallySpawnFood(3);
     }
@@ -199,7 +193,6 @@ package {
     }
     
     override public function destroy():void {
-      remove(_snake.tailCam);
       super.destroy();
     }
   }
