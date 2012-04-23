@@ -25,11 +25,6 @@ package {
       _snake = new Snake(8);
       _food = new FlxGroup();
 
-      /*
-      _hud = new FlxText(32,32,400,'0');
-      _hud.size = 16;
-      */
-
       _bonusBar = new FlxSprite(450,32);
       _bonusBar.makeGraphic(1,8,0xffff0000);
       _bonusBar.origin.x = _bonusBar.origin.y = 0;
@@ -81,9 +76,6 @@ package {
 
       _bonusTimer -= FlxG.elapsed;
 
-      if(_snake.lives < 0) {
-        levelOver();
-      }
 
       if(_bonusTimer > 0) {
         _bonusBar.scale.x = (_bonusTimer / 2) * 25;
@@ -107,6 +99,9 @@ package {
       }
       if(_snake.alive && _snake.head.overlaps(_obstacles)) {
         _snake.die();
+      }
+      if(_snake.lives < 0) {
+        levelOver();
       }
 
       updateHud();

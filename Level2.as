@@ -17,7 +17,10 @@ package {
 
     override protected function addObstacles():void {
       var stone:FlxSprite = new FlxSprite(180,225);      
-      stone.makeGraphic(90,60,0x44ff00ff);
+      stone.makeGraphic(75,45,0x44ff0000);
+      _obstacles.add(stone);
+      stone = new FlxSprite(195,240);
+      stone.makeGraphic(75,45,0x440000ff);
       _obstacles.add(stone);
       add(_obstacles);
     }
