@@ -6,6 +6,8 @@ package {
     [Embed(source='assets/images/level02bg.jpg')] protected var Background:Class;
     // Variablen
     protected var _background:FlxSprite = null;
+    protected var _combos:int = 0;
+    protected var _hudText:FlxText;
 
     override protected function addBackgrounds():void {
       _background = new FlxSprite(0,0);
@@ -22,6 +24,16 @@ package {
 
     override protected function spawnFood():void {
       reallySpawnFood(2);
+    }
+
+    override protected function addHud():void {
+      _hudText = new FlxText(15,15, 640 - 60, "Nothing yet...");
+      _hudText.size = 16;
+      add(_hudText);
+    }
+
+    override protected function updateHud():void {
+      _hudText.text = "Score: " + String(_score) + "\n" + "Combos: " + String(_combos);
     }
   }
 }

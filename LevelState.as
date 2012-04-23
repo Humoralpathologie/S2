@@ -7,7 +7,6 @@ package {
     protected var _snake:Snake;
     protected var _food:FlxGroup;
     protected var _pointHud:Tween;
-    protected var _hud:FlxText;
     protected var _score:int;
     protected var _bonusTimer:Number = 0;
     protected var _bonusTimerPoints:Number = 0;
@@ -26,8 +25,10 @@ package {
       _snake = new Snake(8);
       _food = new FlxGroup();
 
+      /*
       _hud = new FlxText(32,32,400,'0');
       _hud.size = 16;
+      */
 
       _bonusBar = new FlxSprite(450,32);
       _bonusBar.makeGraphic(1,8,0xffff0000);
@@ -47,12 +48,8 @@ package {
       spawnFoods(3);
       add(_food);
       add(_snake);
-      add(_snake.tailCam);
-      FlxG.addCamera(_snake.tailCam);
-      
-      add(_hud);
       add(_bonusBar);
-      
+      addHud();
     }
 
     /* Sort of abstract functions */
@@ -62,9 +59,10 @@ package {
     protected function addObstacles():void {
     }
 
+    protected function addHud():void {
+    }
+
     protected function updateHud():void {
-      _hud.text = "Hi, " + FlxKongregate.getUserName +"! Score: " + String(_score) + "\nLives: " + String(_snake.lives);
-      _hud.y = ((64 - _hud.height) / 2) + 16;
     }
 
     protected function spawnFoods(count:int):void {
@@ -153,11 +151,6 @@ package {
       }
     }
 
-    protected function hitBoundary(snakeHead:FlxObject, tile:FlxObject):void {
-      FlxG.log("Hitting at " + tile.x + ", " + tile.y);
-      _snake.die(); 
-    }
-
     protected function spawnFood():void {
       reallySpawnFood(3);
     }
@@ -178,7 +171,6 @@ package {
     }
     
     override public function destroy():void {
-      remove(_snake.tailCam);
       super.destroy();
     }
   }
