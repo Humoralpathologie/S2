@@ -3,12 +3,13 @@ package {
 
   public class Egg extends FlxSprite {
 
+    [Embed(source='assets/images/square.png')] protected static var Egg0:Class;
     [Embed(source='assets/images/eggA.png')] protected static var EggA:Class;
     [Embed(source='assets/images/eggB.png')] protected static var EggB:Class;
     [Embed(source='assets/images/eggC.png')] protected static var EggC:Class;
     [Embed(source='assets/images/shell.png')] protected static var ShellB:Class;
 
-    private static var eggGraphics:Array = [EggA, EggB, EggC];
+    private static var eggGraphics:Array = [Egg0, EggA, EggB, EggC];
     private static var shellGraphics:Array = [ShellB, ShellB, ShellB];
    
     private var _points:int;

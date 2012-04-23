@@ -3,7 +3,6 @@ package {
   import org.flixel.plugin.photonstorm.API.FlxKongregate;
   
   public class LevelState extends FlxState {
-<<<<<<< HEAD
     [Embed(source='assets/SnakeSounds/schluck2tiefer.mp3')] protected var BiteSound:Class;
     [Embed(source='assets/SnakeSounds/bup.mp3')] protected var Bup:Class;
     
@@ -30,7 +29,6 @@ package {
     override public function create():void {
 
       FlxG.log("Starting game");
-<<<<<<< HEAD
      
       _bup = new FlxSound;
       _bup.loadEmbedded(Bup);
@@ -175,10 +173,6 @@ package {
       _snake.swallow(egg);
       points += egg.points;
      
-
-      if(_bonusTimer > 0) {
-        initPointHUD(egg, '+2', 0xffedf249, 1.5, 2); 
-        _score += 2;
         
       if(_bonusTimer > 0) {
         _bonusTimerPoints += 2;
