@@ -6,7 +6,6 @@ package {
     [Embed(source='assets/SnakeSounds/schluck2tiefer.mp3')] protected var BiteSound:Class;
     [Embed(source='assets/SnakeSounds/bup.mp3')] protected var Bup:Class;
     
-    [Embed(source='assets/background.png')] protected var Background:Class;
   
     protected var _biteSound:FlxSound;
     protected var _bup:FlxSound;
@@ -18,13 +17,11 @@ package {
     protected var _score:int;
     protected var _map:FlxTilemap;
     protected var _level:FlxGroup;
-    protected var _background:FlxSprite;
     protected var _bonusTimer:Number = 0;
-    protected var _bonusBar:FlxSprite;
-    protected var _portal1:Portal;  
-    protected var _portal2:Portal;  
-    protected var _movedPortal:Boolean = false;
     protected var _bonusTimerPoints:Number = 0;
+    protected var _bonusBar:FlxSprite;
+    protected var _obstacles:FlxGroup;
+    protected var _unspawnable:FlxGroup;
       
     override public function create():void {
 
@@ -36,18 +33,14 @@ package {
       _biteSound = new FlxSound;
       _biteSound.loadEmbedded(BiteSound);
       
-      _background = new FlxSprite;
-      _background.loadGraphic(Background); 
-
       FlxG.mouse.hide();
 
       _score = 0;
       
       _snake = new Snake(8);
       _food = new FlxGroup();
-      spawnFoods(3);
 
-      _hud = new FlxText(32,32,400,'0');
+      _hud = new FlxText(32,32,600,'0');
       _hud.size = 16;
 
       _bonusBar = new FlxSprite(450,32);
@@ -58,47 +51,32 @@ package {
       
       add(_bup);
       add(_biteSound);
+      _obstacles = new FlxGroup();
 
       addBackgrounds();
+      addObstacles();
+  
+      _unspawnable = new FlxGroup();
+      _unspawnable.add(_food);
+      _unspawnable.add(_snake);
+      _unspawnable.add(_obstacles);
 
+      spawnFoods(3);
       add(_food);
       add(_snake);
       add(_snake.tailCam);
       FlxG.addCamera(_snake.tailCam);
-
-      initialPortals();
       
       add(_hud);
       add(_bonusBar);
       
     }
 
-    private function initialPortals():void {
-      _portal1 = new Portal(25, 10, 1);
-      _portal1.play('twinkle');
-
-      _portal2 = new Portal(10, 28, 2);
-      _portal2.play('twinkle');
-       
-      add(_portal1);
-      add(_portal2);
-
-    }
-
-    private function hitPortal():void {
-      if (_snake.head.overlaps(_portal1) && !_portal1.inUse) {
-        _bup.play();
-        _portal1.teleport(_snake, _portal2);
-        _portal2.inUse = true;
-      }
-      if (_snake.head.overlaps(_portal2) && !_portal2.inUse) {
-        _bup.play();
-        _portal2.teleport(_snake, _portal1);
-        _portal1.inUse = true;
-      }
-    }
-
+    /* Sort of abstract functions */
     protected function addBackgrounds():void {
+    }
+
+    protected function addObstacles():void {
     }
 
     protected function updateHud():void {
@@ -115,6 +93,9 @@ package {
     protected function levelOver():void {
       FlxG.score = _score;
       FlxG.switchState(new GameOver);
+    }
+    
+    protected function switchLevel():void {
     }
 
     override public function update():void {
@@ -145,6 +126,9 @@ package {
       if(_snake.alive && !_snake.head.onScreen()) {
         _snake.die();
       }
+      if(_snake.alive && _snake.head.overlaps(_obstacles)) {
+        _snake.die();
+      }
 
       updateHud();
     }
@@ -169,7 +153,6 @@ package {
 
       _food.remove(egg, true);
       
-      _snake.faster();
       _snake.swallow(egg);
       points += egg.points;
      
@@ -197,7 +180,11 @@ package {
     }
 
     protected function spawnFood():void {
-      var egg:Egg = new Egg(Math.floor(Math.random() * 3));
+      reallySpawnFood(3);
+    }
+    
+    protected function reallySpawnFood(n:int):void {
+      var egg:Egg = new Egg(Math.floor(Math.random() * n));
 
       var wTiles:int = FlxG.width / 15;
       var hTiles:int = FlxG.height / 15;
@@ -206,8 +193,9 @@ package {
       do {
         egg.x = int(1 + (Math.random() * wTiles)) * 15;
         egg.y = int(6 + (Math.random() * hTiles)) * 15;
-      } while(egg.overlaps(_snake));
+      } while(egg.overlaps(_unspawnable));
       _food.add(egg);
+
     }
     
     override public function destroy():void {

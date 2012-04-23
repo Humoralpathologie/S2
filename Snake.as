@@ -158,7 +158,7 @@ package {
           part.addAnimation('down',[6,7],7);
           _tail = part;
         } else {
-          part = new Egg(i % 3, _head.x - (i * 15), _head.y);
+          part = new Egg(0, _head.x - (i * 15), _head.y);
         }
         part.facing = FlxObject.RIGHT;
         group.add(part);

@@ -3,8 +3,8 @@ package {
   import org.flixel.plugin.photonstorm.API.FlxKongregate;
 
   public class GameOver extends FlxState {
-    private var _scoreText:FlxText;
-    private var _resetButton:FlxButton;
+    protected var _scoreText:FlxText;
+    protected var _resetButton:FlxButton;
 
     override public function create():void {
 
@@ -19,14 +19,17 @@ package {
       _scoreText.y = (FlxG.height - _scoreText.height) / 2
       _scoreText.alignment = 'center'
 
-      _resetButton = new FlxButton(FlxG.width/2-40, 300, 'Play again!', switchToPlayState); 
     
       add(_scoreText);
-      add(_resetButton);
     } 
 
-    private function switchToPlayState():void {
-      FlxG.switchState(new PlayState);
+    public function initReset(state:Class):void {
+      _resetButton = new FlxButton(FlxG.width/2-40, 300, 'Play again!', switchToState(state)); 
+      add(_resetButton);
+    }
+
+    public function switchToState(state:Class):Function {
+      return function():void { FlxG.switchState(new state);}
     }
   }
 }
