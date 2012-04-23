@@ -12,5 +12,16 @@ package {
       _background.loadGraphic(Background);
       add(_background);
     }
+
+    override protected function addObstacles():void {
+      var stone:FlxSprite = new FlxSprite(180,225);      
+      stone.makeGraphic(90,60,0x44ff00ff);
+      _obstacles.add(stone);
+      add(_obstacles);
+    }
+
+    override protected function spawnFood():void {
+      reallySpawnFood(2);
+    }
   }
 }

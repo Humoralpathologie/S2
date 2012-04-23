@@ -12,6 +12,8 @@ package {
     protected var _bonusTimer:Number = 0;
     protected var _bonusTimerPoints:Number = 0;
     protected var _bonusBar:FlxSprite;
+    protected var _obstacles:FlxGroup;
+    protected var _unspawnable:FlxGroup;
       
     override public function create():void {
 
@@ -23,7 +25,6 @@ package {
       
       _snake = new Snake(8);
       _food = new FlxGroup();
-      spawnFoods(3);
 
       _hud = new FlxText(32,32,400,'0');
       _hud.size = 16;
@@ -33,8 +34,17 @@ package {
       _bonusBar.origin.x = _bonusBar.origin.y = 0;
       _bonusBar.scale.x = 0;
 
-      addBackgrounds();
+      _obstacles = new FlxGroup();
 
+      addBackgrounds();
+      addObstacles();
+  
+      _unspawnable = new FlxGroup();
+      _unspawnable.add(_food);
+      _unspawnable.add(_snake);
+      _unspawnable.add(_obstacles);
+
+      spawnFoods(3);
       add(_food);
       add(_snake);
       add(_snake.tailCam);
@@ -45,7 +55,11 @@ package {
       
     }
 
+    /* Sort of abstract functions */
     protected function addBackgrounds():void {
+    }
+
+    protected function addObstacles():void {
     }
 
     protected function updateHud():void {
@@ -91,6 +105,9 @@ package {
         }
       }
       if(_snake.alive && !_snake.head.onScreen()) {
+        _snake.die();
+      }
+      if(_snake.alive && _snake.head.overlaps(_obstacles)) {
         _snake.die();
       }
 
@@ -142,7 +159,11 @@ package {
     }
 
     protected function spawnFood():void {
-      var egg:Egg = new Egg(Math.floor(Math.random() * 3));
+      reallySpawnFood(3);
+    }
+    
+    protected function reallySpawnFood(n:int):void {
+      var egg:Egg = new Egg(Math.floor(Math.random() * n));
 
       var wTiles:int = FlxG.width / 15;
       var hTiles:int = FlxG.height / 15;
@@ -151,8 +172,9 @@ package {
       do {
         egg.x = int(1 + (Math.random() * wTiles)) * 15;
         egg.y = int(6 + (Math.random() * hTiles)) * 15;
-      } while(egg.overlaps(_snake));
+      } while(egg.overlaps(_unspawnable));
       _food.add(egg);
+
     }
     
     override public function destroy():void {
