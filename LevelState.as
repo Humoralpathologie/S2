@@ -41,8 +41,8 @@ package {
       _unspawnable.add(_obstacles);
 
       spawnFoods(3);
-      add(_food);
       add(_snake);
+      add(_food);
       add(_bonusBar);
       addHud();
     }
