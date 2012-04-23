@@ -67,7 +67,6 @@ package {
         FlxG.switchState(levelDescr);
       }
 
-    }
 
     override public function destroy():void {
       FlxSpecialFX.clear();

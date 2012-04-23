@@ -3,31 +3,34 @@ package {
   import org.flixel.plugin.photonstorm.API.FlxKongregate;
   
   public class LevelState extends FlxState {
+<<<<<<< HEAD
     [Embed(source='assets/SnakeSounds/schluck2tiefer.mp3')] protected var BiteSound:Class;
     [Embed(source='assets/SnakeSounds/bup.mp3')] protected var Bup:Class;
     
     [Embed(source='assets/background.png')] protected var Background:Class;
   
-    private var _biteSound:FlxSound;
-    private var _bup:FlxSound;
+    protected var _biteSound:FlxSound;
+    protected var _bup:FlxSound;
 
-    private var _snake:Snake;
-    private var _food:FlxGroup;
-    private var _pointHud:Tween;
-    private var _hud:FlxText;
-    private var _score:int;
-    private var _map:FlxTilemap;
-    private var _level:FlxGroup;
-    private var _background:FlxSprite;
-    private var _bonusTimer:Number = 0;
-    private var _bonusBar:FlxSprite;
-    private var _portal1:Portal;  
-    private var _portal2:Portal;  
-    private var _movedPortal:Boolean = false;
+    protected var _snake:Snake;
+    protected var _food:FlxGroup;
+    protected var _pointHud:Tween;
+    protected var _hud:FlxText;
+    protected var _score:int;
+    protected var _map:FlxTilemap;
+    protected var _level:FlxGroup;
+    protected var _background:FlxSprite;
+    protected var _bonusTimer:Number = 0;
+    protected var _bonusBar:FlxSprite;
+    protected var _portal1:Portal;  
+    protected var _portal2:Portal;  
+    protected var _movedPortal:Boolean = false;
+    protected var _bonusTimerPoints:Number = 0;
       
     override public function create():void {
 
       FlxG.log("Starting game");
+<<<<<<< HEAD
      
       _bup = new FlxSound;
       _bup.loadEmbedded(Bup);
@@ -57,11 +60,14 @@ package {
       
       add(_bup);
       add(_biteSound);
-      add(_background);
+
+      addBackgrounds();
+
       add(_food);
       add(_snake);
       add(_snake.tailCam);
       FlxG.addCamera(_snake.tailCam);
+
       initialPortals();
       
       add(_hud);
@@ -94,38 +100,38 @@ package {
       }
     }
 
-    private function updateHud():void {
+    protected function addBackgrounds():void {
+    }
+
+    protected function updateHud():void {
       _hud.text = "Hi, " + FlxKongregate.getUserName +"! Score: " + String(_score) + "\nLives: " + String(_snake.lives);
       _hud.y = ((64 - _hud.height) / 2) + 16;
     }
 
-    private function spawnFoods(count:int):void {
+    protected function spawnFoods(count:int):void {
       for(var i:int = 0; i < count; i++) {
         spawnFood();
       }
     }
 
+    protected function levelOver():void {
+      FlxG.score = _score;
+      FlxG.switchState(new GameOver);
+    }
+
     override public function update():void {
-      hitPortal();
       super.update();
+
       _bonusTimer -= FlxG.elapsed;
 
       if(_snake.lives < 0) {
-        FlxG.score = _score;
-        FlxG.switchState(new GameOver);
-      }
-      
-      updateHud();
-
-      if (!_snake.head.overlaps(_portal1) && !_snake.head.overlaps(_portal2)) {
-        _portal1.inUse = false;
-        _portal2.inUse = false;
-
+        levelOver();
       }
 
       if(_bonusTimer > 0) {
         _bonusBar.scale.x = (_bonusTimer / 2) * 25;
       } else {
+        _bonusTimerPoints = 0;
         _bonusBar.scale.x = 0;
       }
 
@@ -141,34 +147,21 @@ package {
       if(_snake.alive && !_snake.head.onScreen()) {
         _snake.die();
       }
+
+      updateHud();
     }
 
-    private function initPointHUD(egg:Egg, points:String, Color:uint = 0xffffffff, Delay:Number = 0.5, Speed:int = 1):void { 
+    protected function initPointHUD(egg:Egg, points:String, Color:uint = 0xffffffff, Delay:Number = 0.5, Speed:int = 1):void { 
       _pointHud = new Tween(Delay, 20, egg.x, egg.y, 40, Color, points, Speed); 
       add(_pointHud);  
     } 
 
-    private function movePortal(egg:Egg):void {
-      if (_portal1.alive) {
-        _portal2.revive();
-        _portal2.inUse = true;
-        _portal2.reset(egg.x, egg.y);
-      } else 
-      if (_portal2.alive){
-        _portal1.revive();
-        _portal1.inUse = true;
-        _portal1.reset(egg.x, egg.y);
-      } 
 
-
-    }
-
-    private function eat(snakeHead:FlxSprite, egg:Egg):void {
+    protected function eat(snakeHead:FlxSprite, egg:Egg):void {
       FlxG.log("Eating at " + snakeHead.x + ", " + snakeHead.y);
       spawnFood();
-
       _biteSound.play();
-      
+
       // TODO: This allocates too many objects. Think about how to reduce this.
       var shells:FlxEmitter = egg.shells;
       var points:int = 0;
@@ -187,6 +180,10 @@ package {
         initPointHUD(egg, '+2', 0xffedf249, 1.5, 2); 
         _score += 2;
         
+      if(_bonusTimer > 0) {
+        _bonusTimerPoints += 2;
+        initPointHUD(egg, '+' + String(_bonusTimerPoints), 0xffedf249, 1.5, 2); 
+        _score += _bonusTimerPoints;
       }
 
       _score += points;
@@ -200,12 +197,12 @@ package {
       }
     }
 
-    private function hitBoundary(snakeHead:FlxObject, tile:FlxObject):void {
+    protected function hitBoundary(snakeHead:FlxObject, tile:FlxObject):void {
       FlxG.log("Hitting at " + tile.x + ", " + tile.y);
       _snake.die(); 
     }
 
-    private function spawnFood():void {
+    protected function spawnFood():void {
       var egg:Egg = new Egg(Math.floor(Math.random() * 3));
 
       var wTiles:int = FlxG.width / 15;
@@ -217,6 +214,11 @@ package {
         egg.y = int(6 + (Math.random() * hTiles)) * 15;
       } while(egg.overlaps(_snake));
       _food.add(egg);
+    }
+    
+    override public function destroy():void {
+      remove(_snake.tailCam);
+      super.destroy();
     }
   }
 }
