@@ -71,12 +71,11 @@ package {
       FlxG.switchState(new GameOver);
     }
 
-    override public function update():void {
-      super.update();
-
+    protected function updateTimers():void {
       _bonusTimer -= FlxG.elapsed;
+    }
 
-
+    protected function updateBonusBar():void {
       if(_bonusTimer > 0) {
         _bonusBar.scale.x = (_bonusTimer / 2) * 25;
       } else {
@@ -86,7 +85,9 @@ package {
 
       _bonusBar.x = _snake.head.x - 5;
       _bonusBar.y = _snake.head.y - 24;
+    }
 
+    protected function collideFood():void {
       // I tried to use FlxG.overlap for this, but sometimes, the callback will
       // be called twice. This works, so leave it like this.
       for(var i:int = 0; i < _food.length; i++){
@@ -94,15 +95,37 @@ package {
           eat(_snake.head, _food.members[i]);
         }
       }
+    }
+
+    protected function collideScreen():void {
       if(_snake.alive && !_snake.head.onScreen()) {
         _snake.die();
       }
+    }
+
+    protected function collideObstacles():void {
       if(_snake.alive && _snake.head.overlaps(_obstacles)) {
         _snake.die();
       }
+    }
+
+    override public function update():void {
+      super.update();
+
+      updateTimers();
+      updateBonusBar();
+      
+      collideFood();
+      collideScreen();
+      collideObstacles();
+
       if(_snake.lives < 0) {
         levelOver();
       }
+
+      // This has to be done here. Could be optimized to
+      // only run in eat().
+      doCombos();
 
       updateHud();
     }
@@ -139,11 +162,65 @@ package {
       initPointHUD(egg, egg.points.toString());
       _bonusTimer = 2;
     
-      var combo:Array = _snake.doCombos(egg);
-      for(var i:int = 0; i < combo.length; i++) {
-        initPointHUD(combo[i], '+5', 0xffff0000, 1.5, 2); 
-        _score += 5;
+
+    }
+    
+    /*
+     * Should be overridden if for different scoring.
+     */
+    protected function doCombos():void {
+      var combos:Array = checkCombos(_snake.body.members.slice(0,_snake.body.length - 1));
+      var combo:Array;
+      for(var j:int = 0; j < combos.length; j++) {
+        combo = combos[j];
+        for(var i:int = 0; i < combo.length; i++) {
+          initPointHUD(combo[i], '+5', 0xffff0000, 1.5, 2); 
+          _score += 5;
+          _snake.body.remove(combo[i], true);
+        }
       }
+    }
+
+    /**
+     * A generic helper function for grouping arrays.
+     * You need to write a group function that takes two arguments:
+     * - The current array
+     * - The new element
+     * The function then has to return true if the new element
+     * belongs into the current array and false if it belongs
+     * in a new one.
+     */
+    protected function groupArray(group:Function, arr:Array):Array {
+      if(arr.length == 0) {
+        return [[]];
+      }
+      
+      FlxG.log(arr.length);
+      for(var i:int = 0; i < arr.length; i++)
+        FlxG.log((arr[i] as Egg).type);
+
+      var groups:Array = [[arr[0]]];
+      for(var j:int = 1; j < arr.length; j++){
+        var el:Object = arr[j];
+        var currArr:Array = groups[groups.length - 1];
+        if(group(currArr, el)) {
+          currArr.push(el);
+        } else {
+          groups.push([el]);
+        }
+      }
+      for(var k:int = 0; k < groups.length; k++)
+        FlxG.log(groups[k]);
+      return groups;
+    }
+    
+    /**
+     * This has to be overridden in your level to actually check any combos.
+     * It should check for all possible combos and return them in an array
+     * of arrays.
+     */
+    protected function checkCombos(arr:Array):Array {
+      return [[]];
     }
 
     protected function spawnFood():void {
