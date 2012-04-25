@@ -144,9 +144,11 @@ package {
         levelOver();
       }
 
-      // This has to be done here. Could be optimized to
-      // only run in eat().
-      doCombos();
+      // This has to be done once after the snake ate something.
+      if(_snake.justAte) {
+        FlxG.log("checking for combos...");
+        doCombos();
+      }
 
       updateHud();
     }
@@ -184,12 +186,11 @@ package {
       _score += points;
       initPointHUD(egg, egg.points.toString());
       _bonusTimer = 2;
-    
 
     }
     
     /*
-     * Should be overridden if for different scoring.
+     * Should be overridden for different scoring.
      */
     protected function doCombos():void {
       var combos:Array = checkCombos(_snake.body.members.slice(0,_snake.body.length - 1));
@@ -219,10 +220,6 @@ package {
       if(arr.length == 0) {
         return [[]];
       }
-      
-      FlxG.log(arr.length);
-      for(var i:int = 0; i < arr.length; i++)
-        FlxG.log((arr[i] as Egg).type);
 
       var groups:Array = [[arr[0]]];
       for(var j:int = 1; j < arr.length; j++){
@@ -234,8 +231,6 @@ package {
           groups.push([el]);
         }
       }
-      for(var k:int = 0; k < groups.length; k++)
-        FlxG.log(groups[k]);
       return groups;
     }
     

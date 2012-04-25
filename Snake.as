@@ -19,6 +19,7 @@ package {
     private var _tailCam:FlxCamera;
     private var _nextPos:FlxPoint = null;
     private var _bling:FlxSound = new FlxSound;    
+    private var _justAte:Boolean = false;
     
     public function Snake(movesPerSecond:Number = 1) { 
       super();
@@ -54,6 +55,15 @@ package {
 
     public function set nextPos(pos:FlxPoint):void {
       _nextPos = pos;
+    }
+
+    public function get justAte():Boolean {
+      if(_justAte){
+        _justAte = false;
+        return true;
+      } else {
+        return false;
+      }
     }
 
     public function checkCombos():Array {
@@ -194,6 +204,7 @@ package {
         _body.add(_tail);
         _tailCam.follow(_newPart);
         _newPart = null;
+        _justAte = true;
       }  
 
       for(var i:int = _body.members.length - 1 ; i >= 0; i--){
