@@ -38,5 +38,22 @@ package {
     override protected function updateHud():void {
       _hudText.text = "Score: " + String(_score) + "\n" + "Combos: " + String(_combos);
     }
+
+    override protected function checkCombos(arr:Array):Array {
+      var res:Array;
+
+      var largerThanThree:Function = function(el:Array, i:int, arr:Array):Boolean { 
+        return el.length >= 3;
+      };
+
+      var sameEggType:Function = function(currArr:Array, el:Object):Boolean{
+        return ((currArr[0] as Egg).type == (el as Egg).type)
+      };
+
+      res = groupArray(sameEggType,arr); 
+
+      return res.filter(largerThanThree);
+    }
+
   }
 }
