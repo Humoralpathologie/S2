@@ -161,12 +161,11 @@ package {
       _score += points;
       initPointHUD(egg, egg.points.toString());
       _bonusTimer = 2;
-    
 
     }
     
     /*
-     * Should be overridden if for different scoring.
+     * Should be overridden for different scoring.
      */
     protected function doCombos():void {
       var combos:Array = checkCombos(_snake.body.members.slice(0,_snake.body.length - 1));
