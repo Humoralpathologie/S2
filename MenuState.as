@@ -39,12 +39,14 @@ package {
     private function apiHasLoaded():void
     {
       FlxKongregate.connect();
-      _playButton = new FlxButton(FlxG.width/2-40, 300, 'Play Snake!', switchToPlayState); 
+      _playButton = new FlxButton(FlxG.width/2-40, 300, 'Play Snake!', switchToState(PlayState)); 
+      add(_playButton);
+      _playButton = new FlxButton(FlxG.width/2-40, 340, 'Level 2', switchToState(Level2)); 
       add(_playButton);
     }
 
-    private function switchToPlayState():void {
-      FlxG.switchState(new PlayState);
+    private function switchToState(state:Class):Function {
+      return function():void{FlxG.switchState(new state)};
     }
 
     override public function destroy():void {

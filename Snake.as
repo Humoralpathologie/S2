@@ -16,6 +16,8 @@ package {
     private var _lives:int = 3;
     private var _previousFacing:uint = FlxObject.RIGHT;
     private var _tailCam:FlxCamera;
+    private var _nextPos:FlxPoint = null;
+    private var _justAte:Boolean = false;
     
     public function Snake(movesPerSecond:Number = 1) { 
       super();
@@ -46,6 +48,19 @@ package {
 
     public function get tailCam():FlxCamera {
       return _tailCam;
+    }
+
+    public function set nextPos(pos:FlxPoint):void {
+      _nextPos = pos;
+    }
+
+    public function get justAte():Boolean {
+      if(_justAte){
+        _justAte = false;
+        return true;
+      } else {
+        return false;
+      }
     }
 
     public function checkCombos():Array {
@@ -150,6 +165,7 @@ package {
           _tail = part;
         } else {
           part = new Egg(i % 3, _head.x - (i * 15), _head.y);
+          (part as Egg).eat();
         }
         part.facing = FlxObject.RIGHT;
         group.add(part);
@@ -177,12 +193,14 @@ package {
     private function move():void {
       _previousFacing = _head.facing;
       if(_newPart){ 
+        (_newPart as Egg).eat();
         var swap:FlxSprite;
         _body.remove(_tail);
         _body.add(_newPart);
         _body.add(_tail);
         _tailCam.follow(_newPart);
         _newPart = null;
+        _justAte = true;
       }  
 
       for(var i:int = _body.members.length - 1 ; i >= 0; i--){
@@ -234,8 +252,14 @@ package {
           break;
       }
 
-      _head.x += xSpeed;
-      _head.y += ySpeed;
+      if(_nextPos) {
+        _head.x = _nextPos.x;
+        _head.y = _nextPos.y;
+        _nextPos = null;
+      } else {
+        _head.x += xSpeed;
+        _head.y += ySpeed;
+      }
 
     }
 
@@ -248,28 +272,39 @@ package {
 
       if(FlxG.keys.UP && _previousFacing != FlxObject.DOWN){
         _head.facing = FlxObject.UP;
-        _head.offset.x = 4;
-        _head.offset.y = 15;
-        _head.play('up');
       } else
       if(FlxG.keys.DOWN && _previousFacing != FlxObject.UP){
         _head.facing = FlxObject.DOWN;
-        _head.offset.x = 4;
-        _head.offset.y = 0;
-        _head.play('down');
       } else 
       if(FlxG.keys.RIGHT && _previousFacing != FlxObject.LEFT){
         _head.facing = FlxObject.RIGHT;
-        _head.offset.x = 0;
-        _head.offset.y = 15;
-        _head.play('right');
       } else 
       if(FlxG.keys.LEFT && _previousFacing != FlxObject.RIGHT){
         _head.facing = FlxObject.LEFT;
-        _head.offset.x = 15;
-        _head.offset.y = 15;
-        _head.play('left');
       } 
+
+      switch(_head.facing) {
+        case FlxObject.UP:
+          _head.offset.x = 4;
+          _head.offset.y = 15;
+          _head.play('up');
+          break;
+        case FlxObject.DOWN: 
+          _head.offset.x = 4;
+          _head.offset.y = 0;
+          _head.play('down');
+          break;
+        case FlxObject.RIGHT:
+          _head.offset.x = 0;
+          _head.offset.y = 15;
+          _head.play('right');
+          break;
+        case FlxObject.LEFT:
+          _head.offset.x = 15;
+          _head.offset.y = 15;
+          _head.play('left');
+          break;
+      }
 
       _timer += FlxG.elapsed;
       if(_timer >= _speed){
