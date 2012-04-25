@@ -39,9 +39,6 @@ package {
       _snake = new Snake(8);
       _food = new FlxGroup();
 
-      _hud = new FlxText(32,32,600,'0');
-      _hud.size = 16;
-
       _bonusBar = new FlxSprite(450,32);
       _bonusBar.makeGraphic(1,8,0xffff0000);
       _bonusBar.origin.x = _bonusBar.origin.y = 0;
@@ -168,6 +165,8 @@ package {
         initPointHUD(combo[i], '+5', 0xffff0000, 1.5, 2); 
         _score += 5;
       }
+      
+      FlxG.score = _score;
     }
 
     protected function spawnFood():void {
@@ -176,7 +175,12 @@ package {
     
     protected function reallySpawnFood(n:int):void {
       var egg:Egg = new Egg(Math.floor(Math.random() * n));
+      spawnEgg(egg);
+      _food.add(egg);
 
+    }
+
+    protected function spawnEgg(egg:Egg):void {
       var wTiles:int = FlxG.width / 15;
       var hTiles:int = FlxG.height / 15;
       wTiles -= 2; // Left and right;
@@ -185,7 +189,6 @@ package {
         egg.x = int(1 + (Math.random() * wTiles)) * 15;
         egg.y = int(6 + (Math.random() * hTiles)) * 15;
       } while(egg.overlaps(_unspawnable));
-      _food.add(egg);
 
     }
     

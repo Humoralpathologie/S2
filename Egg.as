@@ -6,18 +6,20 @@ package {
     [Embed(source='assets/images/eggA.png')] protected static var EatenEggA:Class;
     [Embed(source='assets/images/eggB.png')] protected static var EatenEggB:Class;
     [Embed(source='assets/images/eggC.png')] protected static var EatenEggC:Class;
+    [Embed(source='assets/images/eggBlank.png')] protected static var EatenEggBlanc:Class;
+
     [Embed(source='assets/images/egg-tilemap.png')] protected static var EggA:Class;
     [Embed(source='assets/images/egg02-tilemap.png')] protected static var EggB:Class;
-    [Embed(source='assets/images/egg03-tilemap.png')] protected static var EggC:Class;
+    [Embed(source='assets/images/egg03-tilemap.png')] protected static var EggBlanc:Class;
     [Embed(source='assets/images/shell.png')] protected static var ShellB:Class;
 
-    private static var eatenGraphics:Array = [EatenEggA, EatenEggB, EatenEggC];
-    private static var eggGraphics:Array = [EggA, EggB, EggC]
-    private static var shellGraphics:Array = [ShellB, ShellB, ShellB];
+    protected static var eatenGraphics:Array = [EatenEggBlanc, EatenEggA, EatenEggB, EatenEggC];
+    protected static var eggGraphics:Array = [EggBlanc, EggA, EggB]
+    protected static var shellGraphics:Array = [ShellB, ShellB, ShellB];
    
-    private var _points:int;
-    private var _eggType:int;
-    private var _shells:FlxEmitter;
+    protected var _points:int;
+    protected var _eggType:int;
+    protected var _shells:FlxEmitter;
     
     public function Egg(eggType:int = 0, x:int = 0, y:int = 0 ){
       super(x, y);
