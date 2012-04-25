@@ -39,12 +39,9 @@ package {
       _snake = new Snake(8);
       _food = new FlxGroup();
 
-<<<<<<< HEAD
       _hud = new FlxText(32,32,600,'0');
       _hud.size = 16;
 
-=======
->>>>>>> ad0d988b45b7e98e601957f16bc33986ac23a8c7
       _bonusBar = new FlxSprite(450,32);
       _bonusBar.makeGraphic(1,8,0xffff0000);
       _bonusBar.origin.x = _bonusBar.origin.y = 0;
