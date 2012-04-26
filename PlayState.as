@@ -17,8 +17,6 @@ package {
     private var _bonusTimer:Number = 0;
     private var _bonusTimerPoints:Number = 0;
     private var _bonusBar:FlxSprite;
-    private var _portal1:Portal;  
-    private var _portal2:Portal;  
       
     override public function create():void {
 
@@ -43,14 +41,7 @@ package {
       _bonusBar.origin.x = _bonusBar.origin.y = 0;
       _bonusBar.scale.x = 0;
 
-      _portal1 = new Portal(20, 10, 1);
-      _portal1.play('twinkle');
-      _portal2 = new Portal(25, 25, 2);
-      _portal2.play('twinkle');
-
       add(_background);
-      add(_portal1);
-      add(_portal2);
       add(_food);
       add(_snake);
       add(_snake.tailCam);
@@ -61,16 +52,6 @@ package {
       
     }
 
-    private function hitPortal():void {
-      if (_snake.head.overlaps(_portal1) && !_portal1.inUse) {
-        _portal1.teleport(_snake, _portal2);
-        _portal2.inUse = true;
-      }
-      if (_snake.head.overlaps(_portal2) && !_portal2.inUse) {
-        _portal2.teleport(_snake, _portal1);
-        _portal1.inUse = true;
-      }
-    }
 
     private function updateHud():void {
       _hud.text = "Hi, " + FlxKongregate.getUserName +"! Score: " + String(_score) + "\nLives: " + String(_snake.lives);
@@ -94,11 +75,6 @@ package {
       
       updateHud();
 
-      hitPortal();
-      if (!_snake.head.overlaps(_portal1) && !_snake.head.overlaps(_portal2)) {
-        _portal1.inUse = false;
-        _portal2.inUse = false;
-      }
 
       if(_bonusTimer > 0) {
         _bonusBar.scale.x = (_bonusTimer / 2) * 25;

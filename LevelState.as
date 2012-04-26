@@ -3,11 +3,19 @@ package {
   import org.flixel.plugin.photonstorm.API.FlxKongregate;
   
   public class LevelState extends FlxState {
+    [Embed(source='assets/SnakeSounds/schluck2tiefer.mp3')] protected var BiteSound:Class;
+    [Embed(source='assets/SnakeSounds/bup.mp3')] protected var Bup:Class;
+    
   
+    protected var _biteSound:FlxSound;
+    protected var _bup:FlxSound;
+
     protected var _snake:Snake;
     protected var _food:FlxGroup;
     protected var _pointHud:Tween;
     protected var _score:int;
+    protected var _map:FlxTilemap;
+    protected var _level:FlxGroup;
     protected var _bonusTimer:Number = 0;
     protected var _bonusTimerPoints:Number = 0;
     protected var _bonusBar:FlxSprite;
@@ -15,11 +23,18 @@ package {
     protected var _unspawnable:FlxGroup;
     protected var _currentCombos:Array;
     protected var _comboTimer:Number = 0;
+    protected var _combos:int = 0;
       
     override public function create():void {
 
       FlxG.log("Starting game");
+     
+      _bup = new FlxSound;
+      _bup.loadEmbedded(Bup);
 
+      _biteSound = new FlxSound;
+      _biteSound.loadEmbedded(BiteSound);
+      
       FlxG.mouse.hide();
 
       _score = 0;
@@ -32,6 +47,9 @@ package {
       _bonusBar.origin.x = _bonusBar.origin.y = 0;
       _bonusBar.scale.x = 0;
 
+      
+      add(_bup);
+      add(_biteSound);
       _obstacles = new FlxGroup();
 
       addBackgrounds();
@@ -72,6 +90,9 @@ package {
       FlxG.score = _score;
       FlxG.switchState(new GameOver);
     }
+    
+    protected function switchLevel():void {
+    }
 
     protected function updateTimers():void {
       _bonusTimer -= FlxG.elapsed;
@@ -88,6 +109,7 @@ package {
 
       _bonusBar.x = _snake.head.x - 5;
       _bonusBar.y = _snake.head.y - 24;
+
     }
 
     protected function collideFood():void {
@@ -115,6 +137,8 @@ package {
     override public function update():void {
       super.update();
 
+      checkWinConditions();      
+
       updateTimers();
       updateBonusBar();
       
@@ -131,14 +155,20 @@ package {
       updateHud();
     }
 
-    protected function initPointHUD(egg:Egg, points:String, Color:uint = 0xffffffff, Delay:Number = 0.5, Speed:int = 1):void { 
+    protected function checkWinConditions():void {
+
+    }
+
+    protected function showPoints(egg:FlxSprite, points:String, Color:uint = 0xffffffff, Delay:Number = 0.5, Speed:int = 1):void { 
       _pointHud = new Tween(Delay, 20, egg.x, egg.y, 40, Color, points, Speed); 
       add(_pointHud);  
     } 
 
+
     protected function eat(snakeHead:FlxSprite, egg:Egg):void {
       FlxG.log("Eating at " + snakeHead.x + ", " + snakeHead.y);
       spawnFood();
+      _biteSound.play();
 
       // TODO: This allocates too many objects. Think about how to reduce this.
       var shells:FlxEmitter = egg.shells;
@@ -149,18 +179,18 @@ package {
 
       _food.remove(egg, true);
       
-      _snake.faster();
       _snake.swallow(egg);
       points += egg.points;
-
+     
+        
       if(_bonusTimer > 0) {
         _bonusTimerPoints += 2;
-        initPointHUD(egg, '+' + String(_bonusTimerPoints), 0xffedf249, 1.5, 2); 
+        showPoints(egg, '+' + String(_bonusTimerPoints), 0xffedf249, 1.5, 2); 
         _score += _bonusTimerPoints;
       }
 
       _score += points;
-      initPointHUD(egg, egg.points.toString());
+      showPoints(egg, egg.points.toString());
       _bonusTimer = 2;
 
     }
@@ -174,8 +204,9 @@ package {
       if(_currentCombos && _comboTimer <= 0) {
         for(j = 0; j < _currentCombos.length; j++) {
           combo = _currentCombos[j];
+          _combos += 1;
           for(i = 0; i < combo.length; i++) {
-            initPointHUD(combo[i], '+5', 0xffff0000, 1.5, 2); 
+            showPoints(combo[i], '+5', 0xffff0000, 1.5, 2); 
             _score += 5;
             _snake.body.remove(combo[i], true);
           }
@@ -194,6 +225,8 @@ package {
         }
         _comboTimer = 2;
       }
+      
+      FlxG.score = _score;
     }
 
     /**
@@ -238,7 +271,12 @@ package {
     
     protected function reallySpawnFood(n:int):void {
       var egg:Egg = new Egg(Math.floor(Math.random() * n));
+      spawnEgg(egg);
+      _food.add(egg);
 
+    }
+
+    protected function spawnEgg(egg:Egg):void {
       var wTiles:int = FlxG.width / 15;
       var hTiles:int = FlxG.height / 15;
       wTiles -= 2; // Left and right;
@@ -247,7 +285,6 @@ package {
         egg.x = int(1 + (Math.random() * wTiles)) * 15;
         egg.y = int(6 + (Math.random() * hTiles)) * 15;
       } while(egg.overlaps(_unspawnable));
-      _food.add(egg);
 
     }
     

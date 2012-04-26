@@ -6,10 +6,14 @@ package {
   
   public class MenuState extends FlxState {
 
+    [Embed(source='assets/SnakeSounds/SuperSnakeLoop.mp3')] protected var Music:Class;
+    
+    private var _sound:FlxSound;
     private var _snakeTitleFX:SineWaveFX;
     private var _snakeTitleText:FlxText;
     private var _snakeTitleSprite:FlxSprite;
     private var _playButton:FlxButton;
+    private var _playLevel:FlxButton;    
 
     override public function create():void {
 
@@ -28,25 +32,40 @@ package {
 
       _snakeTitleFX.start();
 
+      _sound = new FlxSound;
+      _sound.loadEmbedded(Music, true);
+      
+      add(_sound);
       add(_snakeTitleSprite);
 
       FlxKongregate.init(apiHasLoaded);
-
+      _sound.fadeIn(5);
       FlxG.mouse.show();
+      
+    }
+
+    private function makeButtons():void{
       
     }
 
     private function apiHasLoaded():void
     {
       FlxKongregate.connect();
-      _playButton = new FlxButton(FlxG.width/2-40, 300, 'Play Snake!', switchToState(PlayState)); 
+      _playButton = new FlxButton(FlxG.width/2-40, 300, 'Play Snake!', switchToState(PlayState, 'PlayState', 'None', 'None')); 
+      _playLevel = new FlxButton(FlxG.width/2-40, 300 + 20, 'Portal!', switchToState(LevelState, 'Portal', 'None', 'None')); 
+      var _level1:FlxButton;
+      _level1 = new FlxButton(FlxG.width/2-40, 320 + 20, 'Level 1', switchToState(Level1, 'Crossroads of Carnage', 'Devour 100 Eggs', 'None'));
+      add(_level1);
       add(_playButton);
-      _playButton = new FlxButton(FlxG.width/2-40, 340, 'Level 2', switchToState(Level2)); 
-      add(_playButton);
+      add(_playLevel);
     }
 
-    private function switchToState(state:Class):Function {
-      return function():void{FlxG.switchState(new state)};
+    private function switchToState(state:Class, title:String, objective:String, timeLimit:String):Function {
+      return function ():void {
+        var levelDescr:LevelDescription = new LevelDescription();
+        levelDescr.initial(state, title, objective, timeLimit);
+        FlxG.switchState(levelDescr);
+      }
     }
 
     override public function destroy():void {
