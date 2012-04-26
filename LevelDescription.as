@@ -13,7 +13,8 @@ package {
     private var _back:FlxButton;
     private var _clickSound:FlxSound;
    
-    public function initial(levelState:Class, Title:String, Objective:String, TimeLimit:String):void {
+    public function LevelDescription(levelState:Class, Title:String, Objective:String, TimeLimit:String) {
+      super();
       _LevelState = levelState;
       
       _middleX = FlxG.width / 2 - 300;      
@@ -53,8 +54,5 @@ package {
     private function switchToState(state:Class):Function {
       return function ():void {FlxG.switchState(new state);}
     }
-    
-
-
   }
 }

@@ -53,6 +53,10 @@ package {
       return _tailCam;
     }
 
+    public function get mps():Number {
+      return 1 / _speed; 
+    }
+
     public function set nextPos(pos:FlxPoint):void {
       _nextPos = pos;
     }
@@ -66,56 +70,12 @@ package {
       }
     }
 
-    public function checkCombos():Array {
-      var combos:Array = [[_body.members[0]]];
-      var currentType:int = 0;
-      for(var j:int = 1; j < _body.length - 1; j++){
-        var egg:Egg = (_body.members[j] as Egg);
-        var currArr:Array = combos[combos.length - 1];
-        if(egg.type == currArr[0].type) {
-          currArr.push(egg);
-        } else {
-          combos.push([egg]);
-        }
-      }
-  
-      var largerThanThree:Function = function(el:Array, i:int, arr:Array):Boolean { 
-        return el.length >= 3;
-      };
-
-      combos = combos.filter(largerThanThree);
-      return combos;
-    }
-
     private function tailEgg():Egg {
       if(_body.length >= 2){
         return _body.members[_body.length - 2];
       } else {
         return null;
       }
-    }
-
-    // Checks for combos, removes the comboed eggs from the body and returns an array of them.
-    // Could be a lot nicer.
-    public function doCombos(egg:Egg):Array {
-      var combos:Array = checkCombos();
-      var currentCombo:Array
-      if(combos.length >= 1){
-        currentCombo = combos[combos.length - 1];
-        if(currentCombo[0].type == egg.type){
-          // Remove nothing, wait for next
-          currentCombo = [];
-        } else {
-          // Remove the combo
-          _bling.play();
-          for(var i:int = 0; i < currentCombo.length; i++){
-            _body.remove(currentCombo[i], true);
-          }
-        }
-      } else {
-        currentCombo = [];
-      }
-      return currentCombo;
     }
 
     public function die():void {
