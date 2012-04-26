@@ -34,7 +34,7 @@ package {
       add(_hudText);
     }
 
-    override protected function checkWinCondition() {
+    override protected function checkWinConditions():void {
       if(_combos >= 30) {
         
       }
