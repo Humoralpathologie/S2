@@ -21,6 +21,8 @@ package {
     protected var _bonusBar:FlxSprite;
     protected var _obstacles:FlxGroup;
     protected var _unspawnable:FlxGroup;
+    protected var _currentCombos:Array;
+    protected var _comboTimer:Number = 0;
       
     override public function create():void {
 
@@ -93,6 +95,7 @@ package {
 
     protected function updateTimers():void {
       _bonusTimer -= FlxG.elapsed;
+      _comboTimer -= FlxG.elapsed;
     }
 
     protected function updateBonusBar():void {
@@ -144,11 +147,7 @@ package {
         levelOver();
       }
 
-      // This has to be done once after the snake ate something.
-      if(_snake.justAte) {
-        FlxG.log("checking for combos...");
-        doCombos();
-      }
+      doCombos();
 
       updateHud();
     }
@@ -193,15 +192,30 @@ package {
      * Should be overridden for different scoring.
      */
     protected function doCombos():void {
-      var combos:Array = checkCombos(_snake.body.members.slice(0,_snake.body.length - 1));
       var combo:Array;
-      for(var j:int = 0; j < combos.length; j++) {
-        combo = combos[j];
-        for(var i:int = 0; i < combo.length; i++) {
-          initPointHUD(combo[i], '+5', 0xffff0000, 1.5, 2); 
-          _score += 5;
-          _snake.body.remove(combo[i], true);
+      var j:int, i:int;
+      if(_currentCombos && _comboTimer <= 0) {
+        for(j = 0; j < _currentCombos.length; j++) {
+          combo = _currentCombos[j];
+          for(i = 0; i < combo.length; i++) {
+            initPointHUD(combo[i], '+5', 0xffff0000, 1.5, 2); 
+            _score += 5;
+            _snake.body.remove(combo[i], true);
+          }
         }
+        _currentCombos = null;
+      }
+      if(_snake.justAte) {
+        FlxG.log("checking for combos...");
+        var combos:Array = checkCombos(_snake.body.members.slice(0,_snake.body.length - 1));
+        _currentCombos = combos;
+        for(j = 0; j < _currentCombos.length; j++) {
+          combo = _currentCombos[j];
+          for(i = 0; i < combo.length; i++) {
+            combo[i].flicker(2);
+          }
+        }
+        _comboTimer = 2;
       }
       
       FlxG.score = _score;
@@ -218,7 +232,7 @@ package {
      */
     protected function groupArray(group:Function, arr:Array):Array {
       if(arr.length == 0) {
-        return [[]];
+        return [];
       }
 
       var groups:Array = [[arr[0]]];
@@ -240,7 +254,7 @@ package {
      * of arrays.
      */
     protected function checkCombos(arr:Array):Array {
-      return [[]];
+      return [];
     }
 
     protected function spawnFood():void {
