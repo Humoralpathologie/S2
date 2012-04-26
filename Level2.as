@@ -6,7 +6,6 @@ package {
     [Embed(source='assets/images/level02bg.jpg')] protected var Background:Class;
     // Variablen
     protected var _background:FlxSprite = null;
-    protected var _combos:int = 0;
     protected var _hudText:FlxText;
 
     override protected function addBackgrounds():void {
@@ -33,6 +32,12 @@ package {
       _hudText = new FlxText(15,15, 640 - 60, "Nothing yet...");
       _hudText.size = 16;
       add(_hudText);
+    }
+
+    override protected function checkWinCondition() {
+      if(_combos >= 30) {
+        
+      }
     }
 
     override protected function updateHud():void {

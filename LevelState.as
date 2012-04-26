@@ -15,6 +15,7 @@ package {
     protected var _unspawnable:FlxGroup;
     protected var _currentCombos:Array;
     protected var _comboTimer:Number = 0;
+    protected var _combos:int = 0;
       
     override public function create():void {
 
@@ -115,6 +116,8 @@ package {
     override public function update():void {
       super.update();
 
+      checkWinConditions();      
+
       updateTimers();
       updateBonusBar();
       
@@ -131,7 +134,11 @@ package {
       updateHud();
     }
 
-    protected function initPointHUD(egg:Egg, points:String, Color:uint = 0xffffffff, Delay:Number = 0.5, Speed:int = 1):void { 
+    protected function checkWinConditions():void {
+
+    }
+
+    protected function showPoints(egg:FlxSprite, points:String, Color:uint = 0xffffffff, Delay:Number = 0.5, Speed:int = 1):void { 
       _pointHud = new Tween(Delay, 20, egg.x, egg.y, 40, Color, points, Speed); 
       add(_pointHud);  
     } 
@@ -155,12 +162,12 @@ package {
 
       if(_bonusTimer > 0) {
         _bonusTimerPoints += 2;
-        initPointHUD(egg, '+' + String(_bonusTimerPoints), 0xffedf249, 1.5, 2); 
+        showPoints(egg, '+' + String(_bonusTimerPoints), 0xffedf249, 1.5, 2); 
         _score += _bonusTimerPoints;
       }
 
       _score += points;
-      initPointHUD(egg, egg.points.toString());
+      showPoints(egg, egg.points.toString());
       _bonusTimer = 2;
 
     }
@@ -174,8 +181,9 @@ package {
       if(_currentCombos && _comboTimer <= 0) {
         for(j = 0; j < _currentCombos.length; j++) {
           combo = _currentCombos[j];
+          _combos += 1;
           for(i = 0; i < combo.length; i++) {
-            initPointHUD(combo[i], '+5', 0xffff0000, 1.5, 2); 
+            showPoints(combo[i], '+5', 0xffff0000, 1.5, 2); 
             _score += 5;
             _snake.body.remove(combo[i], true);
           }
