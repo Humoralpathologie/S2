@@ -6,7 +6,6 @@ package {
     [Embed(source='assets/images/level02bg.jpg')] protected var Background:Class;
     // Variablen
     protected var _background:FlxSprite = null;
-    protected var _combos:int = 0;
     protected var _hudText:FlxText;
 
     override protected function addBackgrounds():void {
@@ -35,6 +34,12 @@ package {
       add(_hudText);
     }
 
+    override protected function checkWinConditions():void {
+      if(_combos >= 30) {
+            
+      }
+    }
+
     override protected function updateHud():void {
       _hudText.text = "Score: " + String(_score) + "\n" + "Combos: " + String(_combos);
     }
@@ -45,9 +50,9 @@ package {
       var largerThanThree:Function = function(el:Array, i:int, arr:Array):Boolean { 
         return el.length >= 3;
       };
-
+      
       var sameEggType:Function = function(currArr:Array, el:Object):Boolean{
-        return ((currArr[0] as Egg).type == (el as Egg).type)
+        return ((currArr[0] as Egg).type == (el as Egg).type) && ((currArr[0] as Egg).type == 1);
       };
 
       res = groupArray(sameEggType,arr); 

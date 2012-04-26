@@ -30,7 +30,8 @@ package {
       add(_obstacles);
     }
     
-    private function updateTimer():void {
+    override protected function updateTimers():void {
+      super.updateTimers();
       _timerSec += FlxG.elapsed;
       if (_timerSec >= 60) {
         _timerMin += 1;
@@ -67,15 +68,12 @@ package {
       _hudText.text = "Score: " + String(FlxG.score);
       _hudText.text += "\nDevoured Eggs: " + String(_eggAmount) + "/70";
       _hudText.text += "\nTimer: " + _timerHud;
+      _hudText.text += "\nSpeed: " + _snake.mps;
     }
     
     override protected function eat(snakeHead:FlxSprite, egg:Egg):void {
       super.eat(snakeHead, egg);
       _eggAmount++;
-
-      if (_eggAmount > 0 && _eggAmount % 4 == 0) {
-        _snake.faster();
-      }
     }
 
     override protected function switchLevel():void {
@@ -111,10 +109,6 @@ package {
         return el.length >= 3;
       };
       
-      var isBlanc:Function = function(el:Egg):Boolean {
-        return el.type == 0;
-      };
-      
       var sameEggType:Function = function(currArr:Array, el:Object):Boolean{
         return ((currArr[0] as Egg).type == (el as Egg).type) && ((currArr[0] as Egg).type == 1);
       };
@@ -124,16 +118,10 @@ package {
       return res.filter(largerThanThree);
     }
 
-    override public function update():void {
-      updateTimer();
-      super.update();
-      
-      if (_eggAmount >= 70) {  
+    override protected function checkWinConditions():void {
+      if(_eggAmount >= 70) {
         switchLevel();
       }
-
-    } 
-
-
+    }
   }
 }
