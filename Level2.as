@@ -36,7 +36,7 @@ package {
 
     override protected function checkWinConditions():void {
       if(_combos >= 30) {
-        
+            
       }
     }
 
@@ -50,9 +50,9 @@ package {
       var largerThanThree:Function = function(el:Array, i:int, arr:Array):Boolean { 
         return el.length >= 3;
       };
-
+      
       var sameEggType:Function = function(currArr:Array, el:Object):Boolean{
-        return ((currArr[0] as Egg).type == (el as Egg).type)
+        return ((currArr[0] as Egg).type == (el as Egg).type) && ((currArr[0] as Egg).type == 1);
       };
 
       res = groupArray(sameEggType,arr); 
