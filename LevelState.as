@@ -198,7 +198,7 @@ package {
         for(j = 0; j < _currentCombos.length; j++) {
           combo = _currentCombos[j];
           for(i = 0; i < combo.length; i++) {
-            initPointHUD(combo[i], '+5', 0xffff0000, 1.5, 2); 
+            initPointHUD(combo[i], '+5', 0xff00ff44, 1.5, 2); 
             _score += 5;
             _snake.body.remove(combo[i], true);
           }
