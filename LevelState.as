@@ -86,13 +86,13 @@ package {
       }
     }
 
+    //to override in each level along with switchLevel()
     protected function levelOver():void {
-      FlxG.score = _score;
-      FlxG.switchState(new GameOver);
     }
     
     protected function switchLevel():void {
     }
+
 
     protected function updateTimers():void {
       _bonusTimer -= FlxG.elapsed;

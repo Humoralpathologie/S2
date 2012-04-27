@@ -13,6 +13,9 @@ package {
     private var _timerMin:Number = 0;    
     private var _timerHud:String;
 
+    private var _storyBeat:String = "Little Snake bemerkt, dass sie bei Verdrücken von drei Eiern des Typ A nicht nur kürzer, sondern auch schlauer wird.";
+    private var _switchLevel:SwitchLevel;
+
     override protected function addBackgrounds():void {
       _background = new FlxSprite(0,0);
       _background.loadGraphic(Background);
@@ -66,7 +69,7 @@ package {
     }
     override protected function updateHud():void {
       _hudText.text = "Score: " + String(FlxG.score);
-      _hudText.text += "\nDevoured Eggs: " + String(_eggAmount) + "/70";
+      _hudText.text += "\nDevoured Eggs: " + String(_eggAmount) + "/50";
       _hudText.text += "\nTimer: " + _timerHud;
       _hudText.text += "\nSpeed: " + _snake.mps;
     }
@@ -78,12 +81,16 @@ package {
 
     override protected function switchLevel():void {
       FlxG.score = _score;
-      var _text:String = "Little Snake bemerkt, dass sie bei Verdrücken von drei Eiern des Typ A nicht nur kürzer, sondern auch schlauer wird.";
-      var _switchLevel:SwitchLevel = new SwitchLevel;
-      _switchLevel.initStory(_text);
-      _switchLevel.initReset(Level1);
-      _switchLevel.initPlayNext(Level2);      
+      _switchLevel = new SwitchLevel(_storyBeat, Level1, Level2, _timerHud);
       FlxG.switchState(_switchLevel);
+    }
+
+    override protected function levelOver():void {
+      FlxG.score = _score;
+      _switchLevel = new SwitchLevel(_storyBeat, Level1, Level2, _timerHud);
+      _switchLevel.gameOver();
+      FlxG.switchState(_switchLevel);
+      
     }
 
     override protected function spawnFood():void {
@@ -119,7 +126,7 @@ package {
     }
 
     override protected function checkWinConditions():void {
-      if(_eggAmount >= 70) {
+      if(_eggAmount >= 50) {
         switchLevel();
       }
     }

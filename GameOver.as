@@ -3,8 +3,17 @@ package {
   import org.flixel.plugin.photonstorm.API.FlxKongregate;
 
   public class GameOver extends FlxState {
-    protected var _scoreText:FlxText;
-    protected var _resetButton:FlxButton;
+    private var _scoreText:FlxText;
+    private var _resetButton:FlxButton;
+
+    
+    public function GameOver(replayState:Class) {
+
+
+
+
+
+    }
 
     override public function create():void {
 
