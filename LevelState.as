@@ -109,7 +109,6 @@ package {
 
       _bonusBar.x = _snake.head.x - 5;
       _bonusBar.y = _snake.head.y - 24;
-
     }
 
     protected function collideFood():void {
@@ -211,16 +210,19 @@ package {
             _snake.body.remove(combo[i], true);
           }
         }
+        _snake.faster();
         _currentCombos = null;
       }
       if(_snake.justAte) {
         FlxG.log("checking for combos...");
         var combos:Array = checkCombos(_snake.body.members.slice(0,_snake.body.length - 1));
-        _currentCombos = combos;
-        for(j = 0; j < _currentCombos.length; j++) {
-          combo = _currentCombos[j];
-          for(i = 0; i < combo.length; i++) {
-            combo[i].flicker(2);
+        if(combos.length > 0) {
+          _currentCombos = combos;
+          for(j = 0; j < _currentCombos.length; j++) {
+            combo = _currentCombos[j];
+            for(i = 0; i < combo.length; i++) {
+              combo[i].flicker(2);
+            }
           }
         }
         _comboTimer = 2;
@@ -273,7 +275,6 @@ package {
       var egg:Egg = new Egg(Math.floor(Math.random() * n));
       spawnEgg(egg);
       _food.add(egg);
-
     }
 
     protected function spawnEgg(egg:Egg):void {

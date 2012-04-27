@@ -21,7 +21,5 @@ package {
       add(_playNextLevel);
     }
 
-
-
   }
 }
