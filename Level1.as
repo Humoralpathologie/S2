@@ -8,7 +8,6 @@ package {
     private var _background:FlxSprite = null;
     
     private var _hudText:FlxText; 
-    private var _eggAmount:int = 0;
 
     private var _storyBeat:String = "Little Snake bemerkt, dass sie bei Verdrücken von drei Eiern des Typ A nicht nur kürzer, sondern auch schlauer wird.";
     private var _switchLevel:SwitchLevel;
@@ -39,11 +38,6 @@ package {
       _hudText.text += "\nDevoured Eggs: " + String(_eggAmount) + "/50";
       _hudText.text += "\nTimer: " + _timerHud;
       _hudText.text += "\nSpeed: " + _snake.mps;
-    }
-    
-    override protected function eat(snakeHead:FlxSprite, egg:Egg):void {
-      super.eat(snakeHead, egg);
-      _eggAmount++;
     }
 
     override protected function switchLevel():void {

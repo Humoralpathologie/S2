@@ -24,6 +24,7 @@ package {
     protected var _currentCombos:Array;
     protected var _comboTimer:Number = 0;
     protected var _combos:int = 0;
+    protected var _eggAmount:int = 0;
 
     protected var _timerSec:Number = 0;
     protected var _timerMin:Number = 0;    
@@ -203,6 +204,7 @@ package {
       // TODO: This allocates too many objects. Think about how to reduce this.
       var shells:FlxEmitter = egg.shells;
       var points:int = 0;
+      _eggAmount++;
       shells.at(snakeHead);
       shells.start(true, 3);
       add(shells);
