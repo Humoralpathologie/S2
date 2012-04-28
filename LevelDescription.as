@@ -4,7 +4,7 @@ package {
   public class LevelDescription extends FlxState {
     [Embed(source='assets/SnakeSounds/mouseclick.mp3')] protected var ClickSound:Class;
     
-    private var _LevelState:Class;
+    private var _LevelState:FlxState;
     private var _title:FlxText;
     private var _objective:FlxText;
     private var _timeLimit:FlxText;
@@ -13,7 +13,7 @@ package {
     private var _back:FlxButton;
     private var _clickSound:FlxSound;
    
-    public function LevelDescription(levelState:Class, Title:String, Objective:String, TimeLimit:String) {
+    public function LevelDescription(levelState:FlxState, Title:String, Objective:String, TimeLimit:String) {
       super();
       _LevelState = levelState;
       
@@ -39,7 +39,7 @@ package {
       _clickSound.loadEmbedded(ClickSound);
       
       _play = new FlxButton(FlxG.width/2 - 40, _timeLimit.y + 40, 'Play ' + Title, switchToState(_LevelState));
-      _back = new FlxButton(FlxG.width/2 - 40, _play.y + 20, 'Back to Menu', switchToState(MenuState));
+      _back = new FlxButton(FlxG.width/2 - 40, _play.y + 20, 'Back to Menu', switchToState(new MenuState));
 
       _play.soundDown = _clickSound;
       _back.soundDown = _clickSound;
@@ -51,8 +51,8 @@ package {
       add(_back);
     } 
 
-    private function switchToState(state:Class):Function {
-      return function ():void {FlxG.switchState(new state);}
+    private function switchToState(state:FlxState):Function {
+      return function ():void {FlxG.switchState(state);}
     }
   }
 }
