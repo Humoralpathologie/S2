@@ -9,9 +9,6 @@ package {
     
     private var _hudText:FlxText; 
     private var _eggAmount:int = 0;
-    private var _timerSec:Number = 0;
-    private var _timerMin:Number = 0;    
-    private var _timerHud:String;
 
     private var _storyBeat:String = "Little Snake bemerkt, dass sie bei Verdrücken von drei Eiern des Typ A nicht nur kürzer, sondern auch schlauer wird.";
     private var _switchLevel:SwitchLevel;
@@ -33,35 +30,6 @@ package {
       add(_obstacles);
     }
     
-    override protected function updateTimers():void {
-      super.updateTimers();
-      _timerSec += FlxG.elapsed;
-      if (_timerSec >= 60) {
-        _timerMin += 1;
-        _timerSec = 0;
-      }
-      _timerHud = convertTimer();
-    }
-    
-    private function convertTimer():String {
-      var _sec:String;
-      var _min:String;
-      
-      if (Math.floor(_timerSec) < 10) {
-        _sec = "0" + String(Math.floor(_timerSec));
-      } else {
-        _sec = String(Math.floor(_timerSec));
-      }
-
-      if (_timerMin < 10) {
-        _min = "0" + String(_timerMin);
-      } else {
-        _min = String(_timerMin);
-      }
-
-      return _min + ":" + _sec;
-    }    
-
     override protected function addHud():void {
       _hudText = new FlxText(15,15, 640 - 60);
       _hudText.size = 16;

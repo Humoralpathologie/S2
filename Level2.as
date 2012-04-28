@@ -42,6 +42,8 @@ package {
 
     override protected function updateHud():void {
       _hudText.text = "Score: " + String(_score) + "\n" + "Combos: " + String(_combos);
+      _hudText.text += "\nTimer: " + _timerHud;
+      _hudText.text += "\nSpeed: " + _snake.mps;
     }
 
     override protected function checkCombos(arr:Array):Array {

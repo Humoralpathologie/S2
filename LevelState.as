@@ -25,6 +25,11 @@ package {
     protected var _comboTimer:Number = 0;
     protected var _combos:int = 0;
       
+
+    protected var _timerSec:Number = 0;
+    protected var _timerMin:Number = 0;    
+    protected var _timerHud:String;
+
     override public function create():void {
 
       FlxG.log("Starting game");
@@ -97,7 +102,34 @@ package {
     protected function updateTimers():void {
       _bonusTimer -= FlxG.elapsed;
       _comboTimer -= FlxG.elapsed;
+
+      //for duration of the play
+      _timerSec += FlxG.elapsed;
+      if (_timerSec >= 60) {
+        _timerMin += 1;
+        _timerSec = 0;
+      }
+      _timerHud = convertTimer();
     }
+
+    protected function convertTimer():String {
+      var _sec:String;
+      var _min:String;
+      
+      if (Math.floor(_timerSec) < 10) {
+        _sec = "0" + String(Math.floor(_timerSec));
+      } else {
+        _sec = String(Math.floor(_timerSec));
+      }
+
+      if (_timerMin < 10) {
+        _min = "0" + String(_timerMin);
+      } else {
+        _min = String(_timerMin);
+      }
+
+      return _min + ":" + _sec;
+    }    
 
     protected function updateBonusBar():void {
       if(_bonusTimer > 0) {
