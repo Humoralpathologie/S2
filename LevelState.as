@@ -24,7 +24,12 @@ package {
     protected var _currentCombos:Array;
     protected var _comboTimer:Number = 0;
     protected var _combos:int = 0;
-      
+    protected var _eggAmount:int = 0;
+
+    protected var _timerSec:Number = 0;
+    protected var _timerMin:Number = 0;    
+    protected var _timerHud:String;
+
     override public function create():void {
 
       FlxG.log("Starting game");
@@ -86,18 +91,45 @@ package {
       }
     }
 
+    //to override in each level along with switchLevel()
     protected function levelOver():void {
-      FlxG.score = _score;
-      FlxG.switchState(new GameOver);
     }
     
     protected function switchLevel():void {
     }
 
+
     protected function updateTimers():void {
       _bonusTimer -= FlxG.elapsed;
       _comboTimer -= FlxG.elapsed;
+
+      //for duration of the play
+      _timerSec += FlxG.elapsed;
+      if (_timerSec >= 60) {
+        _timerMin += 1;
+        _timerSec = 0;
+      }
+      _timerHud = convertTimer();
     }
+
+    protected function convertTimer():String {
+      var _sec:String;
+      var _min:String;
+      
+      if (Math.floor(_timerSec) < 10) {
+        _sec = "0" + String(Math.floor(_timerSec));
+      } else {
+        _sec = String(Math.floor(_timerSec));
+      }
+
+      if (_timerMin < 10) {
+        _min = "0" + String(_timerMin);
+      } else {
+        _min = String(_timerMin);
+      }
+
+      return _min + ":" + _sec;
+    }    
 
     protected function updateBonusBar():void {
       if(_bonusTimer > 0) {
@@ -172,13 +204,16 @@ package {
       // TODO: This allocates too many objects. Think about how to reduce this.
       var shells:FlxEmitter = egg.shells;
       var points:int = 0;
+      _eggAmount++;
       shells.at(snakeHead);
       shells.start(true, 3);
       add(shells);
 
       _food.remove(egg, true);
       
-      _snake.swallow(egg);
+      if(egg.type != Egg.ROTTEN){
+        _snake.swallow(egg);
+      }
       points += egg.points;
      
         
@@ -205,8 +240,8 @@ package {
           combo = _currentCombos[j];
           _combos += 1;
           for(i = 0; i < combo.length; i++) {
-            showPoints(combo[i], '+5', 0xffff0000, 1.5, 2); 
-            _score += 5;
+            showPoints(combo[i], '+' + String(combo.length), 0xffff0000, 1.5, 2); 
+            _score += combo.length;
             _snake.body.remove(combo[i], true);
           }
         }
@@ -274,7 +309,6 @@ package {
     protected function reallySpawnFood(n:int):void {
       var egg:Egg = new Egg(Math.floor(Math.random() * n));
       spawnEgg(egg);
-      _food.add(egg);
     }
 
     protected function spawnEgg(egg:Egg):void {
@@ -286,7 +320,7 @@ package {
         egg.x = int(1 + (Math.random() * wTiles)) * 15;
         egg.y = int(6 + (Math.random() * hTiles)) * 15;
       } while(egg.overlaps(_unspawnable));
-
+      _food.add(egg);
     }
     
     override public function destroy():void {

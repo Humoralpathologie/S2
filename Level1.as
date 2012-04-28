@@ -8,17 +8,15 @@ package {
     private var _background:FlxSprite = null;
     
     private var _hudText:FlxText; 
-    private var _eggAmount:int = 0;
-    private var _timerSec:Number = 0;
-    private var _timerMin:Number = 0;    
-    private var _timerHud:String;
+
+    private var _storyBeat:String = "Little Snake bemerkt, dass sie bei Verdrücken von drei Eiern des Typ A nicht nur kürzer, sondern auch schlauer wird.";
+    private var _switchLevel:SwitchLevel;
 
     override protected function addBackgrounds():void {
       _background = new FlxSprite(0,0);
       _background.loadGraphic(Background);
       add(_background);
     }
-
     
     override protected function addObstacles():void {
       var stone1:FlxSprite = new FlxSprite(135,0);      
@@ -30,35 +28,6 @@ package {
       add(_obstacles);
     }
     
-    override protected function updateTimers():void {
-      super.updateTimers();
-      _timerSec += FlxG.elapsed;
-      if (_timerSec >= 60) {
-        _timerMin += 1;
-        _timerSec = 0;
-      }
-      _timerHud = convertTimer();
-    }
-    
-    private function convertTimer():String {
-      var _sec:String;
-      var _min:String;
-      
-      if (Math.floor(_timerSec) < 10) {
-        _sec = "0" + String(Math.floor(_timerSec));
-      } else {
-        _sec = String(Math.floor(_timerSec));
-      }
-
-      if (_timerMin < 10) {
-        _min = "0" + String(_timerMin);
-      } else {
-        _min = String(_timerMin);
-      }
-
-      return _min + ":" + _sec;
-    }    
-
     override protected function addHud():void {
       _hudText = new FlxText(15,15, 640 - 60);
       _hudText.size = 16;
@@ -66,24 +35,23 @@ package {
     }
     override protected function updateHud():void {
       _hudText.text = "Score: " + String(FlxG.score);
-      _hudText.text += "\nDevoured Eggs: " + String(_eggAmount) + "/70";
+      _hudText.text += "\nDevoured Eggs: " + String(_eggAmount) + "/50";
       _hudText.text += "\nTimer: " + _timerHud;
       _hudText.text += "\nSpeed: " + _snake.mps;
-    }
-    
-    override protected function eat(snakeHead:FlxSprite, egg:Egg):void {
-      super.eat(snakeHead, egg);
-      _eggAmount++;
     }
 
     override protected function switchLevel():void {
       FlxG.score = _score;
-      var _text:String = "Little Snake bemerkt, dass sie bei Verdrücken von drei Eiern des Typ A nicht nur kürzer, sondern auch schlauer wird.";
-      var _switchLevel:SwitchLevel = new SwitchLevel;
-      _switchLevel.initStory(_text);
-      _switchLevel.initReset(Level1);
-      _switchLevel.initPlayNext(Level2);      
+      _switchLevel = new SwitchLevel(_storyBeat, Level1, Level2, _timerHud);
       FlxG.switchState(_switchLevel);
+    }
+
+    override protected function levelOver():void {
+      FlxG.score = _score;
+      _switchLevel = new SwitchLevel(_storyBeat, Level1, Level2, _timerHud);
+      _switchLevel.gameOver();
+      FlxG.switchState(_switchLevel);
+      
     }
 
     override protected function spawnFood():void {
@@ -119,7 +87,7 @@ package {
     }
 
     override protected function checkWinConditions():void {
-      if(_eggAmount >= 70) {
+      if(_eggAmount >= 5) {
         switchLevel();
       }
     }
