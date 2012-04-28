@@ -24,7 +24,6 @@ package {
     protected var _currentCombos:Array;
     protected var _comboTimer:Number = 0;
     protected var _combos:int = 0;
-      
 
     protected var _timerSec:Number = 0;
     protected var _timerMin:Number = 0;    
@@ -237,8 +236,8 @@ package {
           combo = _currentCombos[j];
           _combos += 1;
           for(i = 0; i < combo.length; i++) {
-            showPoints(combo[i], '+5', 0xffff0000, 1.5, 2); 
-            _score += 5;
+            showPoints(combo[i], '+' + String(combo.length), 0xffff0000, 1.5, 2); 
+            _score += combo.length;
             _snake.body.remove(combo[i], true);
           }
         }
