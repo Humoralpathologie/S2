@@ -3,11 +3,22 @@ package {
   import org.flixel.plugin.photonstorm.API.FlxKongregate;
 
   public class SwitchLevel extends FlxState {
+    [Embed(source='assets/images/menu.png')] protected var Background:Class;
+    [Embed(source='assets/images/replay.png')] protected var Replay:Class;
+    [Embed(source='assets/images/back.png')] protected var Back:Class;
+    [Embed(source='assets/images/next.png')] protected var Next:Class;
+    [Embed(source='assets/SnakeSounds/bup.mp3')] protected var Bup:Class;
+    [Embed(source='assets/SnakeSounds/mouseclick.mp3')] protected var ClickSound:Class;
+
     private var _scoreText:FlxText;
     private var _storyBeat:FlxText;
     private var _playNextLevel:FlxButton;
     private var _replay:FlxButton;
     private var _backToMenu:FlxButton;
+
+    private var _scaled:Boolean;
+    private var _resetScaled:Boolean;
+    private var _background:FlxSprite;
 
     private var _timer:FlxText;
 
@@ -45,19 +56,34 @@ package {
       _preState = preState;
       _nextState = nextState;
 
-      
-      _playNextLevel = new FlxButton(FlxG.width/2-40, 300, 'Next Level', switchToState(_nextState)); 
-      _replay = new FlxButton(FlxG.width/2-40, 300 + 20, 'Replay', switchToState(_preState)); 
-      _backToMenu = new FlxButton(FlxG.width/2-40, 320 + 20, 'Menu', switchToState(MenuState));      
 
+      _background = new FlxSprite(10, -10);
+      _background.loadGraphic(Background);      
+
+      _playNextLevel = new FlxButton(FlxG.width/2+90, 400, '', switchToState(_nextState)); 
+      _playNextLevel.loadGraphic(Next);
+      _playNextLevel.onOver = scaleButton(_playNextLevel);
+      _playNextLevel.onOut = resetScale(_playNextLevel);
+
+      _replay = new FlxButton(FlxG.width/2-40, 350, '', switchToState(_preState)); 
+      _replay.loadGraphic(Replay);
+      _replay.onOver = scaleButton(_replay);
+      _replay.onOut = resetScale(_replay);
+
+      _backToMenu = new FlxButton(FlxG.width/2-120, 400, '', switchToState(MenuState));      
+      _backToMenu.loadGraphic(Back);
+      _backToMenu.onOver = scaleButton(_backToMenu);
+      _backToMenu.onOut = resetScale(_backToMenu);
       add(_scoreText);
       add(_storyBeat);
       add(_timer);
+      
+      add(_background);
 
       add(_playNextLevel);
       add(_replay);
       add(_backToMenu);
-
+      
     
     }
 
@@ -72,5 +98,31 @@ package {
 
     }
 
-  }
+    private function scaleButton(button:FlxButton):Function{
+      return function ():void{
+        if (!_scaled) {
+          button.scale.x = 1.3;
+          button.scale.y = 1.3;
+          button.setSounds(Bup, 1.0, null, 1.0, ClickSound);
+          _scaled = true;
+          _resetScaled = false;
+        } 
+      }
+
+    }
+
+    private function resetScale(button:FlxButton):Function{
+      return function ():void{
+        if (!_resetScaled) {
+          button.scale.x = 1;
+          button.scale.y = 1;
+          _resetScaled = true;
+          _scaled = false;
+        }
+
+      }
+
+    }
+
+  } 
 }
