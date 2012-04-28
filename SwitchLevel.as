@@ -7,7 +7,7 @@ package {
     [Embed(source='assets/images/replay.png')] protected var Replay:Class;
     [Embed(source='assets/images/back.png')] protected var Back:Class;
     [Embed(source='assets/images/next.png')] protected var Next:Class;
-    [Embed(source='assets/SnakeSounds/bup.mp3')] protected var Bup:Class;
+    [Embed(source='assets/SnakeSounds/TailWhip.mp3')] protected var Whip:Class;
     [Embed(source='assets/SnakeSounds/mouseclick.mp3')] protected var ClickSound:Class;
 
     private var _scoreText:FlxText;
@@ -103,7 +103,8 @@ package {
         if (!_scaled) {
           button.scale.x = 1.3;
           button.scale.y = 1.3;
-          button.setSounds(Bup, 1.0, null, 1.0, ClickSound);
+          button.angle = 30;
+          button.setSounds(Whip, 1.0, null, 1.0, ClickSound);
           _scaled = true;
           _resetScaled = false;
         } 
@@ -116,6 +117,7 @@ package {
         if (!_resetScaled) {
           button.scale.x = 1;
           button.scale.y = 1;
+          button.angle = 0;
           _resetScaled = true;
           _scaled = false;
         }
