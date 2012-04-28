@@ -209,7 +209,9 @@ package {
 
       _food.remove(egg, true);
       
-      _snake.swallow(egg);
+      if(egg.type != Egg.ROTTEN){
+        _snake.swallow(egg);
+      }
       points += egg.points;
      
         
@@ -305,7 +307,6 @@ package {
     protected function reallySpawnFood(n:int):void {
       var egg:Egg = new Egg(Math.floor(Math.random() * n));
       spawnEgg(egg);
-      _food.add(egg);
     }
 
     protected function spawnEgg(egg:Egg):void {
@@ -317,7 +318,7 @@ package {
         egg.x = int(1 + (Math.random() * wTiles)) * 15;
         egg.y = int(6 + (Math.random() * hTiles)) * 15;
       } while(egg.overlaps(_unspawnable));
-
+      _food.add(egg);
     }
     
     override public function destroy():void {

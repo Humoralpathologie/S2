@@ -1,7 +1,7 @@
 package {
   import org.flixel.*;
 
-  public class Level2 extends LevelState {
+  public class Level3 extends LevelState {
     // Assets
     [Embed(source='assets/images/level02bg.jpg')] protected var Background:Class;
     // Variablen
@@ -25,7 +25,16 @@ package {
     }
 
     override protected function spawnFood():void {
-      reallySpawnFood(2);
+      var newEgg:Egg;
+      var n:Number = Math.random();
+      if(n < 0.2) {
+        newEgg = new Egg(Egg.ROTTEN);
+      } else if(n < 0.5) {
+        newEgg = new Egg(1);
+      } else {
+        newEgg = new Egg(0);
+      }
+      spawnEgg(newEgg);
     }
 
     override protected function addHud():void {
@@ -36,7 +45,7 @@ package {
 
     override protected function checkWinConditions():void {
       if(_combos >= 10) {
-        var switcher:SwitchLevel = new SwitchLevel("Conglaturation !!!\nYou have completed a great game.\nAnd prooved the justice of our culture.\nNow go and rest our heroes !", Level2, Level3, "111");
+        var switcher:SwitchLevel = new SwitchLevel("Conglaturation !!!\nYou have completed a great game.\nAnd prooved the justice of our culture.\nNow go and rest our heroes !", Level2, Level2, "111");
         FlxG.switchState(switcher); 
       }
     }

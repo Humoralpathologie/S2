@@ -19,9 +19,9 @@ package {
     //Level description  
     private static var _level1:Array = [new Level1, "Level1", "Crossroads of Carnage", "Devour 100 Eggs", "None"];
     private static var _level2:Array = [new Level2, "Level2", "Make 20 Combos of 3(or more if you dare)", "None"];
-//    private static var _level3:Array = [new Level3, "Snaking on Speed", "Survive the Food Poisoning", "None"];
+    private static var _level3:Array = [new Level3, "Snaking on Speed", "Survive the Food Poisoning", "None"];
     
-    private static var _levels:Object = {l1: _level1, l2: _level2}; 
+    private static var _levels:Object = {l1: _level1, l2: _level2, l3: _level3}; 
 
     override public function create():void {
 
