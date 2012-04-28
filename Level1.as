@@ -18,7 +18,6 @@ package {
       _background.loadGraphic(Background);
       add(_background);
     }
-
     
     override protected function addObstacles():void {
       var stone1:FlxSprite = new FlxSprite(135,0);      

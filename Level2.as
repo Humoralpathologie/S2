@@ -35,8 +35,9 @@ package {
     }
 
     override protected function checkWinConditions():void {
-      if(_combos >= 30) {
-            
+      if(_combos >= 10) {
+        var switcher:SwitchLevel = new SwitchLevel("Conglaturation !!!\nYou have completed a great game.\nAnd prooved the justice of our culture.\nNow go and rest our heroes !", Level2, Level2, "111");
+        FlxG.switchState(switcher); 
       }
     }
 
