@@ -13,7 +13,7 @@ package {
       for each (var buttonStuff:Array in screens) {
         btn = new FlxButton(0, pos, buttonStuff[0], buttonStuff[1]);
         btn.x = (FlxG.width - btn.width) / 2;
-        add(btn);     
+        add(btn);
         pos += btn.height + 10;
       }
       FlxG.mouse.show();

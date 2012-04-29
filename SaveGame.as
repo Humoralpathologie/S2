@@ -40,5 +40,9 @@ package {
     public static function unlockLevel(n:Number):void {
       _save.data.unlockedLevels.push(n);
     } 
+
+    public static function saveScore(n:Number, score:Number):void {
+      _save.data.levelScores[n] = score;
+    }
   }
 }
