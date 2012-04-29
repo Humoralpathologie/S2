@@ -1,13 +1,11 @@
 package {
-  import flash.utils.Dictionary;
   import org.flixel.*;
   import org.flixel.plugin.photonstorm.*;
   import org.flixel.plugin.photonstorm.FX.*;
-  import org.flixel.plugin.photonstorm.API.FlxKongregate;
   
   public class MenuState extends FlxState {
 
-    [Embed(source='assets/SnakeSounds/SuperSnakeLoop.mp3')] protected var Music:Class;
+  [Embed(source='assets/SnakeSounds/SuperSnakeLoop.mp3')] protected var Music:Class;
     
     private var _sound:FlxSound;
     private var _snakeTitleFX:SineWaveFX;
@@ -16,13 +14,6 @@ package {
     private var _playButton:FlxButton;
     private var _playLevel:FlxButton;    
     
-    //Level description  
-    private static var _level1:Array = [new Level1, "Level1", "Crossroads of Carnage", "Devour 100 Eggs", "None"];
-    private static var _level2:Array = [new Level2, "Level2", "Make 20 Combos of 3(or more if you dare)", "None"];
-    private static var _level3:Array = [new Level3, "Snaking on Speed", "Survive the Food Poisoning", "None"];
-    
-    private static var _levels:Object = {l1: _level1, l2: _level2, l3: _level3}; 
-
     override public function create():void {
 
       if (FlxG.getPlugin(FlxSpecialFX) == null)
@@ -46,35 +37,25 @@ package {
       add(_sound);
       add(_snakeTitleSprite);
 
-      FlxKongregate.init(apiHasLoaded);
       _sound.fadeIn(5);
       FlxG.mouse.show();
       
-    }
-
-    private function makeButtons():void{
-      var h:int = 300;
-      for (var level:Object in _levels) {
-        var levelButton:FlxButton;
-        levelButton = new FlxButton(FlxG.width/2-40, h + 20, _levels[level][1], switchToState(_levels[level][0], _levels[level][2], _levels[level][3],  _levels[level][4]));
-        h += 20;
-        add(levelButton);
-      } 
-      
-    }
-
-    
-
-    private function apiHasLoaded():void
-    {
-      FlxKongregate.connect();
       makeButtons();
     }
 
-    private function switchToState(state:FlxState, title:String, objective:String, timeLimit:String):Function {
+    private function makeButtons():void{
+      _playButton = new FlxButton(FlxG.width/2-40, 300, "New Story", switchToState(Level1));
+      _playLevel = new FlxButton(FlxG.width/2-40, 300 + 20, "Select Level", switchToState(LevelSelect));
+      var debugBtn:FlxButton = new FlxButton(0, _playLevel.y + _playLevel.height + 10, "Debug", switchToState(DebugState));
+      debugBtn.x = (FlxG.width - debugBtn.width) / 2; 
+      add(_playButton);
+      add(_playLevel);   
+      add(debugBtn);
+    }
+
+    private function switchToState(state:Class):Function {
       return function ():void {
-        var levelDescr:LevelDescription = new LevelDescription(state, title, objective, timeLimit);
-        FlxG.switchState(levelDescr);
+        FlxG.switchState(new state);
       }
     }
 

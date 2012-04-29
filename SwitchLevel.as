@@ -1,13 +1,12 @@
 package {
   import org.flixel.*;
-  import org.flixel.plugin.photonstorm.API.FlxKongregate;
 
   public class SwitchLevel extends FlxState {
     [Embed(source='assets/images/menu.png')] protected var Background:Class;
     [Embed(source='assets/images/replay.png')] protected var Replay:Class;
     [Embed(source='assets/images/back.png')] protected var Back:Class;
     [Embed(source='assets/images/next.png')] protected var Next:Class;
-    [Embed(source='assets/SnakeSounds/bup.mp3')] protected var Bup:Class;
+    //[Embed(source='assets/SnakeSounds/TailWhip.mp3')] protected var Whip:Class;
     [Embed(source='assets/SnakeSounds/mouseclick.mp3')] protected var ClickSound:Class;
 
     private var _scoreText:FlxText;
@@ -34,10 +33,6 @@ package {
       _storyBeat.text = StoryBeat;
       _storyBeat.x = (FlxG.width - _storyBeat.width) / 2;
       _storyBeat.alignment = 'center';
-
-
-
-      FlxKongregate.submitStats("Score",FlxG.score);
 
       _scoreText = new FlxText(0,FlxG.height / 2, 480);
       _scoreText.size = 20;
@@ -94,8 +89,6 @@ package {
     public function gameOver():void {
       remove(_storyBeat);
       remove(_playNextLevel);      
-
-
     }
 
     private function scaleButton(button:FlxButton):Function{
@@ -103,12 +96,12 @@ package {
         if (!_scaled) {
           button.scale.x = 1.3;
           button.scale.y = 1.3;
-          button.setSounds(Bup, 1.0, null, 1.0, ClickSound);
+          button.angle = 30;
+          button.setSounds(null, 1.0, null, 1.0, ClickSound);
           _scaled = true;
           _resetScaled = false;
         } 
       }
-
     }
 
     private function resetScale(button:FlxButton):Function{
@@ -116,6 +109,7 @@ package {
         if (!_resetScaled) {
           button.scale.x = 1;
           button.scale.y = 1;
+          button.angle = 0;
           _resetScaled = true;
           _scaled = false;
         }
