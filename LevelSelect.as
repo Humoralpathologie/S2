@@ -19,6 +19,7 @@ package {
     private static var _levels:Array = [_level1, _level2, false, false, false, false, false, false, false, false];
 
     private var _title:FlxText;    
+    private var _clickSound:FlxSound;
 
     public function LevelSelect() {
       super();
@@ -28,21 +29,14 @@ package {
       _title.antialiasing = true;
       _title.alignment = 'center';
 
+      _clickSound = new FlxSound;
+      _clickSound.loadEmbedded(ClickSound);
+      
       makeButtons();
       add(_title);
 
     }
 
-    private function testFor():void{
-      for each (var l:Object in _levels) {
-          FlxG.log(l);
-          FlxG.log(typeof l);
-        if (l != null) {
-          FlxG.log(l.length);
-        }
-      }
-
-    }
 
     private function makeButtons():void{
       var xPos:int = 95;
@@ -61,7 +55,7 @@ package {
         if (_levels[i]) {
           levelButton = new FlxButton(xPos, yPos, "", switchToState(_levels[i][0], _levels[i][2], _levels[i][3], _levels[i][4]));
           levelButton.loadGraphic(_levelPics[i+1]);
-          levelButton.setSounds(null, 1.0, null, 1.0, ClickSound);
+          levelButton.soundDown = _clickSound;
           add(levelButton);
         } else {
           levelSprite = new FlxSprite(xPos, yPos);
