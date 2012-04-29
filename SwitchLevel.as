@@ -1,6 +1,5 @@
 package {
   import org.flixel.*;
-  import org.flixel.plugin.photonstorm.API.FlxKongregate;
 
   public class SwitchLevel extends FlxState {
     [Embed(source='assets/images/menu.png')] protected var Background:Class;
@@ -34,10 +33,6 @@ package {
       _storyBeat.text = StoryBeat;
       _storyBeat.x = (FlxG.width - _storyBeat.width) / 2;
       _storyBeat.alignment = 'center';
-
-
-
-      FlxKongregate.submitStats("Score",FlxG.score);
 
       _scoreText = new FlxText(0,FlxG.height / 2, 480);
       _scoreText.size = 20;
@@ -94,8 +89,6 @@ package {
     public function gameOver():void {
       remove(_storyBeat);
       remove(_playNextLevel);      
-
-
     }
 
     private function scaleButton(button:FlxButton):Function{
@@ -109,7 +102,6 @@ package {
           _resetScaled = false;
         } 
       }
-
     }
 
     private function resetScale(button:FlxButton):Function{

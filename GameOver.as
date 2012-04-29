@@ -1,6 +1,5 @@
 package {
   import org.flixel.*;
-  import org.flixel.plugin.photonstorm.API.FlxKongregate;
 
   public class GameOver extends FlxState {
     private var _scoreText:FlxText;
@@ -8,18 +7,11 @@ package {
 
     
     public function GameOver(replayState:Class) {
-
-
-
-
-
     }
 
     override public function create():void {
 
       FlxG.mouse.show();
-
-      FlxKongregate.submitStats("Score",FlxG.score);
 
       _scoreText = new FlxText(0,FlxG.height / 2, 480);
       _scoreText.size = 30;
