@@ -11,11 +11,14 @@ package {
     [Embed(source='assets/images/egg-tilemap.png')] protected static var EggA:Class;
     [Embed(source='assets/images/egg02-tilemap.png')] protected static var EggB:Class;
     [Embed(source='assets/images/egg03-tilemap.png')] protected static var EggBlanc:Class;
+    [Embed(source='assets/images/rotten-eggs.png')] protected static var EggRotten:Class 
     [Embed(source='assets/images/shell.png')] protected static var ShellB:Class;
 
     protected static var eatenGraphics:Array = [EatenEggBlanc, EatenEggA, EatenEggB, EatenEggC];
-    protected static var eggGraphics:Array = [EggBlanc, EggA, EggB]
-    protected static var shellGraphics:Array = [ShellB, ShellB, ShellB];
+    protected static var eggGraphics:Array = [EggBlanc, EggA, EggB, null, EggRotten]
+    protected static var shellGraphics:Array = [ShellB, ShellB, ShellB, ShellB, ShellB];
+
+    public static const ROTTEN:uint = 4;
    
     protected var _points:int;
     protected var _eggType:int;
@@ -52,7 +55,11 @@ package {
     }
 
     public function get points():int{
-      return _points;
+      if(_eggType == ROTTEN){
+        return -5;
+      } else {
+        return 2;
+      }
     }
 
     public function get type():int {
