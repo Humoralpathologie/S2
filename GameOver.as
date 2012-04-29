@@ -19,7 +19,6 @@ package {
       _scoreText.x = (FlxG.width - _scoreText.width) / 2
       _scoreText.y = (FlxG.height - _scoreText.height) / 2
       _scoreText.alignment = 'center'
-
     
       add(_scoreText);
     } 
