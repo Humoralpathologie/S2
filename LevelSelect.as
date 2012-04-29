@@ -52,7 +52,7 @@ package {
           yPos += 90; 
         }
 
-        if (_levels[i]) {
+        if (_levels[i] && SaveGame.levelUnlocked(i)) {
           levelButton = new FlxButton(xPos, yPos, "", switchToState(_levels[i][0], _levels[i][2], _levels[i][3], _levels[i][4]));
           levelButton.loadGraphic(_levelPics[i+1]);
           levelButton.soundDown = _clickSound;
