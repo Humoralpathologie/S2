@@ -12,7 +12,6 @@ package {
     override public function create():void {
       movie = new SWFMovie;
       FlxG.stage.addChild(movie);
-      // This returns zero, no idea why.
       movieLength = 349;
       movie.addEventListener(Event.EXIT_FRAME, next);
     }
@@ -20,7 +19,9 @@ package {
     private function next(e:Event):void {
       if(movieLength-- <= 0){
         movie.removeEventListener(Event.EXIT_FRAME, next);
+        SoundMixer.stopAll();
         FlxG.stage.removeChild(movie);
+
         FlxG.switchState(new MenuState);
       }
     }

@@ -2,6 +2,7 @@ package {
   import org.flixel.*;
   import org.flixel.plugin.photonstorm.*;
   import org.flixel.plugin.photonstorm.FX.*;
+  import flash.media.SoundMixer;
   
   public class MenuState extends FlxState {
 
