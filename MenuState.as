@@ -2,7 +2,6 @@ package {
   import org.flixel.*;
   import org.flixel.plugin.photonstorm.*;
   import org.flixel.plugin.photonstorm.FX.*;
-  import org.flixel.plugin.photonstorm.API.FlxKongregate;
   
   public class MenuState extends FlxState {
 
@@ -15,7 +14,6 @@ package {
     private var _playButton:FlxButton;
     private var _playLevel:FlxButton;    
     
-
     override public function create():void {
 
       if (FlxG.getPlugin(FlxSpecialFX) == null)
@@ -39,27 +37,20 @@ package {
       add(_sound);
       add(_snakeTitleSprite);
 
-      FlxKongregate.init(apiHasLoaded);
       _sound.fadeIn(5);
       FlxG.mouse.show();
       
+      makeButtons();
     }
 
     private function makeButtons():void{
       _playButton = new FlxButton(FlxG.width/2-40, 300, "New Story", switchToState(MovieState));
       _playLevel = new FlxButton(FlxG.width/2-40, 300 + 20, "Select Level", switchToState(LevelSelect));
-
+      var debugBtn:FlxButton = new FlxButton(0, _playLevel.y + _playLevel.height + 10, "Debug", switchToState(DebugState));
+      debugBtn.x = (FlxG.width - debugBtn.width) / 2; 
       add(_playButton);
       add(_playLevel);   
-      
-    }
-
-    
-
-    private function apiHasLoaded():void
-    {
-      FlxKongregate.connect();
-      makeButtons();
+      add(debugBtn);
     }
 
     private function switchToState(state:Class):Function {
