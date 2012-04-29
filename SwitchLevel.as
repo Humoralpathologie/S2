@@ -7,7 +7,7 @@ package {
     [Embed(source='assets/images/replay.png')] protected var Replay:Class;
     [Embed(source='assets/images/back.png')] protected var Back:Class;
     [Embed(source='assets/images/next.png')] protected var Next:Class;
-    [Embed(source='assets/SnakeSounds/TailWhip.mp3')] protected var Whip:Class;
+    //[Embed(source='assets/SnakeSounds/TailWhip.mp3')] protected var Whip:Class;
     [Embed(source='assets/SnakeSounds/mouseclick.mp3')] protected var ClickSound:Class;
 
     private var _scoreText:FlxText;
@@ -104,7 +104,7 @@ package {
           button.scale.x = 1.3;
           button.scale.y = 1.3;
           button.angle = 30;
-          button.setSounds(Whip, 1.0, null, 1.0, ClickSound);
+          button.setSounds(null, 1.0, null, 1.0, ClickSound);
           _scaled = true;
           _resetScaled = false;
         } 

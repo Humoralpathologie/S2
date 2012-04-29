@@ -13,7 +13,6 @@ package {
       movie = new SWFMovie;
       FlxG.stage.addChild(movie);
       // This returns zero, no idea why.
-      // movieLength = movie.totalFrames;
       movieLength = 168;
       movie.addEventListener(Event.EXIT_FRAME, next);
     }

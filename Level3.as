@@ -1,12 +1,29 @@
 package {
   import org.flixel.*;
+  import org.flixel.plugin.photonstorm.*;
+  import org.flixel.plugin.photonstorm.FX.*;
 
-  public class Level2 extends LevelState {
+  public class Level3 extends LevelState {
     // Assets
     [Embed(source='assets/images/level02bg.jpg')] protected var Background:Class;
     // Variablen
     protected var _background:FlxSprite = null;
     protected var _hudText:FlxText;
+    private var _snakePlasma:PlasmaFX;
+    private var _snakePlasmaSprite:FlxSprite;
+
+    override public function create():void {
+      super.create();
+      if (FlxG.getPlugin(FlxSpecialFX) == null)
+      {
+        FlxG.addPlugin(new FlxSpecialFX);
+      }
+
+      _snakePlasma = FlxSpecialFX.plasma();
+      _snakePlasmaSprite = _snakePlasma.create(0,0,160,120,8,8);
+    
+      add(_snakePlasmaSprite);
+    }
 
     override protected function addBackgrounds():void {
       _background = new FlxSprite(0,0);
@@ -25,7 +42,16 @@ package {
     }
 
     override protected function spawnFood():void {
-      reallySpawnFood(2);
+      var newEgg:Egg;
+      var n:Number = Math.random();
+      if(n < 0.1) {
+        newEgg = new Egg(Egg.ROTTEN);
+      } else if(n < 0.4) {
+        newEgg = new Egg(0);
+      } else {
+        newEgg = new Egg(1);
+      }
+      spawnEgg(newEgg);
     }
 
     override protected function addHud():void {
@@ -35,8 +61,8 @@ package {
     }
 
     override protected function checkWinConditions():void {
-      if(_combos >= 10) {
-        var switcher:SwitchLevel = new SwitchLevel("Conglaturation !!!\nYou have completed a great game.\nAnd prooved the justice of our culture.\nNow go and rest our heroes !", Level2, Level3, "111");
+      if(_combos >= 10 || _eggAmount >= 100 || _timerMin >= 4) {
+        var switcher:SwitchLevel = new SwitchLevel("Conglaturation !!!\nYou have completed a great game.\nAnd prooved the justice of our culture.\nNow go and rest our heroes !", Level3, Level3, "111");
         FlxG.switchState(switcher); 
       }
     }
@@ -63,5 +89,9 @@ package {
       return res.filter(largerThanThree);
     }
 
+    override public function destroy():void {
+      FlxSpecialFX.clear();
+      super.destroy();
+    }
   }
 }

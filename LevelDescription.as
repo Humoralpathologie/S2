@@ -38,7 +38,7 @@ package {
       _clickSound = new FlxSound;
       _clickSound.loadEmbedded(ClickSound);
       
-      _play = new FlxButton(FlxG.width/2 - 40, _timeLimit.y + 40, 'Play ' + Title, switchToState(_LevelState));
+      _play = new FlxButton(FlxG.width/2 - 40, _timeLimit.y + 40, 'Play', switchToState(_LevelState));
       _back = new FlxButton(FlxG.width/2 - 40, _play.y + 20, 'Back to Menu', switchToState(new MenuState));
 
       _play.soundDown = _clickSound;

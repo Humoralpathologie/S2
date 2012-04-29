@@ -1,0 +1,89 @@
+package {
+  import org.flixel.*;
+  
+  public class LevelSelect extends FlxState {
+
+    [Embed(source='assets/images/level1.png')] protected static var L1:Class;
+    [Embed(source='assets/images/level2.png')] protected static var L2:Class;
+    [Embed(source='assets/images/levelNo.png')] protected static var LNo:Class;
+    [Embed(source='assets/SnakeSounds/mouseclick.mp3')] protected var ClickSound:Class;
+
+
+    private static var _levelPics:Array = [LNo, L1, L2];
+    //level description
+    private static var _level1:Array = [new Level1, "Level1", "Crossroads of Carnage", "Devour 100 Eggs", "None"];
+    private static var _level2:Array = [new Level2, "Level2", "Make 20 Combos of 3(or more if you dare)", "None"];
+ 
+//    private static var _level3:Array = [new Level3, "Snaking on Speed", "Survive the Food Poisoning", "None"];
+    
+    private static var _levels:Array = [_level1, _level2, false, false, false, false, false, false, false, false];
+
+    private var _title:FlxText;    
+
+    public function LevelSelect() {
+      super();
+
+      _title = new FlxText(FlxG.width / 2 - 300, 50, 600, "SELECT LEVEL");
+      _title.size = 50;
+      _title.antialiasing = true;
+      _title.alignment = 'center';
+
+      makeButtons();
+      add(_title);
+
+    }
+
+    private function testFor():void{
+      for each (var l:Object in _levels) {
+          FlxG.log(l);
+          FlxG.log(typeof l);
+        if (l != null) {
+          FlxG.log(l.length);
+        }
+      }
+
+    }
+
+    private function makeButtons():void{
+      var xPos:int = 95;
+      var yPos:int = 200;
+      
+
+      for (var i:int = 0; i < _levels.length; i++) {
+        var levelButton:FlxButton;
+        var levelSprite:FlxSprite;
+
+        if (i == 5) { 
+          xPos = 95; 
+          yPos += 90; 
+        }
+
+        if (_levels[i]) {
+          levelButton = new FlxButton(xPos, yPos, "", switchToState(_levels[i][0], _levels[i][2], _levels[i][3], _levels[i][4]));
+          levelButton.loadGraphic(_levelPics[i+1]);
+          levelButton.setSounds(null, 1.0, null, 1.0, ClickSound);
+          add(levelButton);
+        } else {
+          levelSprite = new FlxSprite(xPos, yPos);
+          levelSprite.loadGraphic(_levelPics[0]);
+          add(levelSprite);
+        }
+        
+        xPos += 90;
+
+
+      }
+
+      
+    }
+
+
+    private function switchToState(state:FlxState, title:String, objective:String, timeLimit:String):Function {
+      return function ():void {
+        var levelDescr:LevelDescription = new LevelDescription(state, title, objective, timeLimit);
+        FlxG.switchState(levelDescr);
+      }
+    }
+
+  }
+} 
