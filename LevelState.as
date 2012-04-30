@@ -30,6 +30,8 @@ package {
     protected var _timerMin:Number = 0;    
     protected var _timerHud:String;
 
+    protected var _switchLevel:SwitchLevel;
+
     override public function create():void {
 
       FlxG.log("Starting game");

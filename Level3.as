@@ -85,6 +85,14 @@ package {
       _hudText.text += "\nSpeed: " + _snake.mps;
     }
 
+    override protected function levelOver():void {
+      FlxG.score = _score;
+      _switchLevel = new SwitchLevel("You failed!\nTry again", Level3, Level3, _timerHud);
+      _switchLevel.gameOver();
+      FlxG.switchState(_switchLevel);
+      
+    }
+
     override protected function checkCombos(arr:Array):Array {
       var res:Array;
 

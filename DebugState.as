@@ -7,7 +7,7 @@ package {
                             ["Intro Movie", switcher(MovieState)],
                             ["Unlock Levels", function():void{SaveGame.unlockLevels();}],
                             ["Lock Levels", function():void{SaveGame.initializeData();}] 
-                          ]
+rotected                    ]
       var btn:FlxButton;
       var pos:int = 100;
       for each (var buttonStuff:Array in screens) {

@@ -10,7 +10,6 @@ package {
     private var _hudText:FlxText; 
 
     private var _storyBeat:String = "Little Snake bemerkt, dass sie bei Verdrücken von drei Eiern des Typ A nicht nur kürzer, sondern auch schlauer wird.";
-    private var _switchLevel:SwitchLevel;
 
     override protected function addBackgrounds():void {
       _background = new FlxSprite(0,0);
@@ -42,7 +41,8 @@ package {
 
     override protected function switchLevel():void {
       FlxG.score = _score;
-      _switchLevel = new SwitchLevel(_storyBeat, Level1, Level2, _timerHud);
+      _switchLevel = new SwitchLevel("Level1 completed!", Level1, Level2, _timerHud);
+      SaveGame.unlockLevel(1);
       FlxG.switchState(_switchLevel);
     }
 

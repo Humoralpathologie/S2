@@ -34,9 +34,18 @@ package {
       add(_hudText);
     }
 
+    override protected function levelOver():void {
+      FlxG.score = _score;
+      _switchLevel = new SwitchLevel("You failed!\nTry again", Level2, Level3, _timerHud);
+      _switchLevel.gameOver();
+      FlxG.switchState(_switchLevel);
+      
+    }
+
     override protected function checkWinConditions():void {
       if(_combos >= 10) {
         var switcher:SwitchLevel = new SwitchLevel("Conglaturation !!!\nYou have completed a great game.\nAnd prooved the justice of our culture.\nNow go and rest our heroes !", Level2, Level3, "111");
+        SaveGame.unlockLevel(2);
         FlxG.switchState(switcher); 
       }
     }
