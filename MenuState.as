@@ -45,7 +45,7 @@ package {
     }
 
     private function makeButtons():void{
-      _playButton = new FlxButton(FlxG.width/2-40, 300, "New Story", switchToState(Level1));
+      _playButton = new FlxButton(FlxG.width/2-40, 300, "New Story", switchToState(MovieState));
       _playLevel = new FlxButton(FlxG.width/2-40, 300 + 20, "Select Level", switchToState(LevelSelect));
       var debugBtn:FlxButton = new FlxButton(0, _playLevel.y + _playLevel.height + 10, "Debug", switchToState(DebugState));
       debugBtn.x = (FlxG.width - debugBtn.width) / 2; 

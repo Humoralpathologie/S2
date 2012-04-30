@@ -12,11 +12,10 @@ package {
 
     private static var _levelPics:Array = [LNo, L1, L2, L3];
     //level description
-    private static var _level1:Array = [new Level1, "Level1", "Crossroads of Carnage", "Devour 100 Eggs", "None"];
-    private static var _level2:Array = [new Level2, "Level2", "Make 20 Combos of 3(or more if you dare)", "None"];
-    private static var _level3:Array = [new Level3, "Level3", "Do some stuff and don't get sick.", "None"];
+    private static var _level1:Array = [Level1, "Level1", "Crossroads of Carnage", "Devour 50 Eggs", "None"];
+    private static var _level2:Array = [Level2, "Level2", "Make 20 Combos of 3(or more if you dare)", "None"];
  
-//    private static var _level3:Array = [new Level3, "Snaking on Speed", "Survive the Food Poisoning", "None"];
+    private static var _level3:Array = [Level3, "Level3", "Snaking on Speed", "Survive the Food Poisoning", "None"];
     
     private static var _levels:Array = [_level1, _level2, _level3, false, false, false, false, false, false, false];
 
@@ -74,7 +73,7 @@ package {
     }
 
 
-    private function switchToState(state:FlxState, title:String, objective:String, timeLimit:String):Function {
+    private function switchToState(state:Class, title:String, objective:String, timeLimit:String):Function {
       return function ():void {
         var levelDescr:LevelDescription = new LevelDescription(state, title, objective, timeLimit);
         FlxG.switchState(levelDescr);

@@ -12,6 +12,10 @@ package {
     private var _snakePlasma:PlasmaFX;
     private var _snakePlasmaSprite:FlxSprite;
 
+    private var _snakeGlitch:GlitchFX;    
+    //private var _snakeStar:StarfieldFX;
+    //private var _snakeStarSprite:FlxSprite;
+ 
     override public function create():void {
       super.create();
       if (FlxG.getPlugin(FlxSpecialFX) == null)
@@ -19,15 +23,23 @@ package {
         FlxG.addPlugin(new FlxSpecialFX);
       }
 
+//      _snakeStar = FlxSpecialFX.starfield();
+//      _snakeStar.setBackgroundColor(0x00);
+//      _snakeStarSprite = _snakeStar.create(0, 0, 640, 480);
       _snakePlasma = FlxSpecialFX.plasma();
       _snakePlasmaSprite = _snakePlasma.create(0,0,160,120,8,8);
     
       add(_snakePlasmaSprite);
+//      add(_snakeStarSprite);
     }
 
     override protected function addBackgrounds():void {
       _background = new FlxSprite(0,0);
       _background.loadGraphic(Background);
+      _snakeGlitch = FlxSpecialFX.glitch();
+      _background = _snakeGlitch.createFromFlxSprite(_background, 10, 10, true);
+      _snakeGlitch.start(2);    
+  
       add(_background);
     }
 
@@ -71,6 +83,14 @@ package {
       _hudText.text = "Score: " + String(_score) + "\n" + "Combos: " + String(_combos);
       _hudText.text += "\nTimer: " + _timerHud;
       _hudText.text += "\nSpeed: " + _snake.mps;
+    }
+
+    override protected function levelOver():void {
+      FlxG.score = _score;
+      _switchLevel = new SwitchLevel("You failed!\nTry again", Level3, Level3, _timerHud);
+      _switchLevel.gameOver();
+      FlxG.switchState(_switchLevel);
+      
     }
 
     override protected function checkCombos(arr:Array):Array {
