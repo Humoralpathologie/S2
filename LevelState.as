@@ -46,7 +46,7 @@ package {
 
       _score = 0;
       
-      _snake = new Snake(8);
+      _snake = new Snake(10);
       _food = new FlxGroup();
 
       _bonusBar = new FlxSprite(450,32);
@@ -179,7 +179,7 @@ package {
       collideScreen();
       collideObstacles();
 
-      if(_snake.lives < 0) {
+      if(_snake.lives <= 0) {
         levelOver();
       }
 

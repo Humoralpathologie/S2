@@ -19,21 +19,23 @@ package {
     private var _nextPos:FlxPoint = null;
     private var _bling:FlxSound = new FlxSound;    
     private var _justAte:Boolean = false;
+    private var _startMps:Number;
     
     public function Snake(movesPerSecond:Number = 1) { 
       super();
-
-      _mps = movesPerSecond;
+      
+      _startMps = movesPerSecond;
+      _mps = _startMps;
       _speed = 1 / _mps;
       _timer = 0;
 
       _head = new FlxSprite(15 * 10, 15 * 10);
       //_head.makeGraphic(16,16);
       _head.loadGraphic(Head, true, false, 30, 30);
-      _head.addAnimation('left',[0,1,2,3,4,5,6,7,8,9], 10);
-      _head.addAnimation('right',[10,11,12,13,14,15,16,17,18,19], 10);
-      _head.addAnimation('right-eat',[10,11,12,13,14,15,16,17,18,19], 10);
-      _head.addAnimation('up',[20,21,22,23,24,25,26,27,28,29], 10);
+      _head.addAnimation('left',[0,6,9], 5);
+      _head.addAnimation('right',[10,16,19], 5);
+      _head.addAnimation('right-eat',[10,16,19], 5);
+      _head.addAnimation('up',[20,26,29], 5);
       _head.addAnimation('down',[30]);
       _head.width = 15;
       _head.height = 15;
@@ -43,10 +45,25 @@ package {
       _bling.loadEmbedded(Bling);
 
       resurrect();
+      fillBody(_body);
 
       add(_body);
       add(_head);
     }
+/********************************************
+    //getter and setter
+********************************************/
+    public function get head():FlxSprite {
+      return _head;
+    }
+
+    public function get lives():int {
+      return _lives;
+    }
+
+    public function set lives(n:int):void {
+      _lives = n;
+    }    
 
     public function get tailCam():FlxCamera {
       return _tailCam;
@@ -54,6 +71,10 @@ package {
 
     public function get mps():Number {
       return 1 / _speed; 
+    }
+
+    public function get body():FlxGroup {
+      return _body;
     }
 
     public function set nextPos(pos:FlxPoint):void {
@@ -68,6 +89,7 @@ package {
         return false;
       }
     }
+/*******************************************/
 
     private function tailEgg():Egg {
       if(_body.length >= 2){
@@ -83,7 +105,6 @@ package {
     }
 
     private function resurrect():void {
-      _body.clear();
       _head.x = 150;
       _head.y = 150;
       _head.facing = FlxObject.RIGHT;
@@ -91,19 +112,10 @@ package {
       _head.play('right');
       _head.offset.x = 0;
       _head.offset.y = 15;
-      fillBody(_body);
-      _mps = 8;
+      _mps = _startMps;
       _speed = 1 / _mps;
       alive = true;
       _tailCam.follow(tailEgg());
-    }
-
-    public function get head():FlxSprite {
-      return _head;
-    }
-
-    public function get lives():int {
-      return _lives;
     }
 
     public function faster():void {
@@ -226,9 +238,6 @@ package {
 
     }
 
-    public function get body():FlxGroup {
-      return _body;
-    }
      
     override public function update():void {
       super.update();
