@@ -53,14 +53,14 @@ package {
     override public function update():void {
       super.update();
 
-      if (_updateRate == 70) {
+      if (_updateRate == 90) {
         FlxG.log("updated 100");
         FlxG.shake();
         _snakeTitleText.addAnimation('nod', [2, 1, 0], 1);
         _snakeTitleText.play('nod');   
       }
   
-      if (_updateRate <= 80) {
+      if (_updateRate <= 90) {
         _updateRate++
       }
     }

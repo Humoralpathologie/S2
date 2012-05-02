@@ -4,20 +4,16 @@ package {
   public class Level1 extends LevelState {
     // Assets
     [Embed(source='assets/images/level01bg.png')] protected var Background:Class;
-    [Embed(source='assets/SnakeSounds/bup.mp3')] protected var ExtraLive:Class;
     // Variablen
     private var _background:FlxSprite = null;
     
     private var _hudText:FlxText; 
 
     private var _storyBeat:String = "Level1 completed!";
-    private var _extraLive:FlxSound;
 
     override public function create():void {
       super.create();
       _snake.lives = 1;
-      _extraLive = new FlxSound();
-      _extraLive.loadEmbedded(ExtraLive);
     
     }
 
@@ -25,7 +21,7 @@ package {
       super.update();
       if (_eggAmount == 35 && _snake.lives != 2) {
         _snake.lives++;
-        _extraLive.play();
+        _bup.play();
       }
     }
     

@@ -5,10 +5,13 @@ package {
   public class LevelState extends FlxState {
     [Embed(source='assets/SnakeSounds/schluck2tiefer.mp3')] protected var BiteSound:Class;
     [Embed(source='assets/SnakeSounds/bup.mp3')] protected var Bup:Class;
+    [Embed(source='assets/images/hole.png')] protected var Hole:Class;
     
   
     protected var _biteSound:FlxSound;
     protected var _bup:FlxSound;
+
+    protected var _hole:FlxSprite;
 
     protected var _snake:Snake;
     protected var _food:FlxGroup;
@@ -55,6 +58,10 @@ package {
       _bonusBar.scale.x = 0;
 
       
+      _hole = new FlxSprite(150 - 14, 150);
+      _hole.loadGraphic(Hole);      
+      _hole.alpha = 0;
+
       add(_bup);
       add(_biteSound);
       _obstacles = new FlxGroup();
@@ -66,6 +73,8 @@ package {
       _unspawnable.add(_food);
       _unspawnable.add(_snake);
       _unspawnable.add(_obstacles);
+
+      add(_hole);
 
       spawnFoods(3);
       add(_snake);
@@ -167,8 +176,21 @@ package {
       }
     }
 
+    protected function fadeInOutHole():void {
+      if (!_snake.alive) {
+        _hole.alpha = 1;
+      }
+  
+      if (_hole.alpha > 0) {
+        _hole.alpha -= 0.01;
+
+      }
+    
+    }
+
     override public function update():void {
       super.update();
+      fadeInOutHole();
 
       checkWinConditions();      
 
