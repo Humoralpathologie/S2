@@ -2,6 +2,10 @@ package {
   import org.flixel.*;
   import org.flixel.plugin.photonstorm.*;
   import org.flixel.plugin.photonstorm.FX.*;
+<<<<<<< HEAD
+=======
+  import flash.media.SoundMixer;
+>>>>>>> aac9180f3ca820b70d636e1fa967794737cac4f2
   
   public class MenuState extends FlxState {
 
@@ -15,8 +19,12 @@ package {
     private var _snakeTitleSprite:FlxSprite;
     private var _playButton:FlxButton;
     private var _playLevel:FlxButton;    
+<<<<<<< HEAD
     private var _updateRate:int;    
 
+=======
+    
+>>>>>>> aac9180f3ca820b70d636e1fa967794737cac4f2
     override public function create():void {
 
       if (FlxG.getPlugin(FlxSpecialFX) == null)
@@ -42,10 +50,15 @@ package {
       add(_sound);
       add(_snakeTitleText);
 
+<<<<<<< HEAD
       makeButtons();
+=======
+      _sound.fadeIn(5);
+>>>>>>> aac9180f3ca820b70d636e1fa967794737cac4f2
       FlxG.mouse.show();
       _sound.fadeIn(5);
       
+      makeButtons();
     }
 
     override public function update():void {
@@ -64,15 +77,22 @@ package {
     }
 
     private function makeButtons():void{
-      _playButton = new FlxButton(FlxG.width/2-40, 300, "New Story", switchToState(Level1));
+      _playButton = new FlxButton(FlxG.width/2-40, 300, "New Story", switchToState(MovieState));
       _playLevel = new FlxButton(FlxG.width/2-40, 300 + 20, "Select Level", switchToState(LevelSelect));
-
+      var debugBtn:FlxButton = new FlxButton(0, _playLevel.y + _playLevel.height + 10, "Debug", switchToState(DebugState));
+      debugBtn.x = (FlxG.width - debugBtn.width) / 2; 
       add(_playButton);
       add(_playLevel);   
+<<<<<<< HEAD
       
     }
 
     
+=======
+      add(debugBtn);
+    }
+
+>>>>>>> aac9180f3ca820b70d636e1fa967794737cac4f2
     private function switchToState(state:Class):Function {
       return function ():void {
         FlxG.switchState(new state);
