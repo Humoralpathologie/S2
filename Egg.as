@@ -3,19 +3,20 @@ package {
 
   public class Egg extends FlxSprite {
 
-    [Embed(source='assets/images/eggA.png')] protected static var EatenEggA:Class;
-    [Embed(source='assets/images/eggB.png')] protected static var EatenEggB:Class;
-    [Embed(source='assets/images/eggC.png')] protected static var EatenEggC:Class;
-    [Embed(source='assets/images/eggBlank.png')] protected static var EatenEggBlanc:Class;
+    [Embed(source='assets/images/eatenEggBlue.png')] protected static var EatenEggBlue:Class;
+    [Embed(source='assets/images/eatenEggGreenPointed.png')] protected static var EatenEggGreenPointed:Class;
+    [Embed(source='assets/images/eatenEggCross.png')] protected static var EatenEggCross:Class;
+    [Embed(source='assets/images/eatenEggWhite.png')] protected static var EatenEggWhite:Class;
 
-    [Embed(source='assets/images/egg-tilemap.png')] protected static var EggA:Class;
-    [Embed(source='assets/images/egg02-tilemap.png')] protected static var EggB:Class;
-    [Embed(source='assets/images/egg03-tilemap.png')] protected static var EggBlanc:Class;
-    [Embed(source='assets/images/rotten-eggs.png')] protected static var EggRotten:Class 
+    [Embed(source='assets/images/eggBlue.png')] protected static var EggBlue:Class;
+    [Embed(source='assets/images/eggBlue.png')] protected static var EggGreenPointed:Class;
+    [Embed(source='assets/images/eggCross.png')] protected static var EggCross:Class;
+    [Embed(source='assets/images/eggWhite.png')] protected static var EggWhite:Class;
+    [Embed(source='assets/images/eggGreen.png')] protected static var EggGreen:Class 
     [Embed(source='assets/images/shell.png')] protected static var ShellB:Class;
 
-    protected static var eatenGraphics:Array = [EatenEggBlanc, EatenEggA, EatenEggB, EatenEggC];
-    protected static var eggGraphics:Array = [EggBlanc, EggA, EggB, null, EggRotten]
+    protected static var eatenGraphics:Array = [EatenEggWhite, EatenEggBlue, EatenEggGreenPointed, EatenEggCross];
+    protected static var eggGraphics:Array = [EggWhite, EggBlue, EggGreenPointed, EggCross, EggGreen]
     protected static var shellGraphics:Array = [ShellB, ShellB, ShellB, ShellB, ShellB];
 
     public static const ROTTEN:uint = 4;

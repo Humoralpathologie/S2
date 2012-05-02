@@ -2,19 +2,20 @@ package {
   import org.flixel.*;
   import org.flixel.plugin.photonstorm.*;
   import org.flixel.plugin.photonstorm.FX.*;
-  import org.flixel.plugin.photonstorm.API.FlxKongregate;
   
   public class MenuState extends FlxState {
 
   [Embed(source='assets/SnakeSounds/SuperSnakeLoop.mp3')] protected var Music:Class;
+  [Embed(source='assets/images/SNAKE1.png')] protected var Title:Class;
     
     private var _sound:FlxSound;
-    private var _snakeTitleFX:SineWaveFX;
-    private var _snakeTitleText:FlxText;
+    //private var _snakeTitleFX:SineWaveFX;
+    private var _snakeTitleFX:FloodFillFX;
+    private var _snakeTitleText:FlxSprite;
     private var _snakeTitleSprite:FlxSprite;
     private var _playButton:FlxButton;
     private var _playLevel:FlxButton;    
-    
+    private var _updateRate:int;    
 
     override public function create():void {
 
@@ -23,26 +24,43 @@ package {
         FlxG.addPlugin(new FlxSpecialFX);
       }
 
-      _snakeTitleFX = FlxSpecialFX.sineWave();     
-      _snakeTitleText = new FlxText(120,50,400,'SNAKE');
-      _snakeTitleText.size = 100;
-      _snakeTitleText.antialiasing = true;
-      _snakeTitleText.alignment = 'center';
-  
-      _snakeTitleSprite = _snakeTitleFX.createFromFlxSprite(_snakeTitleText, SineWaveFX.WAVETYPE_VERTICAL_SINE,32, _snakeTitleText.width, 8);
+      //_snakeTitleFX = FlxSpecialFX.sineWave();     
+      _snakeTitleFX = FlxSpecialFX.floodFill();     
 
-      _snakeTitleFX.start();
+      _snakeTitleText = new FlxSprite(FlxG.width/2 - 275, 50);
+      _snakeTitleText.loadGraphic(Title, true, false, 550, 220);
+  
+      _snakeTitleText = _snakeTitleFX.create(_snakeTitleText, _snakeTitleText.x, _snakeTitleText.y, _snakeTitleText.width, _snakeTitleText.height, 0, 5, true);
+
+      _snakeTitleFX.start(0);
+      
+      _updateRate = 0;
 
       _sound = new FlxSound;
       _sound.loadEmbedded(Music, true);
       
       add(_sound);
-      add(_snakeTitleSprite);
+      add(_snakeTitleText);
 
-      FlxKongregate.init(apiHasLoaded);
-      _sound.fadeIn(5);
+      makeButtons();
       FlxG.mouse.show();
+      _sound.fadeIn(5);
       
+    }
+
+    override public function update():void {
+      super.update();
+
+      if (_updateRate == 70) {
+        FlxG.log("updated 100");
+        FlxG.shake();
+        _snakeTitleText.addAnimation('nod', [2, 1, 0], 1);
+        _snakeTitleText.play('nod');   
+      }
+  
+      if (_updateRate <= 80) {
+        _updateRate++
+      }
     }
 
     private function makeButtons():void{
@@ -55,13 +73,6 @@ package {
     }
 
     
-
-    private function apiHasLoaded():void
-    {
-      FlxKongregate.connect();
-      makeButtons();
-    }
-
     private function switchToState(state:Class):Function {
       return function ():void {
         FlxG.switchState(new state);

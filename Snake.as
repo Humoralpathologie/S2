@@ -2,9 +2,8 @@ package {
   import org.flixel.*;
 
   public class Snake extends FlxGroup {
-    [Embed(source='assets/head.png')] protected var Head:Class;
+    [Embed(source='assets/images/head.png')] protected var Head:Class;
     [Embed(source='assets/images/tail.png')] protected var Tail:Class;
-    [Embed(source='assets/images/eggs.png')] protected var Eggs:Class;
     [Embed(source='assets/SnakeSounds/Pickup_Coin.mp3')] protected var Bling:Class;
 
     private var _head:FlxSprite;
