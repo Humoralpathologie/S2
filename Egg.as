@@ -7,6 +7,7 @@ package {
     [Embed(source='assets/images/eatenEggGreenPointed.png')] protected static var EatenEggGreenPointed:Class;
     [Embed(source='assets/images/eatenEggCross.png')] protected static var EatenEggCross:Class;
     [Embed(source='assets/images/eatenEggWhite.png')] protected static var EatenEggWhite:Class;
+    [Embed(source='assets/images/eatenEggGreen.png')] protected static var EatenEggGreen:Class;
 
     [Embed(source='assets/images/eggBlue.png')] protected static var EggBlue:Class;
     [Embed(source='assets/images/eggBlue.png')] protected static var EggGreenPointed:Class;
@@ -15,11 +16,11 @@ package {
     [Embed(source='assets/images/eggGreen.png')] protected static var EggGreen:Class 
     [Embed(source='assets/images/shell.png')] protected static var ShellB:Class;
 
-    protected static var eatenGraphics:Array = [EatenEggWhite, EatenEggBlue, EatenEggGreenPointed, EatenEggCross];
-    protected static var eggGraphics:Array = [EggWhite, EggBlue, EggGreenPointed, EggCross, EggGreen]
+    protected static var eatenGraphics:Array = [EatenEggGreen, EatenEggWhite, EatenEggBlue, EatenEggGreenPointed, EatenEggCross];
+    protected static var eggGraphics:Array = [EggGreen, EggWhite, EggBlue, EggGreenPointed, EggCross]
     protected static var shellGraphics:Array = [ShellB, ShellB, ShellB, ShellB, ShellB];
 
-    public static const ROTTEN:uint = 4;
+    public static var ROTTEN:uint = 1;
    
     protected var _points:int;
     protected var _eggType:int;

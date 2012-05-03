@@ -44,8 +44,8 @@ package {
       _tailCam = new FlxCamera(300,30,30,30,2);
       _bling.loadEmbedded(Bling);
 
-      resurrect();
       fillBody(_body);
+      resurrect();
 
       add(_body);
       add(_head);
@@ -53,6 +53,10 @@ package {
 /********************************************
     //getter and setter
 ********************************************/
+    public function get tail():FlxSprite {
+      return _tail;
+    }
+
     public function get head():FlxSprite {
       return _head;
     }
@@ -112,6 +116,11 @@ package {
       _head.play('right');
       _head.offset.x = 0;
       _head.offset.y = 15;
+
+      for (var i:int = 0; i < _body.length; i++) {
+        _body.members[i].x = _head.x - 15;
+        _body.members[i].y = _head.y;
+      }
       _mps = _startMps;
       _speed = 1 / _mps;
       alive = true;
@@ -130,7 +139,7 @@ package {
       for(i = 1; i <= 4; i++){
         var part:FlxSprite;
         if(i == 4) {
-          part = new FlxSprite(_head.x - (i * 15), _head.y);
+          part = new FlxSprite(_head.x - 15, _head.y);
           // This should be somewhere else.
           part.loadGraphic(Tail, true, false, 15, 15);
           part.addAnimation('left',[0,1],7);
@@ -139,7 +148,7 @@ package {
           part.addAnimation('down',[6,7],7);
           _tail = part;
         } else {
-          part = new Egg(i % 3, _head.x - (i * 15), _head.y);
+          part = new Egg(0, _head.x - 15, _head.y);
           (part as Egg).eat();
         }
         part.facing = FlxObject.RIGHT;
@@ -241,6 +250,7 @@ package {
      
     override public function update():void {
       super.update();
+  
 
       if(FlxG.keys.UP && _previousFacing != FlxObject.DOWN){
         _head.facing = FlxObject.UP;

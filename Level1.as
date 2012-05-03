@@ -14,6 +14,7 @@ package {
     override public function create():void {
       super.create();
       _snake.lives = 1;
+      Egg.ROTTEN = 100;      
     
     }
 
@@ -72,10 +73,11 @@ package {
       var egg:Egg;
 
       if (rand > 6) {
-        egg = new Egg(1);  
+        egg = new Egg(2);  
       } else {
-        egg = new Egg(0); 
+        egg = new Egg(Math.floor(Math.random() * 2)); 
       }
+    
 
       spawnEgg(egg);
       _food.add(egg);
@@ -91,7 +93,7 @@ package {
       };
       
       var sameEggType:Function = function(currArr:Array, el:Object):Boolean{
-        return ((currArr[0] as Egg).type == (el as Egg).type) && ((currArr[0] as Egg).type == 1);
+        return ((currArr[0] as Egg).type == (el as Egg).type) && ((currArr[0] as Egg).type == 2);
       };
 
       res = groupArray(sameEggType,arr); 

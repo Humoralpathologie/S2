@@ -35,6 +35,9 @@ package {
 
     protected var _switchLevel:SwitchLevel;
 
+    protected var _startFadeOut:Boolean = true;
+    protected var _tailHidden:Boolean = true;
+
     override public function create():void {
 
       FlxG.log("Starting game");
@@ -58,9 +61,13 @@ package {
       _bonusBar.scale.x = 0;
 
       
-      _hole = new FlxSprite(150 - 14, 150);
+      _hole = new FlxSprite(150 - 15, 150);
       _hole.loadGraphic(Hole);      
-      _hole.alpha = 0;
+      _hole.width = 15;
+      _hole.height = 15;
+      _hole.offset.x = 15;
+
+      _hole.alpha = 1;
 
       add(_bup);
       add(_biteSound);
@@ -176,21 +183,44 @@ package {
       }
     }
 
-    protected function fadeInOutHole():void {
+    protected function fadeInHole():void {
       if (!_snake.alive) {
         _hole.alpha = 1;
+        _tailHidden = true;
       }
   
-      if (_hole.alpha > 0) {
+     }
+    
+    protected function hideTail():void {
+      if (_snake.tail.overlaps(_hole) && _hole.alpha == 1) {
+        _snake.tail.alpha = 0;
+      } else if (_tailHidden) { 
+        _snake.tail.alpha = 1;
+        _tailHidden = false;
+      }
+
+    }
+
+    protected function fadeOutHole():void {
+      if (_hole.alpha > 0 && _startFadeOut) {
         _hole.alpha -= 0.01;
 
       }
-    
+      if (_hole.alpha <= 0) {
+        _startFadeOut = false;
+      }
+      
+
     }
 
     override public function update():void {
       super.update();
-      fadeInOutHole();
+      hideTail();
+      fadeInHole();
+      if (!_snake.tail.overlaps(_hole) && !_startFadeOut) {
+        _startFadeOut = true;
+      }
+      fadeOutHole();
 
       checkWinConditions();      
 

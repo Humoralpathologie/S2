@@ -87,7 +87,7 @@ package {
     }
 
     public function gameOver():void {
-      remove(_storyBeat);
+      _storyBeat.text = "You failed T_T\nTry again!";
       remove(_playNextLevel);      
     }
 

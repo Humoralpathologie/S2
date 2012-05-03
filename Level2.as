@@ -8,6 +8,12 @@ package {
     protected var _background:FlxSprite = null;
     protected var _hudText:FlxText;
 
+    override public function create():void {
+      super.create();
+      _snake.lives = 3;
+      Egg.ROTTEN = 100;      
+    }
+
     override protected function addBackgrounds():void {
       _background = new FlxSprite(0,0);
       _background.loadGraphic(Background);
@@ -25,7 +31,18 @@ package {
     }
 
     override protected function spawnFood():void {
-      reallySpawnFood(2);
+      var rand:int = Math.floor(Math.random() * 10);
+      var egg:Egg;
+
+      if (rand > 4) {
+        egg = new Egg(2);  
+      } else {
+        egg = new Egg(Math.floor(Math.random() * 2)); 
+      }
+
+      spawnEgg(egg);
+      _food.add(egg);
+      
     }
 
     override protected function addHud():void {
@@ -44,16 +61,17 @@ package {
 
     override protected function checkWinConditions():void {
       if(_combos >= 10) {
-        var switcher:SwitchLevel = new SwitchLevel("Conglaturation !!!\nYou have completed a great game.\nAnd prooved the justice of our culture.\nNow go and rest our heroes !", Level2, Level3, "111");
+        var switcher:SwitchLevel = new SwitchLevel("Conglaturation !!!\nYou have completed a great game.\nAnd prooved the justice of our culture.\nNow go and rest our heroes !", Level2, Level3, _timerHud);
         SaveGame.unlockLevel(2);
         FlxG.switchState(switcher); 
       }
     }
 
     override protected function updateHud():void {
-      _hudText.text = "Score: " + String(_score) + "\n" + "Combos: " + String(_combos);
+      _hudText.text = "Score: " + String(_score) + "  Lives: " + String(_snake.lives) + "\n" + "Combos: " + String(_combos);
       _hudText.text += "\nTimer: " + _timerHud;
       _hudText.text += "\nSpeed: " + _snake.mps;
+      
     }
 
     override protected function checkCombos(arr:Array):Array {
@@ -64,7 +82,7 @@ package {
       };
       
       var sameEggType:Function = function(currArr:Array, el:Object):Boolean{
-        return ((currArr[0] as Egg).type == (el as Egg).type) && ((currArr[0] as Egg).type == 1);
+        return ((currArr[0] as Egg).type == (el as Egg).type) && ((currArr[0] as Egg).type == 2);
       };
 
       res = groupArray(sameEggType,arr); 
