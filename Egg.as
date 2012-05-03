@@ -10,7 +10,7 @@ package {
     [Embed(source='assets/images/eatenEggGreen.png')] protected static var EatenEggGreen:Class;
 
     [Embed(source='assets/images/eggBlue.png')] protected static var EggBlue:Class;
-    [Embed(source='assets/images/eggBlue.png')] protected static var EggGreenPointed:Class;
+    [Embed(source='assets/images/eggGreenPointed.png')] protected static var EggGreenPointed:Class;
     [Embed(source='assets/images/eggCross.png')] protected static var EggCross:Class;
     [Embed(source='assets/images/eggWhite.png')] protected static var EggWhite:Class;
     [Embed(source='assets/images/eggGreen.png')] protected static var EggGreen:Class 
