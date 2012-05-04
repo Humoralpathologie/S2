@@ -1,7 +1,9 @@
 package {
-  import org.flixel.*;
+  import org.axgl.*;
+  import org.axgl.text.*;
+  import org.axgl.render.*;
   
-  public class LevelSelect extends FlxState {
+  public class LevelSelect extends AxState {
 
     [Embed(source='assets/images/level1.png')] protected static var L1:Class;
     [Embed(source='assets/images/level2.png')] protected static var L2:Class;
@@ -12,32 +14,25 @@ package {
 
     private static var _levelPics:Array = [LNo, L1, L2, L3];
     //level description
-    private static var _level1:Array = [Level1, "Level1", "Crossroads of Carnage", "Devour 50 Eggs", "None"];
-    private static var _level2:Array = [Level2, "Level2", "Make 20 Combos of 3(or more if you dare)", "None"];
+   
+    private static var _level1:Array = [null, "Level1", "Crossroads of Carnage", "Devour 50 Eggs", "None"];
+    private static var _level2:Array = [null, "Level2", "Make 20 Combos of 3(or more if you dare)", "None"];
  
-    private static var _level3:Array = [Level3, "Level3", "Snaking on Speed", "Survive the Food Poisoning", "None"];
+    private static var _level3:Array = [null, "Level3", "Snaking on Speed", "Survive the Food Poisoning", "None"];
     
     private static var _levels:Array = [_level1, _level2, _level3, false, false, false, false, false, false, false];
 
-    private var _title:FlxText;    
-    private var _clickSound:FlxSound;
+    private var _title:AxText;    
 
-    public function LevelSelect() {
-      super();
-
-      _title = new FlxText(FlxG.width / 2 - 300, 50, 600, "SELECT LEVEL");
-      _title.size = 50;
-      _title.antialiasing = true;
-      _title.alignment = 'center';
-
-      _clickSound = new FlxSound;
-      _clickSound.loadEmbedded(ClickSound);
+    override public function create():void {
+      super.create();
+      Ax.background = new AxColor(0,0,0);
+      _title = new AxText(Ax.width / 2 - 300, 50, null, "SELECT LEVEL");
+      // _title.size = 50;
       
       makeButtons();
       add(_title);
-
     }
-
 
     private function makeButtons():void{
       var xPos:int = 95;
@@ -45,8 +40,8 @@ package {
       
 
       for (var i:int = 0; i < _levels.length; i++) {
-        var levelButton:FlxButton;
-        var levelSprite:FlxSprite;
+        var levelButton:AxButton;
+        var levelSprite:AxSprite;
 
         if (i == 5) { 
           xPos = 95; 
@@ -54,29 +49,27 @@ package {
         }
 
         if (_levels[i] && SaveGame.levelUnlocked(i)) {
-          levelButton = new FlxButton(xPos, yPos, "", switchToState(_levels[i][0], _levels[i][2], _levels[i][3], _levels[i][4]));
-          levelButton.loadGraphic(_levelPics[i+1]);
-          levelButton.soundDown = _clickSound;
+          levelButton = new AxButton(xPos, yPos, _levelPics[i+1],90,90);//"", switchToState(_levels[i][0], _levels[i][2], _levels[i][3], _levels[i][4]));
+          //levelButton.soundDown = _clickSound;
+          levelButton.onClick(function ():void { Ax.sound(ClickSound); })
           add(levelButton);
         } else {
-          levelSprite = new FlxSprite(xPos, yPos);
-          levelSprite.loadGraphic(_levelPics[0]);
+          levelSprite = new AxSprite(xPos, yPos);
+          levelSprite.load(_levelPics[0]);
           add(levelSprite);
         }
         
         xPos += 90;
 
-
       }
-
       
     }
 
 
     private function switchToState(state:Class, title:String, objective:String, timeLimit:String):Function {
       return function ():void {
-        var levelDescr:LevelDescription = new LevelDescription(state, title, objective, timeLimit);
-        FlxG.switchState(levelDescr);
+        //var levelDescr:LevelDescription = new LevelDescription(state, title, objective, timeLimit);
+        ////FlxG.switchState(levelDescr);
       }
     }
 

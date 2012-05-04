@@ -1,13 +1,12 @@
 package {
-  import org.flixel.*;
+  import org.axgl.*;
 
   [SWF(width='640', height='480', backgroundColor='#aa0000')]
-  [Frame(factoryClass="Preloader")]
-  public class Main extends FlxGame {
+  //[Frame(factoryClass="Preloader")]
+  public class Main extends Ax {
     public function Main() {
       SaveGame.load();
-      super(640, 480, MovieState);
-      forceDebugger = true;
+      super(LevelSelect, 640, 480);
     }
   }
 }

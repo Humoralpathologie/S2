@@ -1,68 +1,54 @@
 package {
-  import org.flixel.*;
-  import org.flixel.plugin.photonstorm.*;
-  import org.flixel.plugin.photonstorm.FX.*;
-  import flash.media.SoundMixer;
+  import org.axgl.*;
+  import org.axgl.text.*;
+  import org.axgl.render.*;
   
-  public class MenuState extends FlxState {
+  public class MenuState extends AxState {
 
   [Embed(source='assets/SnakeSounds/SuperSnakeLoop.mp3')] protected var Music:Class;
     
-    private var _sound:FlxSound;
-    private var _snakeTitleFX:SineWaveFX;
-    private var _snakeTitleText:FlxText;
-    private var _snakeTitleSprite:FlxSprite;
-    private var _playButton:FlxButton;
-    private var _playLevel:FlxButton;    
+    private var _snakeTitleText:AxText;
+    private var _playButton:AxButton;
+    private var _playLevel:AxButton;    
     
     override public function create():void {
+      super.create();
+      Ax.background = new AxColor(0,0,0);
 
-      if (FlxG.getPlugin(FlxSpecialFX) == null)
-      {
-        FlxG.addPlugin(new FlxSpecialFX);
-      }
-
-      _snakeTitleFX = FlxSpecialFX.sineWave();     
-      _snakeTitleText = new FlxText(120,50,400,'SNAKE');
-      _snakeTitleText.size = 100;
-      _snakeTitleText.antialiasing = true;
-      _snakeTitleText.alignment = 'center';
+      _snakeTitleText = new AxText(0, 50, null,'SNAKE',Ax.width / 5, 'center');
+      _snakeTitleText.scale.x = 5;
+      _snakeTitleText.scale.y = 5;
   
-      _snakeTitleSprite = _snakeTitleFX.createFromFlxSprite(_snakeTitleText, SineWaveFX.WAVETYPE_VERTICAL_SINE,32, _snakeTitleText.width, 8);
-
-      _snakeTitleFX.start();
-
-      _sound = new FlxSound;
-      _sound.loadEmbedded(Music, true);
+      //Ax.music(Music);
       
-      add(_sound);
-      add(_snakeTitleSprite);
+      add(_snakeTitleText);
 
-      _sound.fadeIn(5);
-      FlxG.mouse.show();
+      //Ax.mouse.show();
       
       makeButtons();
     }
 
     private function makeButtons():void{
-      _playButton = new FlxButton(FlxG.width/2-40, 300, "New Story", switchToState(MovieState));
-      _playLevel = new FlxButton(FlxG.width/2-40, 300 + 20, "Select Level", switchToState(LevelSelect));
-      var debugBtn:FlxButton = new FlxButton(0, _playLevel.y + _playLevel.height + 10, "Debug", switchToState(DebugState));
-      debugBtn.x = (FlxG.width - debugBtn.width) / 2; 
+      _playButton = new AxButton(Ax.width/2-40, 300); //, "New Story", switchToState(MovieState));
+      _playButton.x = (Ax.width - _playButton.width) / 2;
+      _playButton.text("New Story");
+      _playButton.onClick(switchToState(MovieState));
+      _playLevel = new AxButton(Ax.width/2-40, 300 + 40); //, "Select Level", switchToState(LevelSelect));
+      _playLevel.x = (Ax.width - _playLevel.width) / 2;
+      _playLevel.text("Select Level");
+      _playLevel.onClick(switchToState(LevelSelect));
+      //var debugBtn:FlxButton = new FlxButton(0, _playLevel.y + _playLevel.height + 10, "Debug", switchToState(DebugState));
+      //debugBtn.x = (FlxG.width - debugBtn.width) / 2; 
       add(_playButton);
       add(_playLevel);   
-      add(debugBtn);
+      //add(debugBtn);
     }
 
     private function switchToState(state:Class):Function {
       return function ():void {
-        FlxG.switchState(new state);
+        Ax.pushState(new state);
       }
     }
 
-    override public function destroy():void {
-      FlxSpecialFX.clear();
-      super.destroy();
-    }
   }
 }
