@@ -38,6 +38,7 @@ package {
     protected var _startFadeOut:Boolean = true;
     protected var _tailHidden:Boolean = true;
 
+    private var _stoped:Boolean = false;
     override public function create():void {
 
       FlxG.log("Starting game");
@@ -205,6 +206,15 @@ package {
     }
 
     override public function update():void {
+      if(FlxG.keys.SPACE && !_stoped){
+        FlxG.paused = true;
+        _stoped = true;
+      }
+      if(FlxG.keys.SPACE && _stoped){
+        FlxG.paused = false;
+        _stoped = false;
+      }
+
       super.update();
       fadeInHole();
       fadeOutHole();
