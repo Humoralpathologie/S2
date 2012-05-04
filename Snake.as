@@ -2,7 +2,7 @@ package {
   import org.flixel.*;
 
   public class Snake extends FlxGroup {
-    [Embed(source='assets/images/head.png')] protected var Head:Class;
+    [Embed(source='assets/images/snakeHead.png')] protected var Head:Class;
     [Embed(source='assets/images/tail.png')] protected var Tail:Class;
     [Embed(source='assets/SnakeSounds/Pickup_Coin.mp3')] protected var Bling:Class;
 
@@ -20,7 +20,8 @@ package {
     private var _bling:FlxSound = new FlxSound;    
     private var _justAte:Boolean = false;
     private var _startMps:Number;
-    
+
+    private var _emoLevel:int;    
     public function Snake(movesPerSecond:Number = 1) { 
       super();
       
@@ -32,11 +33,25 @@ package {
       _head = new FlxSprite(15 * 10, 15 * 10);
       //_head.makeGraphic(16,16);
       _head.loadGraphic(Head, true, false, 30, 30);
-      _head.addAnimation('left',[0,6,9], 5);
-      _head.addAnimation('right',[10,16,19], 5);
-      _head.addAnimation('right-eat',[10,16,19], 5);
-      _head.addAnimation('up',[20,26,29], 5);
-      _head.addAnimation('down',[30]);
+      _head.addAnimation('right_0',[0,1], 3);
+      _head.addAnimation('left_0',[2,3], 3);
+      _head.addAnimation('up_0',[4,5], 4);
+      _head.addAnimation('down_0',[6,7], 4);
+
+      _head.addAnimation('right_1',[8,9], 3);
+      _head.addAnimation('left_1',[10,11], 3);
+      _head.addAnimation('up_1',[12,13], 4);
+      _head.addAnimation('down_1',[14,15], 4);
+
+      _head.addAnimation('right_2',[16,17], 3);
+      _head.addAnimation('left_2',[18,19], 3);
+      _head.addAnimation('up_2',[20,21], 4);
+      _head.addAnimation('down_2',[22,23], 4);
+
+      _head.addAnimation('right_3',[24,25], 3);
+      _head.addAnimation('left_3',[26,27], 3);
+      _head.addAnimation('up_3',[28,29], 4);
+      _head.addAnimation('down_3',[30,31], 4);
       _head.width = 15;
       _head.height = 15;
 
@@ -113,26 +128,21 @@ package {
       _head.y = 150;
       _head.facing = FlxObject.RIGHT;
       _previousFacing = _head.facing;
-      _head.play('right');
+      _head.play('right_0');
       _head.offset.x = 0;
-      _head.offset.y = 15;
+      _head.offset.y = 9.5;
 
       for (var i:int = 0; i < _body.length; i++) {
         _body.members[i].x = _head.x - 15;
         _body.members[i].y = _head.y;
       }
+      _tail.alpha == 0;
       _mps = _startMps;
       _speed = 1 / _mps;
       alive = true;
       _tailCam.follow(tailEgg());
     }
 
-    public function faster():void {
-      if(_mps < 30)
-        _mps += 1;
-      
-      _speed = 1 / _mps;
-    }
 
     private function fillBody(group:FlxGroup):void {
       var i:int;
@@ -174,6 +184,19 @@ package {
       }
     }
 
+    private function animateBodyMovement(part:FlxSprite):void {
+        if (part.facing == FlxObject.UP || part.facing == FlxObject.DOWN) {
+          (part as Egg).offset.x = 2;
+          (part as Egg).offset.y = 0;
+          (part as Egg).play("vertical");
+        } else {
+          (part as Egg).offset.x = 0;
+          (part as Egg).offset.y = 0;
+          (part as Egg).play("horizontal");
+        }
+        
+    }
+
     private function move():void {
       _previousFacing = _head.facing;
       if(_newPart){ 
@@ -187,10 +210,9 @@ package {
         _justAte = true;
       }  
 
-      for(var i:int = _body.members.length - 1 ; i >= 0; i--){
+      for(var i:int = _body.length - 1 ; i >= 0; i--){
         var part:FlxSprite;
         part = _body.members[i];
-        if(part) {
           if(i == 0){
             part.x = _head.x;
             part.y = _head.y; 
@@ -200,7 +222,10 @@ package {
             part.y = _body.members[i - 1].y;
             part.facing = _body.members[i - 1].facing;
           }
-        }
+    
+          if (i != _body.length - 1) {
+            animateBodyMovement(part);
+          }
       }
 
       var xSpeed:int = 0;
@@ -247,7 +272,32 @@ package {
 
     }
 
+    private function setEmoLevel():void {
+      switch(_mps) {
+        case 10:
+          _emoLevel = 0;
+        break;
+        case 15:
+          _emoLevel = 1;
+        break;
+        case 20:
+          _emoLevel = 2;
+        break;
+        case 25:
+          _emoLevel = 3;
+        break;
+
+      }
+
+    }
      
+    public function faster():void {
+      if(_mps < 30)
+        _mps += 1;
+            
+      setEmoLevel();
+      _speed = 1 / _mps;
+    }
     override public function update():void {
       super.update();
   
@@ -267,24 +317,24 @@ package {
 
       switch(_head.facing) {
         case FlxObject.UP:
-          _head.offset.x = 4;
+          _head.offset.x = 8;
           _head.offset.y = 15;
-          _head.play('up');
+          _head.play('up_' + String(_emoLevel));
           break;
         case FlxObject.DOWN: 
-          _head.offset.x = 4;
+          _head.offset.x = 8;
           _head.offset.y = 0;
-          _head.play('down');
+          _head.play('down_' + String(_emoLevel));
           break;
         case FlxObject.RIGHT:
           _head.offset.x = 0;
-          _head.offset.y = 15;
-          _head.play('right');
+          _head.offset.y = 9.5;
+          _head.play('right_' + String(_emoLevel));
           break;
         case FlxObject.LEFT:
           _head.offset.x = 15;
-          _head.offset.y = 15;
-          _head.play('left');
+          _head.offset.y = 9.5;
+          _head.play('left_' + String(_emoLevel));
           break;
       }
 

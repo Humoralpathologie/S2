@@ -3,11 +3,11 @@ package {
 
   public class Egg extends FlxSprite {
 
-    [Embed(source='assets/images/eatenEggBlue.png')] protected static var EatenEggBlue:Class;
-    [Embed(source='assets/images/eatenEggGreenPointed.png')] protected static var EatenEggGreenPointed:Class;
+    [Embed(source='assets/images/eatenEggBlue_shadow.png')] protected static var EatenEggBlue:Class;
+    [Embed(source='assets/images/eatenEggGreenPointed_shadow.png')] protected static var EatenEggGreenPointed:Class;
     [Embed(source='assets/images/eatenEggCross.png')] protected static var EatenEggCross:Class;
-    [Embed(source='assets/images/eatenEggWhite.png')] protected static var EatenEggWhite:Class;
-    [Embed(source='assets/images/eatenEggGreen.png')] protected static var EatenEggGreen:Class;
+    [Embed(source='assets/images/eatenEggWhite_shadow.png')] protected static var EatenEggWhite:Class;
+    [Embed(source='assets/images/eatenEggGreen_shadow.png')] protected static var EatenEggGreen:Class;
 
     [Embed(source='assets/images/eggBlue.png')] protected static var EggBlue:Class;
     [Embed(source='assets/images/eggGreenPointed.png')] protected static var EggGreenPointed:Class;
@@ -51,9 +51,11 @@ package {
     }
 
     public function eat():void{
-      offset.y = 0;
-      offset.x = 0;
-      loadGraphic(eatenGraphics[_eggType]);
+      loadGraphic(eatenGraphics[_eggType], true, false, 19, 17);
+      addAnimation("horizontal", [1], 1);
+      addAnimation("vertical", [0], 1);
+      width = 15;
+      height = 15;
     }
 
     public function get points():int{

@@ -65,7 +65,7 @@ package {
       _hole.loadGraphic(Hole);      
       _hole.width = 15;
       _hole.height = 15;
-      _hole.offset.x = 15;
+      _hole.offset.x = 13;
 
       _hole.alpha = 1;
 
@@ -186,40 +186,27 @@ package {
     protected function fadeInHole():void {
       if (!_snake.alive) {
         _hole.alpha = 1;
-        _tailHidden = true;
+        _snake.tail.alpha = 0;
       }
   
      }
     
-    protected function hideTail():void {
-      if (_snake.tail.overlaps(_hole) && _hole.alpha == 1) {
-        _snake.tail.alpha = 0;
-      } else if (_tailHidden) { 
-        _snake.tail.alpha = 1;
-        _tailHidden = false;
-      }
-
-    }
 
     protected function fadeOutHole():void {
-      if (_hole.alpha > 0 && _startFadeOut) {
-        _hole.alpha -= 0.01;
-
-      }
-      if (_hole.alpha <= 0) {
-        _startFadeOut = false;
+      if (!_snake.tail.overlaps(_hole)) {
+        if (_hole.alpha > 0) {
+          _hole.alpha -= 0.01;
+        }
+        if (_snake.tail.alpha < 1) {
+          _snake.tail.alpha += 0.03;
+        }
       }
       
-
     }
 
     override public function update():void {
       super.update();
-      hideTail();
       fadeInHole();
-      if (!_snake.tail.overlaps(_hole) && !_startFadeOut) {
-        _startFadeOut = true;
-      }
       fadeOutHole();
 
       checkWinConditions();      
