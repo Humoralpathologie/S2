@@ -1,7 +1,7 @@
 package {
-  import org.flixel.*;
+  import org.axgl.*;
 
-  public class Egg extends FlxSprite {
+  public class Egg extends AxSprite {
 
     [Embed(source='assets/images/eggA.png')] protected static var EatenEggA:Class;
     [Embed(source='assets/images/eggB.png')] protected static var EatenEggB:Class;
@@ -22,36 +22,41 @@ package {
    
     protected var _points:int;
     protected var _eggType:int;
-    protected var _shells:FlxEmitter;
+    // protected var _shells:AxEmitter;
     
     public function Egg(eggType:int = 0, x:int = 0, y:int = 0 ){
       super(x, y);
       
       _eggType = eggType;
-      loadGraphic(eggGraphics[eggType], true, false, 30, 30);
+      load(eggGraphics[eggType], 30, 30);
       addAnimation('wiggle',[0,1],2);
-      play('wiggle');
+      animate('wiggle');
 
       width = 15;
       height = 15;
       offset.y = 6;
       offset.x = 1;
 
-      _shells = new FlxEmitter();
-      _shells.makeParticles(shellGraphics[eggType], 4);
+      //_shells = new FlxEmitter();
+      //_shells.makeParticles(shellGraphics[eggType], 4);
 
       _points = 2; // Can be switched later by eggType
 
     }
 
+    /*
     public function get shells():FlxEmitter{
       return _shells;
     }
+    */
 
     public function eat():void{
       offset.y = 0;
       offset.x = 0;
-      loadGraphic(eatenGraphics[_eggType]);
+      load(eatenGraphics[_eggType]);
+      show(0);
+      // X-Tina style
+      dirty = true;
     }
 
     public function get points():int{

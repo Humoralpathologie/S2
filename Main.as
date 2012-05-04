@@ -6,7 +6,7 @@ package {
   public class Main extends Ax {
     public function Main() {
       SaveGame.load();
-      super(LevelSelect, 640, 480);
+      super(MenuState, 640, 480);
     }
   }
 }

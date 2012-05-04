@@ -1,25 +1,26 @@
 package {
-  import org.flixel.*;
+  import org.axgl.*;
+  import org.axgl.input.*;
 
-  public class Snake extends FlxGroup {
+  public class Snake extends AxGroup {
     [Embed(source='assets/head.png')] protected var Head:Class;
     [Embed(source='assets/images/tail.png')] protected var Tail:Class;
     [Embed(source='assets/images/eggs.png')] protected var Eggs:Class;
     [Embed(source='assets/SnakeSounds/Pickup_Coin.mp3')] protected var Bling:Class;
 
-    private var _head:FlxSprite;
-    private var _tail:FlxSprite;
-    private var _body:FlxGroup;
+    private var _head:AxSprite;
+    private var _tail:AxSprite;
+    private var _body:AxGroup;
     private var _timer:Number;
     private var _speed:Number;
     private var _mps:Number;
-    private var _newPart:FlxSprite;
+    private var _newPart:AxSprite;
     private var _lives:int = 3;
-    private var _previousFacing:uint = FlxObject.RIGHT;
-    private var _tailCam:FlxCamera;
-    private var _nextPos:FlxPoint = null;
-    private var _bling:FlxSound = new FlxSound;    
+    private var _previousFacing:uint = AxEntity.RIGHT;
+    private var _nextPos:AxPoint = null;
+    //private var _bling:FlxSound = new FlxSound;    
     private var _justAte:Boolean = false;
+    public var alive:Boolean = false;
     
     public function Snake(movesPerSecond:Number = 1) { 
       super();
@@ -28,9 +29,8 @@ package {
       _speed = 1 / _mps;
       _timer = 0;
 
-      _head = new FlxSprite(15 * 10, 15 * 10);
-      //_head.makeGraphic(16,16);
-      _head.loadGraphic(Head, true, false, 30, 30);
+      _head = new AxSprite(15 * 10, 15 * 10);
+      _head.load(Head, 30, 30);
       _head.addAnimation('left',[0,1,2,3,4,5,6,7,8,9], 10);
       _head.addAnimation('right',[10,11,12,13,14,15,16,17,18,19], 10);
       _head.addAnimation('right-eat',[10,11,12,13,14,15,16,17,18,19], 10);
@@ -38,10 +38,9 @@ package {
       _head.addAnimation('down',[30]);
       _head.width = 15;
       _head.height = 15;
+      _head.flip = AxEntity.NONE;
 
-      _body = new FlxGroup();
-      _tailCam = new FlxCamera(300,30,30,30,2);
-      _bling.loadEmbedded(Bling);
+      _body = new AxGroup();
 
       resurrect();
 
@@ -49,15 +48,11 @@ package {
       add(_head);
     }
 
-    public function get tailCam():FlxCamera {
-      return _tailCam;
-    }
-
     public function get mps():Number {
       return 1 / _speed; 
     }
 
-    public function set nextPos(pos:FlxPoint):void {
+    public function set nextPos(pos:AxPoint):void {
       _nextPos = pos;
     }
 
@@ -71,8 +66,8 @@ package {
     }
 
     private function tailEgg():Egg {
-      if(_body.length >= 2){
-        return _body.members[_body.length - 2];
+      if(_body.members.length >= 2){
+        return (_body.members[_body.members.length - 2] as Egg);
       } else {
         return null;
       }
@@ -84,22 +79,22 @@ package {
     }
 
     private function resurrect():void {
-      _body.clear();
+      _body.dispose();
+      _body = new AxGroup();
       _head.x = 150;
       _head.y = 150;
-      _head.facing = FlxObject.RIGHT;
+      _head.facing = AxEntity.RIGHT;
       _previousFacing = _head.facing;
-      _head.play('right');
+      _head.animate('right');
       _head.offset.x = 0;
       _head.offset.y = 15;
       fillBody(_body);
       _mps = 8;
       _speed = 1 / _mps;
       alive = true;
-      _tailCam.follow(tailEgg());
     }
 
-    public function get head():FlxSprite {
+    public function get head():AxSprite {
       return _head;
     }
 
@@ -114,42 +109,43 @@ package {
       _speed = 1 / _mps;
     }
 
-    private function fillBody(group:FlxGroup):void {
+    private function fillBody(group:AxGroup):void {
       var i:int;
       for(i = 1; i <= 4; i++){
-        var part:FlxSprite;
+        var part:AxSprite;
         if(i == 4) {
-          part = new FlxSprite(_head.x - (i * 15), _head.y);
+          part = new AxSprite(_head.x - (i * 15), _head.y);
           // This should be somewhere else.
-          part.loadGraphic(Tail, true, false, 15, 15);
+          part.load(Tail, 15, 15);
           part.addAnimation('left',[0,1],7);
           part.addAnimation('right',[2,3],7);
           part.addAnimation('up',[4,5],7);
           part.addAnimation('down',[6,7],7);
           _tail = part;
+          _tail.flip = AxEntity.NONE;
         } else {
           part = new Egg(i % 3, _head.x - (i * 15), _head.y);
           (part as Egg).eat();
         }
-        part.facing = FlxObject.RIGHT;
+        part.facing = AxEntity.RIGHT;
         group.add(part);
       } 
     }
 
-    public function swallow(food:FlxSprite):void {
+    public function swallow(food:AxSprite):void {
       _newPart = food;
       switch(_head.facing) {
-        case FlxObject.RIGHT:
-            _head.play('right-eat');
+        case AxEntity.RIGHT:
+            _head.animate('right-eat');
           break;
-        case FlxObject.LEFT:
-            _head.play('left');
+        case AxEntity.LEFT:
+            _head.animate('left');
           break;
-        case FlxObject.UP:
-            _head.play('up');
+        case AxEntity.UP:
+            _head.animate('up');
           break;
-        case FlxObject.DOWN:
-            _head.play('down');
+        case AxEntity.DOWN:
+            _head.animate('down');
           break;
       }
     }
@@ -158,61 +154,58 @@ package {
       _previousFacing = _head.facing;
       if(_newPart){ 
         (_newPart as Egg).eat();
-        var swap:FlxSprite;
+        var swap:AxSprite;
         _body.remove(_tail);
         _body.add(_newPart);
         _body.add(_tail);
-        _tailCam.follow(_newPart);
         _newPart = null;
         _justAte = true;
       }  
 
       for(var i:int = _body.members.length - 1 ; i >= 0; i--){
-        var part:FlxSprite;
-        part = _body.members[i];
-        if(part) {
-          if(i == 0){
-            part.x = _head.x;
-            part.y = _head.y; 
-            part.facing = head.facing;
-          } else {
-            part.x = _body.members[i - 1].x;
-            part.y = _body.members[i - 1].y;
-            part.facing = _body.members[i - 1].facing;
-          }
+        var part:AxSprite;
+        var lastPart:AxSprite;
+        part = (_body.members[i] as AxSprite); 
+        if(i == 0){
+          lastPart = _head;
+        } else {
+          lastPart = (_body.members[i - 1] as AxSprite);
         }
+        part.x = lastPart.x;
+        part.y = lastPart.y; 
+        part.facing = lastPart.facing;
       }
 
       var xSpeed:int = 0;
       var ySpeed:int = 0;
       
       switch(_head.facing) {
-        case FlxObject.RIGHT:
+        case AxEntity.RIGHT:
             xSpeed = 15;
           break;
-        case FlxObject.LEFT:
+        case AxEntity.LEFT:
             xSpeed = -15;
           break;
-        case FlxObject.UP:
+        case AxEntity.UP:
             ySpeed = -15;
           break;
-        case FlxObject.DOWN:
+        case AxEntity.DOWN:
             ySpeed = 15;
           break;
       }
 
       switch(_tail.facing) {
-        case FlxObject.RIGHT:
-            _tail.play('right');
+        case AxEntity.RIGHT:
+            _tail.animate('right');
           break;
-        case FlxObject.LEFT:
-            _tail.play('left');
+        case AxEntity.LEFT:
+            _tail.animate('left');
           break;
-        case FlxObject.UP:
-            _tail.play('up');
+        case AxEntity.UP:
+            _tail.animate('up');
           break;
-        case FlxObject.DOWN:
-            _tail.play('down');
+        case AxEntity.DOWN:
+            _tail.animate('down');
           break;
       }
 
@@ -227,50 +220,50 @@ package {
 
     }
 
-    public function get body():FlxGroup {
+    public function get body():AxGroup {
       return _body;
     }
      
     override public function update():void {
       super.update();
 
-      if(FlxG.keys.UP && _previousFacing != FlxObject.DOWN){
-        _head.facing = FlxObject.UP;
+      if(Ax.keys.pressed(AxKey.UP) && _previousFacing != AxEntity.DOWN){
+        _head.facing = AxEntity.UP;
       } else
-      if(FlxG.keys.DOWN && _previousFacing != FlxObject.UP){
-        _head.facing = FlxObject.DOWN;
+      if(Ax.keys.pressed(AxKey.DOWN) && _previousFacing != AxEntity.UP){
+        _head.facing = AxEntity.DOWN;
       } else 
-      if(FlxG.keys.RIGHT && _previousFacing != FlxObject.LEFT){
-        _head.facing = FlxObject.RIGHT;
+      if(Ax.keys.pressed(AxKey.RIGHT) && _previousFacing != AxEntity.LEFT){
+        _head.facing = AxEntity.RIGHT;
       } else 
-      if(FlxG.keys.LEFT && _previousFacing != FlxObject.RIGHT){
-        _head.facing = FlxObject.LEFT;
+      if(Ax.keys.pressed(AxKey.LEFT) && _previousFacing != AxEntity.RIGHT){
+        _head.facing = AxEntity.LEFT;
       } 
 
       switch(_head.facing) {
-        case FlxObject.UP:
+        case AxEntity.UP:
           _head.offset.x = 4;
           _head.offset.y = 15;
-          _head.play('up');
+          _head.animate('up');
           break;
-        case FlxObject.DOWN: 
+        case AxEntity.DOWN: 
           _head.offset.x = 4;
           _head.offset.y = 0;
-          _head.play('down');
+          _head.animate('down');
           break;
-        case FlxObject.RIGHT:
+        case AxEntity.RIGHT:
           _head.offset.x = 0;
           _head.offset.y = 15;
-          _head.play('right');
+          _head.animate('right');
           break;
-        case FlxObject.LEFT:
+        case AxEntity.LEFT:
           _head.offset.x = 15;
           _head.offset.y = 15;
-          _head.play('left');
+          _head.animate('left');
           break;
       }
 
-      _timer += FlxG.elapsed;
+      _timer += Ax.dt;
       if(_timer >= _speed){
         if(alive){
           if(_head.overlaps(_body)){

@@ -46,7 +46,7 @@ package {
 
     private function switchToState(state:Class):Function {
       return function ():void {
-        Ax.pushState(new state);
+        Ax.switchState(new state);
       }
     }
 
