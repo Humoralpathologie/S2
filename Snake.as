@@ -3,7 +3,7 @@ package {
 
   public class Snake extends FlxGroup {
     [Embed(source='assets/images/snake_head_tilemap.png')] protected var Head:Class;
-    [Embed(source='assets/images/tail.png')] protected var Tail:Class;
+    [Embed(source='assets/images/snake_tail_tilemap.png')] protected var Tail:Class;
     [Embed(source='assets/SnakeSounds/Pickup_Coin.mp3')] protected var Bling:Class;
 
     private var _head:FlxSprite;
@@ -151,11 +151,19 @@ package {
         if(i == 4) {
           part = new FlxSprite(_head.x - 15, _head.y);
           // This should be somewhere else.
-          part.loadGraphic(Tail, true, false, 15, 15);
-          part.addAnimation('left',[0,1],7);
-          part.addAnimation('right',[2,3],7);
-          part.addAnimation('up',[4,5],7);
-          part.addAnimation('down',[6,7],7);
+          part.loadGraphic(Tail, true, false, 45, 45);
+          part.width = 15;
+          part.height = 15;
+          part.offset.x = 15;
+          part.offset.y = 15
+          part.width = 15;
+          part.height = 15;
+          part.offset.x = 15;
+          part.offset.y = 15;
+          part.addAnimation('left',[0],1);
+          part.addAnimation('right',[1],1);
+          part.addAnimation('up',[2],1);
+          part.addAnimation('down',[3],1);
           _tail = part;
         } else {
           part = new Egg(0, _head.x - 15, _head.y);
@@ -186,12 +194,8 @@ package {
 
     private function animateBodyMovement(part:FlxSprite):void {
         if (part.facing == FlxObject.UP || part.facing == FlxObject.DOWN) {
-          (part as Egg).offset.x = 2;
-          (part as Egg).offset.y = 0;
           (part as Egg).play("vertical");
         } else {
-          (part as Egg).offset.x = 0;
-          (part as Egg).offset.y = 0;
           (part as Egg).play("horizontal");
         }
         
@@ -212,20 +216,30 @@ package {
 
       for(var i:int = _body.length - 1 ; i >= 0; i--){
         var part:FlxSprite;
+        var prePart:FlxSprite;
+        var preFacing:uint;
         part = _body.members[i];
+        prePart = _body.members[i - 1];
+        preFacing = part.facing;
+
+          if (i != _body.length - 1) {
+            animateBodyMovement(part);
+          }
+
           if(i == 0){
             part.x = _head.x;
             part.y = _head.y; 
             part.facing = head.facing;
           } else {
-            part.x = _body.members[i - 1].x;
-            part.y = _body.members[i - 1].y;
-            part.facing = _body.members[i - 1].facing;
+            part.x = prePart.x;
+            part.y = prePart.y;
+            part.facing = prePart.facing;
+            //body tile in angle
+            if (i != _body.length - 1 && preFacing != part.facing) {
+              (part as Egg).play("angle");
+            } 
           }
     
-          if (i != _body.length - 1) {
-            animateBodyMovement(part);
-          }
       }
 
       var xSpeed:int = 0;

@@ -17,7 +17,6 @@ package {
     private var _playButton:FlxButton;
     private var _playLevel:FlxButton;    
     private var _updateRate:int;    
-
     
     override public function create():void {
 
@@ -47,7 +46,6 @@ package {
       makeButtons();
       _sound.fadeIn(5);
       FlxG.mouse.show();
-      
     }
 
     override public function update():void {

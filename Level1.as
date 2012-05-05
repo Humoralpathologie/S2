@@ -4,6 +4,7 @@ package {
   public class Level1 extends LevelState {
     // Assets
     [Embed(source='assets/images/level01bg.png')] protected var Background:Class;
+    [Embed(source='assets/images/eatenEggGreen_shadow.png')] protected static var EatenEggGreen:Class;
     // Variablen
     private var _background:FlxSprite = null;
     
