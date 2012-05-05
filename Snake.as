@@ -2,7 +2,7 @@ package {
   import org.flixel.*;
 
   public class Snake extends FlxGroup {
-    [Embed(source='assets/images/snakeHead.png')] protected var Head:Class;
+    [Embed(source='assets/images/snake_head_tilemap.png')] protected var Head:Class;
     [Embed(source='assets/images/tail.png')] protected var Tail:Class;
     [Embed(source='assets/SnakeSounds/Pickup_Coin.mp3')] protected var Bling:Class;
 
@@ -32,7 +32,7 @@ package {
 
       _head = new FlxSprite(15 * 10, 15 * 10);
       //_head.makeGraphic(16,16);
-      _head.loadGraphic(Head, true, false, 30, 30);
+      _head.loadGraphic(Head, true, false, 45, 75);
       _head.addAnimation('right_0',[0,1], 3);
       _head.addAnimation('left_0',[2,3], 3);
       _head.addAnimation('up_0',[4,5], 4);
@@ -301,6 +301,8 @@ package {
     override public function update():void {
       super.update();
   
+      _head.offset.x = 15;
+      _head.offset.y = 30;
 
       if(FlxG.keys.UP && _previousFacing != FlxObject.DOWN){
         _head.facing = FlxObject.UP;
@@ -317,23 +319,15 @@ package {
 
       switch(_head.facing) {
         case FlxObject.UP:
-          _head.offset.x = 8;
-          _head.offset.y = 15;
           _head.play('up_' + String(_emoLevel));
           break;
         case FlxObject.DOWN: 
-          _head.offset.x = 8;
-          _head.offset.y = 0;
           _head.play('down_' + String(_emoLevel));
           break;
         case FlxObject.RIGHT:
-          _head.offset.x = 0;
-          _head.offset.y = 9.5;
           _head.play('right_' + String(_emoLevel));
           break;
         case FlxObject.LEFT:
-          _head.offset.x = 15;
-          _head.offset.y = 9.5;
           _head.play('left_' + String(_emoLevel));
           break;
       }
