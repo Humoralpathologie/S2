@@ -79,8 +79,7 @@ package {
     }
 
     private function resurrect():void {
-      _body.dispose();
-      _body = new AxGroup();
+      _body.clear();
       _head.x = 150;
       _head.y = 150;
       _head.facing = AxEntity.RIGHT;
