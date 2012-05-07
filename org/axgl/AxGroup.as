@@ -66,6 +66,14 @@ package org.axgl {
 			return this;
 		}
 
+    /**
+     * Removes everything from the group.
+     */
+    public function clear():void {
+			members = new Vector.<AxEntity>;
+			tempMembers = new Vector.<AxEntity>;
+    }
+
 		/**
 		 * @inheritDoc
 		 */
