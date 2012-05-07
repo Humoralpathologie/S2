@@ -269,7 +269,7 @@ package {
           for(j = 0; j < _currentCombos.length; j++) {
             combo = _currentCombos[j];
             for(i = 0; i < combo.length; i++) {
-              //combo[i].flicker(2);
+              combo[i].flicker(2);
             }
           }
         }
