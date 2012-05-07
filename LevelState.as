@@ -1,5 +1,6 @@
 package {
   import org.axgl.*;
+  import org.axgl.text.*;
   
   public class LevelState extends AxState {
     [Embed(source='assets/SnakeSounds/schluck2tiefer.mp3')] protected var BiteSound:Class;
@@ -45,7 +46,6 @@ package {
       FlxG.mouse.hide();
       */
       _score = 0;
-      
       _snake = new Snake(8);
       _food = new AxGroup();
 
@@ -133,9 +133,11 @@ package {
     protected function updateBonusBar():void {
       if(_bonusTimer > 0) {
         _bonusBar.scale.x = (_bonusTimer / 2) * 25;
+        _bonusBar.dirty = true;
       } else {
         _bonusTimerPoints = 0;
         _bonusBar.scale.x = 0;
+        _bonusBar.dirty = true;
       }
 
       _bonusBar.x = _snake.head.x - 5;
@@ -143,8 +145,6 @@ package {
     }
 
     protected function collideFood():void {
-      // I tried to use FlxG.overlap for this, but sometimes, the callback will
-      // be called twice. This works, so leave it like this.
       for(var i:int = 0; i < _food.members.length; i++){
         if(_snake.head.overlaps(_food.members[i])){
           eat(_snake.head, (_food.members[i] as Egg));
@@ -161,7 +161,7 @@ package {
     }
 
     protected function collideObstacles():void {
-      if(_snake.alive && _snake.head.overlaps(_obstacles)) {
+      if(_snake.alive && Ax.overlap(_snake.head, _obstacles)) {
         _snake.die();
       }
     }
@@ -248,20 +248,28 @@ package {
             //showPoints(combo[i], '+' + String(combo.length), 0xffff0000, 1.5, 2); 
             _score += combo.length;
             _snake.body.remove(combo[i]);
+            combo[i].dispose();
+            trace(_snake.body.members.length);
           }
         }
         _snake.faster();
         _currentCombos = null;
       }
       if(_snake.justAte) {
+        trace("checking for combos");
         //FlxG.log("checking for combos...");
-        var combos:Array = checkCombos(new Array().concat(_snake.body.members.slice(0,_snake.body.members.length - 1)));
+        var bodyArray:Array = new Array();
+        for(i = 0; i < _snake.body.members.length - 1; i++) {
+          bodyArray.push(_snake.body.members[i]);
+        }
+        trace(bodyArray);
+        var combos:Array = checkCombos(bodyArray);
         if(combos.length > 0) {
           _currentCombos = combos;
           for(j = 0; j < _currentCombos.length; j++) {
             combo = _currentCombos[j];
             for(i = 0; i < combo.length; i++) {
-              combo[i].flicker(2);
+              //combo[i].flicker(2);
             }
           }
         }
@@ -324,7 +332,7 @@ package {
       do {
         egg.x = int(1 + (Math.random() * wTiles)) * 15;
         egg.y = int(6 + (Math.random() * hTiles)) * 15;
-      } while(egg.overlaps(_unspawnable));
+      } while(Ax.overlap(egg,_unspawnable));
       _food.add(egg);
     }
   }

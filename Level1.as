@@ -67,11 +67,11 @@ package {
       if (rand > 6) {
         egg = new Egg(1);  
       } else {
-        egg = new Egg(0); 
+        //
+        egg = new Egg(1); 
       }
 
       spawnEgg(egg);
-      _food.add(egg);
       
     }
 

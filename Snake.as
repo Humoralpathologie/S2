@@ -226,7 +226,7 @@ package {
      
     override public function update():void {
       super.update();
-
+      
       if(Ax.keys.pressed(AxKey.UP) && _previousFacing != AxEntity.DOWN){
         _head.facing = AxEntity.UP;
       } else
@@ -239,6 +239,22 @@ package {
       if(Ax.keys.pressed(AxKey.LEFT) && _previousFacing != AxEntity.RIGHT){
         _head.facing = AxEntity.LEFT;
       } 
+
+      if(Ax.mouse.pressed(0)){
+        if(Math.abs(Ax.mouse.x - _head.x) < Math.abs(Ax.mouse.y - _head.y)){
+          if(Ax.mouse.y > _head.y) {
+            _head.facing = AxEntity.DOWN;
+          } else {
+            _head.facing = AxEntity.UP;
+          } 
+        } else {
+          if(Ax.mouse.x < _head.x) {
+            _head.facing = AxEntity.LEFT;
+          } else {
+            _head.facing = AxEntity.RIGHT;
+          }
+        }
+      }
 
       switch(_head.facing) {
         case AxEntity.UP:
@@ -266,7 +282,7 @@ package {
       _timer += Ax.dt;
       if(_timer >= _speed){
         if(alive){
-          if(_head.overlaps(_body)){
+          if(Ax.overlap(_head, _body)){
             die();
           }
           move();

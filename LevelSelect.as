@@ -51,7 +51,7 @@ package {
         if (_levels[i] && SaveGame.levelUnlocked(i)) {
           levelButton = new AxButton(xPos, yPos, _levelPics[i+1],90,90);//"", switchToState(_levels[i][0], _levels[i][2], _levels[i][3], _levels[i][4]));
           //levelButton.soundDown = _clickSound;
-          levelButton.onClick(function ():void { Ax.sound(ClickSound); Ax.switchState(new Level1)})
+          levelButton.onClick(function ():void { Ax.sound(ClickSound); Ax.pushState(new Level1)})
           add(levelButton);
         } else {
           levelSprite = new AxSprite(xPos, yPos);

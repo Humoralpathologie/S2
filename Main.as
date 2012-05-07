@@ -8,5 +8,9 @@ package {
       SaveGame.load();
       super(MenuState, 640, 480);
     }
+    override public function create():void {
+			Ax.debuggerEnabled = true;
+      Ax.debugger.active = true;
+    }
   }
 }
