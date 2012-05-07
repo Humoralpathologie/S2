@@ -1,6 +1,5 @@
 package {
   import org.flixel.*;
-  import org.flixel.plugin.photonstorm.API.FlxKongregate;
   
   public class LevelState extends FlxState {
     [Embed(source='assets/SnakeSounds/schluck2tiefer.mp3')] protected var BiteSound:Class;
