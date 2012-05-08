@@ -27,6 +27,9 @@ package {
     public function Egg(eggType:int = 0, x:int = 0, y:int = 0 ){
       super(x, y);
       
+      // Don't flippin' flip it.
+      flip = AxEntity.NONE;
+      
       _eggType = eggType;
       load(eggGraphics[eggType], 30, 30);
       addAnimation('wiggle',[0,1],2);
