@@ -66,12 +66,15 @@ package org.axgl {
 			return this;
 		}
 
-    /**
-     * Removes everything from the group.
-     */
-    public function clear():void {
+		/**
+		 * Removes all entities from the group.
+		 *
+		 * @return This group.
+		 */
+		public function clear():AxGroup {
       members.length = 0;
-    }
+			return this;
+		}
 
 		/**
 		 * @inheritDoc
@@ -85,7 +88,9 @@ package org.axgl {
 				}
 
 				entity.update();
-				Ax.debugger.updates++;
+				if (countUpdate) {
+					Ax.debugger.updates++;
+				}
 			}
 		}
 
@@ -101,7 +106,9 @@ package org.axgl {
 				}
 
 				entity.draw();
-				Ax.debugger.draws++;
+				if (countDraw) {
+					Ax.debugger.draws++;
+				}
 			}
 		}
 		

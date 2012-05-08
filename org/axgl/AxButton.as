@@ -106,9 +106,10 @@ package org.axgl {
 				animate("idle");
 				labelOffset = 0;
 			}
+			
 
 			if (label != null) {
-        label.y = labelY + labelOffset;
+				label.y = labelY + labelOffset;
 				label.update();
 			}
 
