@@ -3,9 +3,8 @@ package {
   import org.axgl.input.*;
 
   public class Snake extends AxGroup {
-    [Embed(source='assets/head.png')] protected var Head:Class;
-    [Embed(source='assets/images/tail.png')] protected var Tail:Class;
-    [Embed(source='assets/images/eggs.png')] protected var Eggs:Class;
+    [Embed(source='assets/images/snake_head_tilemap.png')] protected var Head:Class;
+    [Embed(source='assets/images/snake_tail_tilemap.png')] protected var Tail:Class;
     [Embed(source='assets/SnakeSounds/Pickup_Coin.mp3')] protected var Bling:Class;
 
     private var _head:AxSprite;
@@ -22,31 +21,69 @@ package {
     private var _justAte:Boolean = false;
     public var alive:Boolean = false;
     
+    private var _startMps:Number;
+    private var _emoLevel:int;    
+
     public function Snake(movesPerSecond:Number = 1) { 
       super();
-
-      _mps = movesPerSecond;
+      
+      _startMps = movesPerSecond;
+      _mps = _startMps;
       _speed = 1 / _mps;
       _timer = 0;
 
       _head = new AxSprite(15 * 10, 15 * 10);
-      _head.load(Head, 30, 30);
-      _head.addAnimation('left',[0,1,2,3,4,5,6,7,8,9], 10);
-      _head.addAnimation('right',[10,11,12,13,14,15,16,17,18,19], 10);
-      _head.addAnimation('right-eat',[10,11,12,13,14,15,16,17,18,19], 10);
-      _head.addAnimation('up',[20,21,22,23,24,25,26,27,28,29], 10);
-      _head.addAnimation('down',[30]);
+      //_head.makeGraphic(16,16);
+      _head.load(Head, 45, 75);
+      _head.addAnimation('right_0',[0,1], 3);
+      _head.addAnimation('left_0',[2,3], 3);
+      _head.addAnimation('up_0',[4,5], 4);
+      _head.addAnimation('down_0',[6,7], 4);
+
+      _head.addAnimation('right_1',[8,9], 3);
+      _head.addAnimation('left_1',[10,11], 3);
+      _head.addAnimation('up_1',[12,13], 4);
+      _head.addAnimation('down_1',[14,15], 4);
+
+      _head.addAnimation('right_2',[16,17], 3);
+      _head.addAnimation('left_2',[18,19], 3);
+      _head.addAnimation('up_2',[20,21], 4);
+      _head.addAnimation('down_2',[22,23], 4);
+
+      _head.addAnimation('right_3',[24,25], 3);
+      _head.addAnimation('left_3',[26,27], 3);
+      _head.addAnimation('up_3',[28,29], 4);
+      _head.addAnimation('down_3',[30,31], 4);
       _head.width = 15;
       _head.height = 15;
       _head.flip = AxEntity.NONE;
 
       _body = new AxGroup();
 
+      fillBody(_body);
       resurrect();
 
       add(_body);
       add(_head);
     }
+/********************************************
+    //getter and setter
+********************************************/
+    public function get tail():AxSprite {
+      return _tail;
+    }
+
+    public function get head():AxSprite {
+      return _head;
+    }
+
+    public function get lives():int {
+      return _lives;
+    }
+
+    public function set lives(n:int):void {
+      _lives = n;
+    }    
 
     public function get mps():Number {
       return 1 / _speed; 
@@ -56,6 +93,11 @@ package {
       _nextPos = pos;
     }
 
+    public function get body():AxGroup {
+      return _body;
+    }
+
+
     public function get justAte():Boolean {
       if(_justAte){
         _justAte = false;
@@ -64,6 +106,7 @@ package {
         return false;
       }
     }
+/*******************************************/
 
     private function tailEgg():Egg {
       if(_body.members.length >= 2){
@@ -79,51 +122,45 @@ package {
     }
 
     private function resurrect():void {
-      _body.clear();
       _head.x = 150;
       _head.y = 150;
       _head.facing = AxEntity.RIGHT;
       _previousFacing = _head.facing;
-      _head.animate('right');
+      _head.animate('right_0');
       _head.offset.x = 0;
-      _head.offset.y = 15;
-      fillBody(_body);
-      _mps = 8;
+      _head.offset.y = 9.5;
+
+      for (var i:int = 0; i < _body.members.length; i++) {
+        _body.members[i].x = _head.x - 15;
+        _body.members[i].y = _head.y;
+      }
+      _tail.alpha == 0;
+      _mps = _startMps;
       _speed = 1 / _mps;
       alive = true;
     }
 
-    public function get head():AxSprite {
-      return _head;
-    }
-
-    public function get lives():int {
-      return _lives;
-    }
-
-    public function faster():void {
-      if(_mps < 30)
-        _mps += 1;
-      
-      _speed = 1 / _mps;
-    }
 
     private function fillBody(group:AxGroup):void {
       var i:int;
       for(i = 1; i <= 4; i++){
         var part:AxSprite;
         if(i == 4) {
-          part = new AxSprite(_head.x - (i * 15), _head.y);
+          part = new AxSprite(_head.x - 15, _head.y);
           // This should be somewhere else.
-          part.load(Tail, 15, 15);
-          part.addAnimation('left',[0,1],7);
-          part.addAnimation('right',[2,3],7);
-          part.addAnimation('up',[4,5],7);
-          part.addAnimation('down',[6,7],7);
+          part.load(Tail, 45, 45);
+          part.width = 15;
+          part.height = 15;
+          part.offset.x = 15;
+          part.offset.y = 15
+          part.addAnimation('left',[0],1);
+          part.addAnimation('right',[1],1);
+          part.addAnimation('up',[2],1);
+          part.addAnimation('down',[3],1);
           _tail = part;
           _tail.flip = AxEntity.NONE;
         } else {
-          part = new Egg(i % 3, _head.x - (i * 15), _head.y);
+          part = new Egg(0, _head.x - 15, _head.y);
           (part as Egg).eat();
         }
         part.facing = AxEntity.RIGHT;
@@ -149,6 +186,15 @@ package {
       }
     }
 
+    private function animateBodyMovement(part:AxSprite):void {
+        if (part.facing == AxEntity.UP || part.facing == AxEntity.DOWN) {
+          (part as Egg).animate("vertical");
+        } else {
+          (part as Egg).animate("horizontal");
+        }
+        
+    }
+
     private function move():void {
       _previousFacing = _head.facing;
       if(_newPart){ 
@@ -163,16 +209,29 @@ package {
 
       for(var i:int = _body.members.length - 1 ; i >= 0; i--){
         var part:AxSprite;
-        var lastPart:AxSprite;
-        part = (_body.members[i] as AxSprite); 
-        if(i == 0){
-          lastPart = _head;
-        } else {
-          lastPart = (_body.members[i - 1] as AxSprite);
-        }
-        part.x = lastPart.x;
-        part.y = lastPart.y; 
-        part.facing = lastPart.facing;
+        var prePart:AxSprite;
+        var preFacing:uint;
+        part = (_body.members[i] as AxSprite);
+        preFacing = part.facing;
+
+          if (i != _body.members.length - 1) {
+            animateBodyMovement(part);
+          }
+
+          if(i == 0){
+            part.x = _head.x;
+            part.y = _head.y; 
+            part.facing = head.facing;
+          } else {
+            prePart = (_body.members[i - 1] as AxSprite);
+            part.x = prePart.x;
+            part.y = prePart.y;
+            part.facing = prePart.facing;
+            //body tile in angle
+            if (i != _body.members.length - 1 && preFacing != part.facing) {
+              (part as Egg).animate("angle");
+            } 
+          }
       }
 
       var xSpeed:int = 0;
@@ -219,12 +278,36 @@ package {
 
     }
 
-    public function get body():AxGroup {
-      return _body;
+    private function setEmoLevel():void {
+      switch(_mps) {
+        case 10:
+          _emoLevel = 0;
+        break;
+        case 15:
+          _emoLevel = 1;
+        break;
+        case 20:
+          _emoLevel = 2;
+        break;
+        case 25:
+          _emoLevel = 3;
+        break;
+
+      }
+
     }
      
+    public function faster():void {
+      if(_mps < 30)
+        _mps += 1;
+            
+      setEmoLevel();
+      _speed = 1 / _mps;
+    }
     override public function update():void {
       super.update();
+      _head.offset.x = 15;
+      _head.offset.y = 30;
       
       if(Ax.keys.pressed(AxKey.UP) && _previousFacing != AxEntity.DOWN){
         _head.facing = AxEntity.UP;
@@ -257,24 +340,16 @@ package {
 
       switch(_head.facing) {
         case AxEntity.UP:
-          _head.offset.x = 4;
-          _head.offset.y = 15;
-          _head.animate('up');
+          _head.animate('up_' + String(_emoLevel));
           break;
         case AxEntity.DOWN: 
-          _head.offset.x = 4;
-          _head.offset.y = 0;
-          _head.animate('down');
+          _head.animate('down_' + String(_emoLevel));
           break;
         case AxEntity.RIGHT:
-          _head.offset.x = 0;
-          _head.offset.y = 15;
-          _head.animate('right');
+          _head.animate('right_' + String(_emoLevel));
           break;
         case AxEntity.LEFT:
-          _head.offset.x = 15;
-          _head.offset.y = 15;
-          _head.animate('left');
+          _head.animate('left_' + String(_emoLevel));
           break;
       }
 

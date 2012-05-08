@@ -37,8 +37,9 @@ package {
       } else if(n < 0.4) {
         newEgg = new Egg(0);
       } else {
-        newEgg = new Egg(1);
+        newEgg = new Egg(2);
       }
+      
       spawnEgg(newEgg);
     }
 
@@ -49,13 +50,14 @@ package {
 
     override protected function checkWinConditions():void {
       if(_combos >= 10 || _eggAmount >= 100 || _timerMin >= 4) {
-        var switcher:SwitchLevel = new SwitchLevel("Conglaturation !!!\nYou have completed a great game.\nAnd prooved the justice of our culture.\nNow go and rest our heroes !", Level3, Level3, "111");
+        var switcher:SwitchLevel = new SwitchLevel("Conglaturation !!!\nYou have completed a great game.\nAnd prooved the justice of our culture.\nNow go and rest our heroes !", Level3, Level3, _timerHud);
         Ax.switchState(switcher); 
       }
     }
 
     override protected function updateHud():void {
       _hudText.text = "Score: " + String(_score) + "\n" + "Combos: " + String(_combos);
+      _hudText.text += "\nDevoured Eggs: " + _eggAmount;
       _hudText.text += "\nTimer: " + _timerHud;
       _hudText.text += "\nSpeed: " + _snake.mps;
     }
@@ -75,7 +77,7 @@ package {
       };
       
       var sameEggType:Function = function(currArr:Array, el:Object):Boolean{
-        return ((currArr[0] as Egg).type == (el as Egg).type) && ((currArr[0] as Egg).type == 1);
+        return ((currArr[0] as Egg).type == (el as Egg).type) && ((currArr[0] as Egg).type == 2);
       };
 
       res = groupArray(sameEggType,arr); 

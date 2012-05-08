@@ -86,10 +86,7 @@ package {
           _resetScaled = true;
           _scaled = false;
         }
-
       }
-
     }
-
   } 
 }

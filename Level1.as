@@ -4,14 +4,29 @@ package {
   
   public class Level1 extends LevelState {
     // Assets
-    [Embed(source='assets/background.png')] protected var Background:Class;
+    [Embed(source='assets/images/level01bg.png')] protected var Background:Class;
     // Variablen
     private var _background:AxSprite = null;
     
     private var _hudText:AxText; 
 
-    private var _storyBeat:String = "Little Snake bemerkt, dass sie bei Verdrücken von drei Eiern des Typ A nicht nur kürzer, sondern auch schlauer wird.";
+    private var _storyBeat:String = "Level1 completed!";
 
+    override public function create():void {
+      super.create();
+      _snake.lives = 1;
+      Egg.ROTTEN = 100;      
+    
+    }
+
+    override public function update():void {
+      super.update();
+      if (_eggAmount == 35 && _snake.lives != 2) {
+        _snake.lives++;
+        //_bup.play();
+      }
+    }
+    
     override protected function addBackgrounds():void {
       _background = new AxSprite(0, 0, Background);
       add(_background);
@@ -28,19 +43,13 @@ package {
     }
     
     override protected function addHud():void {
-      /*
-      _hudText = new FlxText(15,15, 640 - 60);
-      _hudText.size = 16;
+      _hudText = new AxText(15,15, null, "Nothing yet...");
       add(_hudText);
-      */
     }
     override protected function updateHud():void {
-      /*
-      _hudText.text = "Score: " + String(FlxG.score);
+      _hudText.text = "Score: " + String(_score) + "  Lives: " + _snake.lives;
       _hudText.text += "\nDevoured Eggs: " + String(_eggAmount) + "/50";
       _hudText.text += "\nTimer: " + _timerHud;
-      _hudText.text += "\nSpeed: " + _snake.mps;
-      */
     }
 
     override protected function switchLevel():void {
@@ -60,10 +69,9 @@ package {
       var egg:Egg;
 
       if (rand > 6) {
-        egg = new Egg(1);  
+        egg = new Egg(2);  
       } else {
-        //
-        egg = new Egg(1); 
+        egg = new Egg(Math.floor(Math.random() * 2)); 
       }
 
       spawnEgg(egg);
@@ -79,7 +87,7 @@ package {
       };
       
       var sameEggType:Function = function(currArr:Array, el:Object):Boolean{
-        return ((currArr[0] as Egg).type == (el as Egg).type) && ((currArr[0] as Egg).type == 1);
+        return ((currArr[0] as Egg).type == (el as Egg).type) && ((currArr[0] as Egg).type == 2);
       };
 
       res = groupArray(sameEggType,arr); 
@@ -92,5 +100,6 @@ package {
         switchLevel();
       }
     }
+
   }
 }

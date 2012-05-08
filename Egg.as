@@ -3,21 +3,23 @@ package {
 
   public class Egg extends AxSprite {
 
-    [Embed(source='assets/images/eggA.png')] protected static var EatenEggA:Class;
-    [Embed(source='assets/images/eggB.png')] protected static var EatenEggB:Class;
-    [Embed(source='assets/images/eggC.png')] protected static var EatenEggC:Class;
-    [Embed(source='assets/images/eggBlank.png')] protected static var EatenEggBlanc:Class;
+    [Embed(source='assets/images/eatenEggBlue.png')] protected static var EatenEggBlue:Class;
+    [Embed(source='assets/images/eatenEggGreenPointed.png')] protected static var EatenEggGreenPointed:Class;
+    [Embed(source='assets/images/eatenEggCross.png')] protected static var EatenEggCross:Class;
+    [Embed(source='assets/images/eatenEggWhite.png')] protected static var EatenEggWhite:Class;
+    [Embed(source='assets/images/eatenEggGreen.png')] protected static var EatenEggGreen:Class;
 
-    [Embed(source='assets/images/egg-tilemap.png')] protected static var EggA:Class;
-    [Embed(source='assets/images/egg02-tilemap.png')] protected static var EggB:Class;
-    [Embed(source='assets/images/egg03-tilemap.png')] protected static var EggBlanc:Class;
-    [Embed(source='assets/images/rotten-eggs.png')] protected static var EggRotten:Class 
+    [Embed(source='assets/images/eggBlue.png')] protected static var EggBlue:Class;
+    [Embed(source='assets/images/eggGreenPointed.png')] protected static var EggGreenPointed:Class;
+    [Embed(source='assets/images/eggCross.png')] protected static var EggCross:Class;
+    [Embed(source='assets/images/eggWhite.png')] protected static var EggWhite:Class;
+    [Embed(source='assets/images/eggGreen.png')] protected static var EggGreen:Class 
     [Embed(source='assets/images/shell.png')] protected static var ShellB:Class;
 
-    protected static var eatenGraphics:Array = [EatenEggBlanc, EatenEggA, EatenEggB, EatenEggC];
-    protected static var eggGraphics:Array = [EggBlanc, EggA, EggB, null, EggRotten]
+    protected static var eatenGraphics:Array = [EatenEggGreen, EatenEggWhite, EatenEggBlue, EatenEggGreenPointed, EatenEggCross];
+    protected static var eggGraphics:Array = [EggGreen, EggWhite, EggBlue, EggGreenPointed, EggCross]
 
-    public static const ROTTEN:uint = 4;
+    public static var ROTTEN:uint = 1;
    
     protected var _points:int;
     protected var _eggType:int;
@@ -43,10 +45,14 @@ package {
     }
 
     public function eat():void{
-      offset.y = 0;
-      offset.x = 0;
-      load(eatenGraphics[_eggType]);
-      show(0);
+      load(eatenGraphics[_eggType], 30, 45);
+      width = 15;
+      height = 15;
+      offset.x = 15;
+      offset.y = 15;
+      addAnimation("horizontal", [0], 1);
+      addAnimation("vertical", [1], 1);
+      addAnimation("angle", [2], 1);
     }
 
     public function get points():int{

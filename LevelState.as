@@ -9,11 +9,14 @@ package {
     [Embed(source='assets/SnakeSounds/schluck2tiefer.mp3')] protected var BiteSound:Class;
     [Embed(source='assets/SnakeSounds/bup.mp3')] protected var Bup:Class;
     [Embed(source='assets/images/shell.png')] protected static var Shell:Class;
+    [Embed(source='assets/images/hole.png')] protected var Hole:Class;
     
     /* 
     protected var _biteSound:FlxSound;
     protected var _bup:FlxSound;
     */
+
+    protected var _hole:AxSprite;
 
     protected var _snake:Snake;
     protected var _food:AxGroup;
@@ -36,6 +39,10 @@ package {
     protected var _switchLevel:SwitchLevel;
     protected var _particles:AxGroup;
 
+    protected var _startFadeOut:Boolean = true;
+    protected var _tailHidden:Boolean = true;
+
+    private var _stoped:Boolean = false;
     override public function create():void {
       super.create();
 
@@ -50,7 +57,7 @@ package {
       _particles.add(AxParticleSystem.register(effect));
 
       _score = 0;
-      _snake = new Snake(8);
+      _snake = new Snake(10);
       _food = new AxGroup();
 
       _bonusBar = new AxSprite(450,32);
@@ -58,6 +65,14 @@ package {
       _bonusBar.create(1,8,0xffff0000);
 
       _obstacles = new AxGroup();
+      
+      _hole = new AxSprite(150 - 15, 150);
+      _hole.load(Hole);      
+      _hole.width = 15;
+      _hole.height = 15;
+      _hole.offset.x = 13;
+
+      _hole.alpha = 1;
 
       addBackgrounds();
       addObstacles();
@@ -66,6 +81,8 @@ package {
       _unspawnable.add(_food);
       _unspawnable.add(_snake);
       _unspawnable.add(_obstacles);
+
+      add(_hole);
 
       spawnFoods(3);
       add(_snake);
@@ -168,8 +185,41 @@ package {
       }
     }
 
+    protected function fadeInHole():void {
+      if (!_snake.alive) {
+        _hole.alpha = 1;
+        _snake.tail.alpha = 0;
+      }
+  
+     }
+    
+
+    protected function fadeOutHole():void {
+      if (!_snake.tail.overlaps(_hole)) {
+        if (_hole.alpha > 0) {
+          _hole.alpha -= 0.01;
+        }
+        if (_snake.tail.alpha < 1) {
+          _snake.tail.alpha += 0.03;
+        }
+      }
+      
+    }
+
     override public function update():void {
+      /*
+      if(FlxG.keys.SPACE && !_stoped){
+        FlxG.paused = true;
+        _stoped = true;
+      }
+      if(FlxG.keys.SPACE && _stoped){
+        FlxG.paused = false;
+        _stoped = false;
+      }
+      */
       super.update();
+      fadeInHole();
+      fadeOutHole();
 
       checkWinConditions();      
 
@@ -180,7 +230,7 @@ package {
       collideScreen();
       collideObstacles();
 
-      if(_snake.lives < 0) {
+      if(_snake.lives <= 0) {
         levelOver();
       }
 
