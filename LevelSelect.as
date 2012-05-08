@@ -16,9 +16,9 @@ package {
     //level description
    
     private static var _level1:Array = [Level1, "Level1", "Crossroads of Carnage", "Devour 50 Eggs", "None"];
-    private static var _level2:Array = [null, "Level2", "Make 20 Combos of 3(or more if you dare)", "None"];
+    private static var _level2:Array = [Level2, "Level2", "Make 20 Combos of 3(or more if you dare)", "None"];
  
-    private static var _level3:Array = [null, "Level3", "Snaking on Speed", "Survive the Food Poisoning", "None"];
+    private static var _level3:Array = [Level2, "Level3", "Snaking on Speed", "Survive the Food Poisoning", "None"];
     
     private static var _levels:Array = [_level1, _level2, _level3, false, false, false, false, false, false, false];
 
@@ -51,7 +51,7 @@ package {
         if (_levels[i] && SaveGame.levelUnlocked(i)) {
           levelButton = new AxButton(xPos, yPos, _levelPics[i+1],90,90);//"", switchToState(_levels[i][0], _levels[i][2], _levels[i][3], _levels[i][4]));
           //levelButton.soundDown = _clickSound;
-          levelButton.onClick(function ():void { Ax.sound(ClickSound); Ax.pushState(new Level1)})
+          levelButton.onClick(function ():void { Ax.sound(ClickSound); Ax.pushState(new Level2)})
           add(levelButton);
         } else {
           levelSprite = new AxSprite(xPos, yPos);

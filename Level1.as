@@ -44,20 +44,15 @@ package {
     }
 
     override protected function switchLevel():void {
-      //FlxG.score = _score;
-      //_switchLevel = new SwitchLevel("Level1 completed!", Level1, Level2, _timerHud);
-      //SaveGame.unlockLevel(1);
-      //Ax.switchState(_switchLevel);
+      _switchLevel = new SwitchLevel("Level1 completed!", Level1, Level1, _timerHud);
+      SaveGame.unlockLevel(1);
+      Ax.switchState(_switchLevel);
     }
 
     override protected function levelOver():void {
-      /*
-      FlxG.score = _score;
-      _switchLevel = new SwitchLevel(_storyBeat, Level1, Level2, _timerHud);
+      _switchLevel = new SwitchLevel(_storyBeat, Level1, Level1, _timerHud);
       _switchLevel.gameOver();
-      FlxG.switchState(_switchLevel);
-      */
-      
+      Ax.switchState(_switchLevel);
     }
 
     override protected function spawnFood():void {

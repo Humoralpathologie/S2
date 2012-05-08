@@ -29,7 +29,7 @@ package {
     protected var _timerMin:Number = 0;    
     protected var _timerHud:String;
 
-    //protected var _switchLevel:SwitchLevel;
+    protected var _switchLevel:SwitchLevel;
 
     override public function create():void {
       super.create();
@@ -50,9 +50,8 @@ package {
       _food = new AxGroup();
 
       _bonusBar = new AxSprite(450,32);
-      _bonusBar.create(1,8,0xffff0000);
-      _bonusBar.origin.x = _bonusBar.origin.y = 0;
       _bonusBar.scale.x = 0;
+      _bonusBar.create(1,8,0xffff0000);
 
       _obstacles = new AxGroup();
 
@@ -133,11 +132,9 @@ package {
     protected function updateBonusBar():void {
       if(_bonusTimer > 0) {
         _bonusBar.scale.x = (_bonusTimer / 2) * 25;
-        _bonusBar.dirty = true;
       } else {
         _bonusTimerPoints = 0;
         _bonusBar.scale.x = 0;
-        _bonusBar.dirty = true;
       }
 
       _bonusBar.x = _snake.head.x - 5;
