@@ -42,7 +42,6 @@ package {
       }
 
       spawnEgg(egg);
-      _food.add(egg);
       
     }
 
