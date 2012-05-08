@@ -46,6 +46,13 @@ package {
       
       FlxG.mouse.hide();
 
+      effect = new AxParticleEffect('combo', Shell, 10);
+      effect.amount = 100;
+      effect.blend = AxBlendMode.PARTICLE;
+      effect.color(new AxColor(0.3, 0.3, 0.3), new AxColor(0, 1, 1), new AxColor(1, 0, 0), new AxColor(1, 1, 1));
+      
+      _particles.add(AxParticleSystem.register(effect));
+
       _score = 0;
       
       _snake = new Snake(10);
@@ -288,7 +295,9 @@ package {
           for(i = 0; i < combo.length; i++) {
             showPoints(combo[i], '+' + String(combo.length), 0xffff0000, 1.5, 2); 
             _score += combo.length;
-            _snake.body.remove(combo[i], true);
+            AxParticleSystem.emit("combo", combo[i].x, combo[i].y);
+            _snake.body.remove(combo[i]);
+            
           }
         }
         _snake.faster();
