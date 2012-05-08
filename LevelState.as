@@ -1,10 +1,14 @@
 package {
   import org.axgl.*;
   import org.axgl.text.*;
+  import org.axgl.particle.*;
+  import org.axgl.render.*;
+  import org.axgl.util.*;
   
   public class LevelState extends AxState {
     [Embed(source='assets/SnakeSounds/schluck2tiefer.mp3')] protected var BiteSound:Class;
     [Embed(source='assets/SnakeSounds/bup.mp3')] protected var Bup:Class;
+    [Embed(source='assets/images/shell.png')] protected static var Shell:Class;
     
     /* 
     protected var _biteSound:FlxSound;
@@ -30,21 +34,21 @@ package {
     protected var _timerHud:String;
 
     protected var _switchLevel:SwitchLevel;
+    protected var _particles:AxGroup;
 
     override public function create():void {
       super.create();
 
-      //FlxG.log("Starting game");
-     
-      /*
-      _bup = new FlxSound;
-      _bup.loadEmbedded(Bup);
+      _particles = new AxGroup();
+      var effect:AxParticleEffect = new AxParticleEffect('eat-egg', Shell, 5);
+      effect.xVelocity = new AxRange(-70, 70);
+      effect.yVelocity = new AxRange(-70, 70);
+      effect.lifetime = new AxRange(0.5, 1.5);
+      effect.amount = 4;
+      effect.blend = AxBlendMode.PARTICLE;
+      effect.color(new AxColor(0.3, 0.3, 0.3), new AxColor(1, 1, 1), new AxColor(0.3, 0.3, 0.3), new AxColor(1, 1, 1));
+      _particles.add(AxParticleSystem.register(effect));
 
-      _biteSound = new FlxSound;
-      _biteSound.loadEmbedded(BiteSound);
-      
-      FlxG.mouse.hide();
-      */
       _score = 0;
       _snake = new Snake(8);
       _food = new AxGroup();
@@ -66,6 +70,7 @@ package {
       spawnFoods(3);
       add(_snake);
       add(_food);
+      add(_particles);
       add(_bonusBar);
       addHud();
     }
@@ -210,6 +215,7 @@ package {
       shells.start(true, 3);
       add(shells);
       */
+      AxParticleSystem.emit("eat-egg", snakeHead.x, snakeHead.y);
 
       _food.remove(egg);
       
