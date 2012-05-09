@@ -59,6 +59,7 @@ package {
       effect = new AxParticleEffect('combo', Shell, 10);
       effect.amount = 100;
       effect.blend = AxBlendMode.PARTICLE;
+      effect.aVelocity = new AxRange(170, 240);
       effect.color(new AxColor(0.3, 0.3, 0.3), new AxColor(0, 1, 1), new AxColor(1, 0, 0), new AxColor(1, 1, 1));
       
       _particles.add(AxParticleSystem.register(effect));
