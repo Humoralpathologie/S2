@@ -6,9 +6,11 @@ package {
   public class MenuState extends AxState {
 
   [Embed(source='assets/SnakeSounds/SuperSnakeLoop.mp3')] protected var Music:Class;
-  [Embed(source='assets/images/SNAKE1.png')] protected var Title:Class;
+  [Embed(source='assets/images/cover_schrift_gelb.png')] protected var Title:Class;
+  [Embed(source='assets/images/cover_hintergrund.png')] protected var Background:Class;
     
     private var _snakeTitleText:AxSprite;
+    private var _bg:AxSprite;
     private var _playButton:AxButton;
     private var _playLevel:AxButton;    
     
@@ -16,13 +18,15 @@ package {
       super.create();
       Ax.background = new AxColor(0,0,0);
 
-      _snakeTitleText = new AxSprite(40,40);
-      _snakeTitleText.load(Title,550,220);
-      _snakeTitleText.addAnimation('nod', [2, 1, 0], 1);
-      _snakeTitleText.animate('nod');
+      _bg = new AxSprite(0,0);
+      _bg.load(Background);
+     
+
+      _snakeTitleText = new AxSprite(0,0);
+      _snakeTitleText.load(Title);
   
       //Ax.music(Music);
-      
+      add(_bg);     
       add(_snakeTitleText);
 
       //Ax.mouse.show();

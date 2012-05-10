@@ -1,5 +1,6 @@
 package {
   import org.axgl.*;
+  import org.axgl.text.*;
   
   public class Hud extends AxGroup{
     [Embed(source='assets/images/icons/anzeigenbalken.png')] protected var Background:Class;
@@ -8,84 +9,77 @@ package {
     [Embed(source='assets/images/icons/icon-poison.png')] protected var Poison:Class;
     [Embed(source='assets/images/icons/icon-speed.png')] protected var Speed:Class;
     [Embed(source='assets/images/icons/icon-time.png')] protected var Time:Class;
+    [Embed(source='assets/images/icons/icon-score.png')] protected var Score:Class;
+    [Embed(source='assets/images/icons/icon-egg.png')] protected var EEgg:Class;
 
     private var _bg:AxSprite;
-    private var _lives:AxSprite;
-    private var _livesText:AxText;
+    private var _lives:AxSprite = new AxSprite(0,0,Lives);
+    private var _livesText:AxText = new AxText(0,0,null,"");
 
-    private var _combo:AxSprite;
-    private var _comboText:AxText;
+    private var _combo:AxSprite = new AxSprite(0,0,Combo);
+    private var _comboText:AxText = new AxText(0,0,null,"");
 
-    private var _poison:AxSprite;
-    private var _poisonText:AxText;
+    private var _poison:AxSprite = new AxSprite(0,0,Poison);
+    private var _poisonText:AxText = new AxText(0,0,null,"");
 
-    private var _speed:AxSprite;
-    private var _speedText:AxText;
+    private var _speed:AxSprite = new AxSprite(0,0,Speed);
+    private var _speedText:AxText = new AxText(0,0,null,"");
 
-    private var _time:AxSprite;
-    private var _timeText:AxText;
+    private var _time:AxSprite = new AxSprite(0,0,Time);
+    private var _timeText:AxText = new AxText(0,0,null,"");
+
+    private var _score:AxSprite = new AxSprite(0,0,Score);
+    private var _scoreText:AxText = new AxText(0,0,null,"");
+
+    private var _egg:AxSprite = new AxSprite(0,0,EEgg);
+    private var _eggText:AxText = new AxText(0,0,null,"");
 
     private var _hash:Object;
+    private var _xPos:int = 15;
+    private var _yPos:int = 10;
 
     public function Hud(huds:Array) {
       super();
       _bg = new AxSprite(10, 5);
       _bg.load(Background);
-
-      _lives = new AxSprite(10, 5);
-      _lives.load(Lives);
-      _livesText = new AxSprite(30, 5, 30);
-
-      _time = new AxSprite(10, 25);
-      _time.load(Time);
-      _timeText = new AxSprite(30, 25, 50);
-
-
-      _speed = new AxSprite(10, 45);
-      _speed.load(Speed);
-      _speedText = new AxSprite(30, 45, 30);
-
-
-      _combo = new AxSprite(Ax.width/2 - 20, 25);
-      _combo.load(Combo);
-      _comboText = new AxSprite(Ax.width/2, 45, 30);
-
-      _poison = new AxSprite(Ax.width - 50, 5);
-      _poison.load(Poison);
-      _poisonText = new AxSprite(Ax.width - 30, 45, 30);
-
       add(_bg);
-      add(_comboText); 
-      add(_timeText); 
-      add(_speedText); 
-      add(_poisonText); 
-      add(_livesText); 
 
-      _hash = { lives: _lives,
-                time: _time,
-                speed: _speed,
-                combo: _combo,
-                poison: _poison }
-/*        
-      for (var x in huds) {
-        if(_hash[x]) {
-          _hash[x].last.text = huds[x];
-          _hash[x].last.alignment =;
-          _hash[x].last.size = 16;
-
-          add(_hash[x].last);
-          add(_hash[x].first);
-        }  
-      }     
-*/                  
-    
+      _hash = { lives: [_lives, _livesText, 12],
+                speed: [_speed, _speedText, 24],
+                combo: [_combo,_comboText, 60],
+                poison: [_poison, _poisonText, 24], 
+                score: [_score, _scoreText, 36], 
+                egg: [_egg, _eggText, 60], 
+                time: [_time, _timeText, 60]
+                }
       for (var i:int = 0; i < huds.length; i++) {
         if (_hash[huds[i]]) {
-          add(_hash[huds[i]]) 
+          displayIcon(_hash[huds[i]]);
         }  
       }
+      
 
+       
+    }
 
+    private function displayIcon(lis:Array):void {
+      var sp:AxSprite = lis[0];
+      var txt:AxText = lis[1];
+      var txtWidth:int = lis[2];
+ 
+      sp.x = _xPos;
+      sp.y = _yPos;
+      
+      txt.scale.x = txt.scale.y = 2;
+      txt.x = _xPos + sp.width + 5;
+      txt.y = _yPos;
+      txt.width = txtWidth;
+      txt.align = "left";
+      
+      _xPos += sp.width + 5 + txt.width;
+      
+      add(sp);
+      add(txt);
     }
     
     public function set livesText(l:String):void {
@@ -97,11 +91,24 @@ package {
     }
 
     public function set comboText(combo:String):void {
-      _comboText = combo;
+      _comboText.text = combo;
     }
 
-    public function set 
+    public function set poisonText(poison:String):void {
+      _poisonText.text = poison; 
+    }
 
+    public function set timeText(time:String):void {
+      _timeText.text = time; 
+    }
+
+    public function set scoreText(score:String):void {
+      _scoreText.text = score;
+    }
+
+    public function set eggText(eggAmount:String):void {
+      _eggText.text = eggAmount;
+    }
   }
 }
     
