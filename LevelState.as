@@ -31,6 +31,7 @@ package {
     protected var _comboTimer:Number = 0;
     protected var _combos:int = 0;
     protected var _eggAmount:int = 0;
+    protected var _poisonEgg:int = 0;
 
     protected var _timerSec:Number = 0;
     protected var _timerMin:Number = 0;    
@@ -255,7 +256,6 @@ package {
 
 
     protected function eat(snakeHead:AxSprite, egg:Egg):void {
-      //FlxG.log("Eating at " + snakeHead.x + ", " + snakeHead.y);
       spawnFood();
       //_biteSound.play();
 
@@ -274,10 +274,12 @@ package {
       
       if(egg.type != Egg.ROTTEN){
         _snake.swallow(egg);
+      } else {
+        _poisonEgg++;
       }
       points += egg.points;
      
-        
+    
       if(_bonusTimer > 0) {
         _bonusTimerPoints += 2;
         //showPoints(egg, '+' + String(_bonusTimerPoints), 0xffedf249, 1.5, 2); 

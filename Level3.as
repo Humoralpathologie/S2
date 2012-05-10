@@ -7,7 +7,6 @@ package {
     [Embed(source='assets/images/level3bg.png')] protected var Background:Class;
     // Variablen
     protected var _background:AxSprite = null;
-    protected var _hudText:AxText;
 
     override protected function addBackgrounds():void {
       _background = new AxSprite(0,0);
@@ -44,8 +43,17 @@ package {
     }
 
     override protected function addHud():void {
-      _hudText = new AxText(15,15, null, "Nothing yet...");
-      add(_hudText);
+      _hud = new Hud(["lives", "speed", "time", "score", "combo", "poison"]); 
+      add(_hud);
+    }
+
+    override protected function updateHud():void {
+      _hud.livesText = String(_snake.lives);
+      _hud.timeText = _timerHud;
+      _hud.speedText = (_snakeSpeed < 10) ? "0" + String(_snakeSpeed) : String(_snakeSpeed);
+      _hud.scoreText = String(111); 
+      _hud.comboText = String(_combos) + "/10"; 
+      _hud.poisonText = String(_poisonEgg);
     }
 
     override protected function checkWinConditions():void {
@@ -55,12 +63,6 @@ package {
       }
     }
 
-    override protected function updateHud():void {
-      _hudText.text = "Score: " + String(_score) + "\n" + "Combos: " + String(_combos);
-      _hudText.text += "\nDevoured Eggs: " + _eggAmount;
-      _hudText.text += "\nTimer: " + _timerHud;
-      _hudText.text += "\nSpeed: " + _snake.mps;
-    }
 
     override protected function levelOver():void {
       _switchLevel = new SwitchLevel("You failed!\nTry again", Level3, Level3, _timerHud);
