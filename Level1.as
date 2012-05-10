@@ -8,8 +8,6 @@ package {
     // Variablen
     private var _background:AxSprite = null;
     
-    private var _hudText:AxText; 
-
     private var _storyBeat:String = "Level1 completed!";
 
     override public function create():void {
@@ -43,13 +41,14 @@ package {
     }
     
     override protected function addHud():void {
-      _hudText = new AxText(15,15, null, "Nothing yet...");
-      add(_hudText);
+      _hud = new Hud(["lives", "time", "score", "egg"]); 
+      add(_hud);
     }
     override protected function updateHud():void {
-      _hudText.text = "Score: " + String(_score) + "  Lives: " + _snake.lives;
-      _hudText.text += "\nDevoured Eggs: " + String(_eggAmount) + "/50";
-      _hudText.text += "\nTimer: " + _timerHud;
+      _hud.livesText = String(_snake.lives);
+      _hud.timeText = _timerHud;
+      _hud.eggText = String(_eggAmount) + "/50";
+      _hud.scoreText = String(111); 
     }
 
     override protected function switchLevel():void {

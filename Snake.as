@@ -19,7 +19,7 @@ package {
     private var _nextPos:AxPoint = null;
     //private var _bling:FlxSound = new FlxSound;    
     private var _justAte:Boolean = false;
-    public var alive:Boolean = false;
+    private var _alive:Boolean;
     
     private var _startMps:Number;
     private var _emoLevel:int;    
@@ -69,6 +69,14 @@ package {
 /********************************************
     //getter and setter
 ********************************************/
+    public function get alive():Boolean {
+      return _alive;
+    }
+    
+    public function set alive(b:Boolean):void {
+      _alive = b; 
+    }
+
     public function get tail():AxSprite {
       return _tail;
     }

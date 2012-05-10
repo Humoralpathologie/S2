@@ -27,7 +27,9 @@ package {
     override public function create():void {
       super.create();
       Ax.background = new AxColor(0,0,0);
-      _title = new AxText(Ax.width / 2 - 300, 50, null, "SELECT LEVEL");
+      _title = new AxText(Ax.width/2 - 120, 50, null, "SELECT LEVEL", 120, "center");
+      _title.scale.x = 2;
+      _title.scale.y = 2;
       // _title.size = 50;
       
       makeButtons();

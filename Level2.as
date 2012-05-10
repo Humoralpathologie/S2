@@ -7,7 +7,6 @@ package {
     [Embed(source='assets/images/level02bg.jpg')] protected var Background:Class;
     // Variablen
     protected var _background:AxSprite = null;
-    protected var _hudText:AxText;
 
     override public function create():void {
       super.create();
@@ -45,10 +44,6 @@ package {
       
     }
 
-    override protected function addHud():void {
-      _hudText = new AxText(15,15,null,"Nothing yet") //, 640 - 60, "Nothing yet...");
-      add(_hudText);
-    }
 
     override protected function levelOver():void {
       _switchLevel = new SwitchLevel("You failed!\nTry again", Level2, Level2, _timerHud);
@@ -65,11 +60,17 @@ package {
       }
     }
 
+    override protected function addHud():void {
+      _hud = new Hud(["lives", "speed", "time", "score", "combo"]); 
+      add(_hud);
+    }
+
     override protected function updateHud():void {
-      _hudText.text = "Score: " + String(_score) + "  Lives: " + String(_snake.lives) + "\n" + "Combos: " + String(_combos);
-      _hudText.text += "\nTimer: " + _timerHud;
-      _hudText.text += "\nSpeed: " + _snake.mps;
-      
+      _hud.livesText = String(_snake.lives);
+      _hud.timeText = _timerHud;
+      _hud.speedText = (_snakeSpeed < 10) ? "0" + String(_snakeSpeed) : String(_snakeSpeed);
+      _hud.scoreText = String(111); 
+      _hud.comboText = String(_combos) + "/10"; 
     }
 
     override protected function checkCombos(arr:Array):Array {

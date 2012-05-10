@@ -31,20 +31,22 @@ package {
     protected var _comboTimer:Number = 0;
     protected var _combos:int = 0;
     protected var _eggAmount:int = 0;
+    protected var _poisonEgg:int = 0;
 
     protected var _timerSec:Number = 0;
     protected var _timerMin:Number = 0;    
     protected var _timerHud:String;
 
+    protected var _snakeSpeed:int;
+    protected var _hud:Hud;
+
     protected var _switchLevel:SwitchLevel;
     protected var _particles:AxGroup;
 
-    protected var _startFadeOut:Boolean = true;
-    protected var _tailHidden:Boolean = true;
-
-    private var _stoped:Boolean = false;
     override public function create():void {
       super.create();
+
+      Ax.camera.follow(_snake);
 
       _particles = new AxGroup();
       var effect:AxParticleEffect = new AxParticleEffect('eat-egg', Shell, 5);
@@ -179,12 +181,14 @@ package {
       }
     }
 
+    private function onScreen(sprite:AxSprite):Boolean {
+      return sprite.x > 0 && sprite.x < Ax.width && sprite.y > 0 && sprite.y < Ax.height; 
+    }
+
     protected function collideScreen():void {
-      /*
-      if(_snake.alive && !_snake.head.onScreen()) {
+      if(_snake.alive && !onScreen(_snake.head)) {
         _snake.die();
       }
-      */
     }
 
     protected function collideObstacles():void {
@@ -208,26 +212,18 @@ package {
           _hole.alpha -= 0.01;
         }
         if (_snake.tail.alpha < 1) {
-          _snake.tail.alpha += 0.03;
+          _snake.tail.alpha += 0.3;
         }
       }
       
     }
 
     override public function update():void {
-      /*
-      if(FlxG.keys.SPACE && !_stoped){
-        FlxG.paused = true;
-        _stoped = true;
-      }
-      if(FlxG.keys.SPACE && _stoped){
-        FlxG.paused = false;
-        _stoped = false;
-      }
-      */
       super.update();
       fadeInHole();
       fadeOutHole();
+
+      _snakeSpeed = _snake.mps - 9;
 
       checkWinConditions();      
 
@@ -260,7 +256,6 @@ package {
 
 
     protected function eat(snakeHead:AxSprite, egg:Egg):void {
-      //FlxG.log("Eating at " + snakeHead.x + ", " + snakeHead.y);
       spawnFood();
       //_biteSound.play();
 
@@ -279,10 +274,12 @@ package {
       
       if(egg.type != Egg.ROTTEN){
         _snake.swallow(egg);
+      } else {
+        _poisonEgg++;
       }
       points += egg.points;
      
-        
+    
       if(_bonusTimer > 0) {
         _bonusTimerPoints += 2;
         //showPoints(egg, '+' + String(_bonusTimerPoints), 0xffedf249, 1.5, 2); 
