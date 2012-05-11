@@ -6,7 +6,8 @@ package {
                             ["Level End", switcher(SwitchLevel)],
                             ["Intro Movie", switcher(MovieState)],
                             ["Unlock Levels", function():void{SaveGame.unlockLevels();}],
-                            ["Lock Levels", function():void{SaveGame.initializeData();}] 
+                            ["Lock Levels", function():void{SaveGame.initializeData();}],
+                            ["Tweening test", switcher(TweenTestState)]
                           ]
       var btn:AxButton;
       var pos:int = 100;

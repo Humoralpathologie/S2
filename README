@@ -1,0 +1,3 @@
+To compile:
+
+mxmcl -library-path+=lib Main.as
