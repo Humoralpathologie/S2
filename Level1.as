@@ -47,7 +47,7 @@ package {
       _hud.livesText = String(_snake.lives);
       _hud.timeText = _timerHud;
       _hud.eggText = String(_eggAmount) + "/50";
-      _hud.scoreText = String(111); 
+      _hud.scoreText = String(_score); 
     }
 
     override protected function switchLevel():void {

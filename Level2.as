@@ -45,6 +45,14 @@ package {
       
     }
 
+    override public function update():void {
+      super.update();
+      if (_eggAmount == 100 && _snake.lives != 3) {
+        _snake.lives++;
+        //_bup.play();
+      }
+    }
+
     override protected function levelOver():void {
       _switchLevel.gameOver();
       Ax.switchState(_switchLevel);
@@ -52,7 +60,7 @@ package {
     }
 
     override protected function checkWinConditions():void {
-      if(_combos >= 20) {
+      if(_combos >= 10) {
         SaveGame.unlockLevel(2);
         Ax.switchState(_switchLevel);
       }
@@ -67,7 +75,7 @@ package {
       _hud.livesText = String(_snake.lives);
       _hud.timeText = _timerHud;
       _hud.speedText = (_snakeSpeed < 10) ? "0" + String(_snakeSpeed) : String(_snakeSpeed);
-      _hud.scoreText = String(111); 
+      _hud.scoreText = String(_score); 
       _hud.comboText = String(_combos) + "/10"; 
     }
 

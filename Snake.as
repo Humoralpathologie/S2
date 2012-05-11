@@ -143,9 +143,9 @@ package {
         _body.members[i].y = _head.y;
       }
       _tail.alpha == 0;
-      //_mps = _startMps;
-     // setEmoLevel();
-     // _speed = 1 / _mps;
+      _mps = _startMps;
+      setEmoLevel();
+      _speed = 1 / _mps;
       alive = true;
     }
 
