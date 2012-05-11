@@ -50,7 +50,7 @@ package {
           yPos += 90; 
         }
 
-        if (_levels[i] && SaveGame.levelUnlocked(i)) {
+        if (_levels[i] && SaveGame.levelUnlocked(i + 1)) {
           levelButton = new AxButton(xPos, yPos, _levelPics[i+1],90,90);//"", switchToState(_levels[i][0], _levels[i][2], _levels[i][3], _levels[i][4]));
           //levelButton.soundDown = _clickSound;
           levelButton.onClick(switchToState(_levels[i][0],null,null,null));
