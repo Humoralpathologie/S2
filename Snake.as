@@ -144,6 +144,7 @@ package {
       }
       _tail.alpha == 0;
       _mps = _startMps;
+      setEmoLevel();
       _speed = 1 / _mps;
       alive = true;
     }
