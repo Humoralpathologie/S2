@@ -20,6 +20,7 @@ package {
     //private var _bling:FlxSound = new FlxSound;    
     private var _justAte:Boolean = false;
     private var _alive:Boolean;
+    private var _resurrect:Boolean = false;
     
     private var _startMps:Number;
     private var _emoLevel:int;    
@@ -75,6 +76,14 @@ package {
     
     public function set alive(b:Boolean):void {
       _alive = b; 
+    }
+
+    public function get resurrectNext():Boolean {
+      return _resurrect;
+    }
+    
+    public function set resurrectNext(b:Boolean):void {
+      _resurrect = b; 
     }
 
     public function get tail():AxSprite {
@@ -368,7 +377,7 @@ package {
             die();
           }
           move();
-        } else {
+        } else if(_resurrect) {
           resurrect();
         }
         _timer -= _speed;

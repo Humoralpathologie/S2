@@ -43,6 +43,8 @@ package {
     protected var _switchLevel:SwitchLevel;
     protected var _particles:AxGroup;
 
+    protected var _shownDeathScreen:Boolean = false;
+
     override public function create():void {
       super.create();
 
@@ -236,6 +238,15 @@ package {
 
       if(_snake.lives <= 0) {
         levelOver();
+      } else if(_snake.alive) {
+        _shownDeathScreen = false;
+      } else {
+        if(_shownDeathScreen) {
+          _snake.resurrectNext = true;
+        } else {
+          _shownDeathScreen = true;
+          Ax.pushState(new SnakeDeath);
+        }
       }
 
       doCombos();

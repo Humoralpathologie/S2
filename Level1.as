@@ -12,9 +12,7 @@ package {
 
     override public function create():void {
       super.create();
-      _snake.lives = 1;
-      Egg.ROTTEN = 100;      
-    
+      _snake.lives = 2;
     }
 
     override public function update():void {
@@ -48,7 +46,7 @@ package {
       _hud.livesText = String(_snake.lives);
       _hud.timeText = _timerHud;
       _hud.eggText = String(_eggAmount) + "/50";
-      _hud.scoreText = String(111); 
+      _hud.scoreText = String(_score); 
     }
 
     override protected function switchLevel():void {
