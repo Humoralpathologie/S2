@@ -4,6 +4,8 @@ package {
   import org.axgl.particle.*;
   import org.axgl.render.*;
   import org.axgl.util.*;
+  import com.gskinner.motion.*;
+  import com.gskinner.motion.easing.*;
   
   public class LevelState extends AxState {
     [Embed(source='assets/SnakeSounds/schluck2tiefer.mp3')] protected var BiteSound:Class;
@@ -44,6 +46,8 @@ package {
     protected var _particles:AxGroup;
 
     protected var _shownDeathScreen:Boolean = false;
+
+    protected var _pointDirection:uint = 0;
 
     override public function create():void {
       super.create();
@@ -258,27 +262,29 @@ package {
 
     }
 
-      /*
-    protected function showPoints(egg:FlxSprite, points:String, Color:uint = 0xffffffff, Delay:Number = 0.5, Speed:int = 1):void { 
-      _pointHud = new Tween(Delay, 20, egg.x, egg.y, 40, Color, points, Speed); 
-      add(_pointHud);  
+    protected function showPoints(egg:AxSprite, points:String, color:AxColor = null):void {
+      var pointo:AxText = new AxText(egg.x, egg.y, null, points);
+      pointo.scale.x = 4;
+      pointo.scale.y = 4;
+      if(color) {
+        pointo.color = color;
+      }
+      var func:Function = function(tween:GTween):void {
+        pointo.exists = false; 
+      }
+      new GTween(pointo, 2, {x:(((_pointDirection + 1) % 4 < 2) ? 640 : 0), y:((_pointDirection % 4 < 2) ? 480 : 0), alpha: 0}, {onComplete: func});
+      _pointDirection = (_pointDirection + 1) % 4
+      add(pointo);
     } 
-      */
 
 
     protected function eat(snakeHead:AxSprite, egg:Egg):void {
       spawnFood();
       //_biteSound.play();
 
-      // TODO: This allocates too many objects. Think about how to reduce this.
-      //var shells:FlxEmitter = egg.shells;
       var points:int = 0;
       _eggAmount++;
-      /*
-      shells.at(snakeHead);
-      shells.start(true, 3);
-      add(shells);
-      */
+
       AxParticleSystem.emit("eat-egg", snakeHead.x, snakeHead.y);
 
       _food.remove(egg);
@@ -293,12 +299,12 @@ package {
     
       if(_bonusTimer > 0) {
         _bonusTimerPoints += 2;
-        //showPoints(egg, '+' + String(_bonusTimerPoints), 0xffedf249, 1.5, 2); 
+        showPoints(egg, '+' + String(_bonusTimerPoints), new AxColor(1,1,0,1));
         _score += _bonusTimerPoints;
       }
 
       _score += points;
-      //showPoints(egg, egg.points.toString());
+      showPoints(egg, egg.points.toString(), ((points < 0) ? new AxColor(1,0,0,1) : null ));
       _bonusTimer = 2;
 
     }
@@ -314,7 +320,7 @@ package {
           combo = _currentCombos[j];
           _combos += 1;
           for(i = 0; i < combo.length; i++) {
-            //showPoints(combo[i], '+' + String(combo.length), 0xffff0000, 1.5, 2); 
+            showPoints(combo[i], '+' + String(combo.length), new AxColor(Math.random(), Math.random(), Math.random(), 1));
             _score += combo.length;
             AxParticleSystem.emit("combo", combo[i].x, combo[i].y);
             _snake.body.remove(combo[i]);
