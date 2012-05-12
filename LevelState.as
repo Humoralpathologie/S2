@@ -22,7 +22,6 @@ package {
 
     protected var _snake:Snake;
     protected var _food:AxGroup;
-    //protected var _pointHud:Tween;
     protected var _score:int;
     protected var _bonusTimer:Number = 0;
     protected var _bonusTimerPoints:Number = 0;

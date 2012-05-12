@@ -51,7 +51,7 @@ package {
 
     override protected function switchLevel():void {
       _switchLevel = new SwitchLevel("Level1 completed!", Level1, Level1, _timerHud);
-      SaveGame.unlockLevel(1);
+      SaveGame.unlockLevel(2);
       Ax.switchState(_switchLevel);
     }
 
@@ -70,7 +70,7 @@ package {
       } else {
         egg = new Egg(Math.floor(Math.random() * 2)); 
       }
-
+      egg.points = 2;
       spawnEgg(egg);
       
     }

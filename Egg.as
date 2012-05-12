@@ -40,7 +40,7 @@ package {
       offset.y = 6;
       offset.x = 1;
 
-      _points = 2; // Can be switched later by eggType
+      _points = null;
 
     }
 
@@ -56,11 +56,19 @@ package {
     }
 
     public function get points():int{
-      if(_eggType == ROTTEN){
-        return -5;
+      if(_points) {
+        return _points;
       } else {
-        return 2;
+        if(_eggType == ROTTEN){
+          return -5;
+        } else {
+          return 2;
+        }
       }
+    }
+
+    public function set points(n:int):void {
+      _points = n;
     }
 
     public function get type():int {
