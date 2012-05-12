@@ -181,6 +181,9 @@ package {
     }
 
     private function onScreen(sprite:AxSprite):Boolean {
+      trace("screen: " + String(sprite.screen.x));
+      trace("spritex: " + String(sprite.x));
+      
       return sprite.screen.x > 0 && sprite.screen.x < Ax.width && sprite.screen.y > 0 && sprite.screen.y < Ax.height; 
     }
 
@@ -198,7 +201,7 @@ package {
 
     protected function fadeInHole():void {
       if (!_snake.alive) {
-        _hole.alpha = 1;
+        _hole.alpha += 1;
         _snake.tail.alpha = -1;
       }
   

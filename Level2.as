@@ -10,7 +10,7 @@ package {
 
     override public function create():void {
       super.create();
-      _snake.lives = 3;
+      _snake.lives = 2;
       Egg.ROTTEN = 100;      
       _switchLevel = new SwitchLevel(Level2, Level3);
     }
@@ -54,6 +54,7 @@ package {
     }
 
     override protected function levelOver():void {
+      SaveGame.saveScore(2, _score);
       _switchLevel.gameOver();
       Ax.switchState(_switchLevel);
       
@@ -61,7 +62,8 @@ package {
 
     override protected function checkWinConditions():void {
       if(_combos >= 10) {
-        SaveGame.unlockLevel(2);
+        SaveGame.saveScore(2, _score);
+        SaveGame.unlockLevel(3);
         Ax.switchState(_switchLevel);
       }
     }
