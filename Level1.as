@@ -18,7 +18,7 @@ package {
 
     override public function update():void {
       super.update();
-      if (_eggAmount == 35 && _snake.lives != 2) {
+      if (_eggAmount == 40 && _snake.lives != 2) {
         _snake.lives++;
         //_bup.play();
       }
@@ -63,10 +63,10 @@ package {
     }
 
     override protected function spawnFood():void {
-      var rand:int = Math.floor(Math.random() * 10);
+      var rand:int = Math.floor(Math.random() * 11);
       var egg:Egg;
 
-      if (rand > 6) {
+      if (rand > 5) {
         egg = new Egg(2);  
       } else {
         egg = new Egg(Math.floor(Math.random() * 2)); 
@@ -94,7 +94,7 @@ package {
     }
 
     override protected function checkWinConditions():void {
-      if(_eggAmount >= 1) {
+      if(_eggAmount >= 50) {
         switchLevel();
       }
     }
