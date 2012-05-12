@@ -8,11 +8,12 @@ package {
     // Variablen
     private var _background:AxSprite = null;
     
-    private var _storyBeat:String = "Level1 completed!";
-
     override public function create():void {
       super.create();
-      _snake.lives = 2;
+      _switchLevel = new SwitchLevel(Level1, Level2);
+      _snake.lives = 1;
+      Egg.ROTTEN = 100;      
+    
     }
 
     override public function update():void {
@@ -50,14 +51,14 @@ package {
     }
 
     override protected function switchLevel():void {
-      _switchLevel = new SwitchLevel("Level1 completed!", Level1, Level1, _timerHud);
       SaveGame.unlockLevel(2);
+      SaveGame.saveScore(1, _score);
       Ax.switchState(_switchLevel);
     }
 
     override protected function levelOver():void {
-      _switchLevel = new SwitchLevel(_storyBeat, Level1, Level1, _timerHud);
       _switchLevel.gameOver();
+      SaveGame.saveScore(1, _score);
       Ax.switchState(_switchLevel);
     }
 
@@ -93,7 +94,7 @@ package {
     }
 
     override protected function checkWinConditions():void {
-      if(_eggAmount >= 50) {
+      if(_eggAmount >= 1) {
         switchLevel();
       }
     }

@@ -8,6 +8,12 @@ package {
     // Variablen
     protected var _background:AxSprite = null;
 
+    override public function create():void {
+      super.create();
+      _snake.lives = 3;
+      Egg.ROTTEN = 1;      
+      _switchLevel = new SwitchLevel(Level3, Level3);
+    }
     override protected function addBackgrounds():void {
       _background = new AxSprite(0,0);
       _background.load(Background, 640, 480);
@@ -58,14 +64,12 @@ package {
 
     override protected function checkWinConditions():void {
       if(_combos >= 10 || _eggAmount >= 100 || _timerMin >= 4) {
-        var switcher:SwitchLevel = new SwitchLevel("Conglaturation !!!\nYou have completed a great game.\nAnd prooved the justice of our culture.\nNow go and rest our heroes !", Level3, Level3, _timerHud);
-        Ax.switchState(switcher); 
+        Ax.switchState(_switchLevel);
       }
     }
 
 
     override protected function levelOver():void {
-      _switchLevel = new SwitchLevel("You failed!\nTry again", Level3, Level3, _timerHud);
       _switchLevel.gameOver();
       Ax.switchState(_switchLevel);
       

@@ -12,6 +12,7 @@ package {
       super.create();
       _snake.lives = 3;
       Egg.ROTTEN = 100;      
+      _switchLevel = new SwitchLevel(Level2, Level3);
     }
 
     override protected function addBackgrounds():void {
@@ -46,7 +47,7 @@ package {
 
 
     override protected function levelOver():void {
-      _switchLevel = new SwitchLevel("You failed!\nTry again", Level2, Level2, _timerHud);
+      SaveGame.saveScore(2, _score);
       _switchLevel.gameOver();
       Ax.switchState(_switchLevel);
       
@@ -54,9 +55,9 @@ package {
 
     override protected function checkWinConditions():void {
       if(_combos >= 10) {
-        var switcher:SwitchLevel = new SwitchLevel("Conglaturation !!!\nYou have completed a great game.\nAnd prooved the justice of our culture.\nNow go and rest our heroes !", Level2, Level3, _timerHud);
+        SaveGame.saveScore(2, _score);
         SaveGame.unlockLevel(3);
-        Ax.switchState(switcher); 
+        Ax.switchState(_switchLevel);
       }
     }
 
@@ -69,7 +70,7 @@ package {
       _hud.livesText = String(_snake.lives);
       _hud.timeText = _timerHud;
       _hud.speedText = (_snakeSpeed < 10) ? "0" + String(_snakeSpeed) : String(_snakeSpeed);
-      _hud.scoreText = String(111); 
+      _hud.scoreText = String(_score); 
       _hud.comboText = String(_combos) + "/10"; 
     }
 
