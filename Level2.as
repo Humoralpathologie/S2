@@ -10,7 +10,7 @@ package {
 
     override public function create():void {
       super.create();
-      _snake.lives = 2;
+      _snake.lives = 3;
       Egg.ROTTEN = 100;      
       _switchLevel = new SwitchLevel(Level2, Level3);
     }
@@ -45,13 +45,6 @@ package {
       
     }
 
-    override public function update():void {
-      super.update();
-      if (_eggAmount == 100 && _snake.lives != 3) {
-        _snake.lives++;
-        //_bup.play();
-      }
-    }
 
     override protected function levelOver():void {
       SaveGame.saveScore(2, _score);

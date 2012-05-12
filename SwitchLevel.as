@@ -14,8 +14,6 @@ package {
     private var _replay:AxButton;
     private var _backToMenu:AxButton;
 
-    private var _scaled:Boolean;
-    private var _resetScaled:Boolean;
     private var _background:AxSprite;
     private var _boardLeft:AxSprite;
     private var _boardRight:AxSprite;
@@ -69,29 +67,5 @@ package {
       remove(_playNextLevel);      
     }
 
-    private function scaleButton(button:AxButton):Function{
-      return function ():void{
-        if (!_scaled) {
-          button.scale.x = 1.3;
-          button.scale.y = 1.3;
-          button.angle = 30;
-          //Button.setSounds(null, 1.0, null, 1.0, ClickSound);
-          _scaled = true;
-          _resetScaled = false;
-        } 
-      }
-    }
-
-    private function resetScale(button:AxButton):Function{
-      return function ():void{
-        if (!_resetScaled) {
-          button.scale.x = 1;
-          button.scale.y = 1;
-          button.angle = 0;
-          _resetScaled = true;
-          _scaled = false;
-        }
-      }
-    }
   } 
 }

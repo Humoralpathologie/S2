@@ -134,18 +134,18 @@ package {
     }
 
     public function die():void {
-      alive = false;
+      _alive = false;
       _lives--;
     }
 
     private function resurrect():void {
       _head.x = 150;
       _head.y = 150;
+      _head.offset.x = 15;
+      _head.offset.y = 30;
       _head.facing = AxEntity.RIGHT;
       _previousFacing = _head.facing;
       _head.animate('right_0');
-      _head.offset.x = 0;
-      _head.offset.y = 9.5;
 
       for (var i:int = 0; i < _body.members.length; i++) {
         _body.members[i].x = _head.x - 15;
@@ -155,7 +155,7 @@ package {
       _mps = _startMps;
       setEmoLevel();
       _speed = 1 / _mps;
-      alive = true;
+      _alive = true;
     }
 
 
@@ -324,8 +324,6 @@ package {
     }
     override public function update():void {
       super.update();
-      _head.offset.x = 15;
-      _head.offset.y = 30;
       
       if(Ax.keys.pressed(AxKey.UP) && _previousFacing != AxEntity.DOWN){
         _head.facing = AxEntity.UP;
@@ -373,7 +371,7 @@ package {
 
       _timer += Ax.dt;
       if(_timer >= _speed){
-        if(alive){
+        if(_alive){
           if(Ax.overlap(_head, _body)){
             die();
           }
