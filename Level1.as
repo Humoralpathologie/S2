@@ -94,7 +94,7 @@ package {
     }
 
     override protected function checkWinConditions():void {
-      if(_eggAmount >= 1) {
+      if(_eggAmount >= 30) {
         switchLevel();
       }
     }
