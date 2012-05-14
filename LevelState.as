@@ -47,11 +47,14 @@ package {
     protected var _shownDeathScreen:Boolean = false;
 
     protected var _pointDirection:uint = 0;
+    protected var _tweens:Vector.<GTween>;
 
     override public function create():void {
       super.create();
 
       Ax.camera.follow(_snake);
+
+      _tweens = new Vector.<GTween>;
 
       _particles = new AxGroup();
       var effect:AxParticleEffect = new AxParticleEffect('eat-egg', Shell, 5);
@@ -271,7 +274,8 @@ package {
       var func:Function = function(tween:GTween):void {
         pointo.exists = false; 
       }
-      new GTween(pointo, 2, {x:(((_pointDirection + 1) % 4 < 2) ? 640 : 0), y:((_pointDirection % 4 < 2) ? 480 : 0), alpha: 0}, {onComplete: func});
+      var tween:GTween = new GTween(pointo, 2, {x:(((_pointDirection + 1) % 4 < 2) ? 640 : 0), y:((_pointDirection % 4 < 2) ? 480 : 0), alpha: 0}, {onComplete: func});
+      _tweens.push(tween);
       _pointDirection = (_pointDirection + 1) % 4
       add(pointo);
     } 
@@ -408,6 +412,14 @@ package {
         egg.y = int(6 + (Math.random() * hTiles)) * 15;
       } while(Ax.overlap(egg,_unspawnable));
       _food.add(egg);
+    }
+
+    override public function dispose():void {
+      for each(var tween:GTween in _tweens) {
+        tween.end();
+      }
+      _tweens = null;
+      super.dispose();
     }
   }
 }
