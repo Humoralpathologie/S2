@@ -1,6 +1,7 @@
 package {
   import org.axgl.*;
   import org.axgl.text.*;
+  import org.axgl.util.*;
   
   public class Hud extends AxGroup{
     [Embed(source='assets/images/icons/anzeigenbalken.png')] protected var Background:Class;
@@ -58,8 +59,10 @@ package {
         }  
       }
       
-
-       
+      var rect:AxRect = new AxRect(0,0);
+      for each(var sprite:AxModel in members) {
+        sprite.scroll = rect;
+      }
     }
 
     private function displayIcon(lis:Array):void {

@@ -339,17 +339,35 @@ package {
       } 
 
       if(Ax.mouse.pressed(0)){
-        if(Math.abs(Ax.mouse.x - _head.x) < Math.abs(Ax.mouse.y - _head.y)){
-          if(Ax.mouse.y > _head.y) {
-            _head.facing = AxEntity.DOWN;
-          } else {
-            _head.facing = AxEntity.UP;
-          } 
+        if(Ax.mouse.x > Ax.width / 2){
+          switch(_head.facing) {
+            case AxEntity.UP:
+              _head.facing = AxEntity.RIGHT;
+              break;
+            case AxEntity.DOWN: 
+              _head.facing = AxEntity.LEFT;
+              break;
+            case AxEntity.RIGHT:
+              _head.facing = AxEntity.DOWN;
+              break;
+            case AxEntity.LEFT:
+              _head.facing = AxEntity.UP;
+              break;
+          }
         } else {
-          if(Ax.mouse.x < _head.x) {
-            _head.facing = AxEntity.LEFT;
-          } else {
-            _head.facing = AxEntity.RIGHT;
+          switch(_head.facing) {
+            case AxEntity.UP:
+              _head.facing = AxEntity.LEFT;
+              break;
+            case AxEntity.DOWN: 
+              _head.facing = AxEntity.RIGHT;
+              break;
+            case AxEntity.RIGHT:
+              _head.facing = AxEntity.UP;
+              break;
+            case AxEntity.LEFT:
+              _head.facing = AxEntity.DOWN;
+              break;
           }
         }
       }

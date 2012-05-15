@@ -6,7 +6,7 @@ package {
   public class Main extends Ax {
     public function Main() {
       SaveGame.load();
-      super(MenuState, 640, 480);
+      super(MenuState);//, 640, 480);
     }
     override public function create():void {
 			Ax.debuggerEnabled = true;

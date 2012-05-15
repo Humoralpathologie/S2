@@ -52,8 +52,8 @@ package {
 
     override public function create():void {
       super.create();
-
-      Ax.camera.follow(_snake);
+      
+      Ax.zoom = 1.5;
 
       _tweens = new Vector.<GTween>;
 
@@ -77,6 +77,8 @@ package {
 
       _score = 0;
       _snake = new Snake(10);
+      Ax.camera.follow(_snake.head);
+      Ax.camera.bounds = new AxRect(0,0,640,480);
       _food = new AxGroup();
 
       _bonusBar = new AxSprite(450,32);
@@ -259,6 +261,7 @@ package {
       doCombos();
 
       updateHud();
+      Ax.camera.follow(_snake.head);
     }
 
     protected function checkWinConditions():void {
@@ -266,7 +269,9 @@ package {
     }
 
     protected function showPoints(egg:AxSprite, points:String, color:AxColor = null):void {
-      var pointo:AxText = new AxText(egg.x, egg.y, null, points);
+      var pointo:AxText = new AxText(egg.screen.x, egg.screen.y, null, points);
+      pointo.scroll.x = 0;
+      pointo.scroll.y = 0;
       pointo.scale.x = 4;
       pointo.scale.y = 4;
       if(color) {
@@ -275,7 +280,9 @@ package {
       var func:Function = function(tween:GTween):void {
         pointo.exists = false; 
       }
-      var tween:GTween = new GTween(pointo, 2, {x:(((_pointDirection + 1) % 4 < 2) ? 640 : 0), y:((_pointDirection % 4 < 2) ? 480 : 0), alpha: 0}, {onComplete: func});
+      //var tween:GTween = new GTween(pointo, 2, {x:(((_pointDirection + 1) % 4 < 2) ? 640 : 0), y:((_pointDirection % 4 < 2) ? 480 : 0), alpha: 0}, {onComplete: func});
+      var tween:GTween = new GTween(pointo, 2, {x: 320, y: 0, alpha: 0}, {onComplete: func});
+      
       _tweens.push(tween);
       _pointDirection = (_pointDirection + 1) % 4
       add(pointo);

@@ -20,7 +20,7 @@ package {
       super.update();
       _timer += Ax.dt;
       if(_addedText) {
-        if(Ax.keys.pressed(AxKey.SPACE)) {
+        if(Ax.keys.pressed(AxKey.SPACE) || Ax.mouse.pressed(0)) {
           Ax.popState();
         }
       } else if(_timer >= 2) {
