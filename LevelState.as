@@ -191,7 +191,7 @@ package {
     }
 
     private function onScreen(sprite:AxSprite):Boolean {
-      return sprite.x > 0 && sprite.x < Ax.width && sprite.y > 0 && sprite.y < Ax.height; 
+      return sprite.x > 0 && sprite.x < 640 && sprite.y > 0 && sprite.y < 480; 
     }
 
     protected function collideScreen():void {
@@ -433,8 +433,8 @@ package {
     }
 
     protected function spawnEgg(egg:Egg):void {
-      var wTiles:int = Ax.width / 15;
-      var hTiles:int = Ax.height / 15;
+      var wTiles:int = 640 / 15;
+      var hTiles:int = 480 / 15;
       wTiles -= 2; // Left and right;
       hTiles -= 7; // 6 top, 1 bottom;
       do {

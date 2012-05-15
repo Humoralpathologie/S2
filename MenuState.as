@@ -35,12 +35,12 @@ package {
     }
 
     private function makeButtons():void{
-      _playButton = new AxButton(Ax.width/2-40, 300); //, "New Story", switchToState(MovieState));
-      _playButton.x = (Ax.width - _playButton.width) / 2;
+      _playButton = new AxButton(640/2-40, 300); //, "New Story", switchToState(MovieState));
+      _playButton.x = (640 - _playButton.width) / 2;
       _playButton.text("New Story");
       _playButton.onClick(switchToState(MovieState));
-      _playLevel = new AxButton(Ax.width/2-40, 300 + 40); //, "Select Level", switchToState(LevelSelect));
-      _playLevel.x = (Ax.width - _playLevel.width) / 2;
+      _playLevel = new AxButton(640/2-40, 300 + 40); //, "Select Level", switchToState(LevelSelect));
+      _playLevel.x = (640 - _playLevel.width) / 2;
       _playLevel.text("Select Level");
       _playLevel.onClick(switchToState(LevelSelect));
       //var debugBtn:FlxButton = new FlxButton(0, _playLevel.y + _playLevel.height + 10, "Debug", switchToState(DebugState));

@@ -32,7 +32,7 @@ package {
       _boardLeft = new AxSprite(60, 30, Board);    
       _boardRight = new AxSprite(_boardLeft.x + _boardLeft.width + 40, 30, Board);    
 
-      var mid:int = Ax.width / 2 - 60;      
+      var mid:int = 640 / 2 - 60;      
 
       _replay = new AxButton(mid, 330); 
       _replay.load(Replay, 120, 147)

@@ -14,7 +14,7 @@ package {
       for each (var buttonStuff:Array in screens) {
         btn = new AxButton(0, pos)//, buttonStuff[0], buttonStuff[1]);
         btn.onClick(buttonStuff[1]);
-        btn.x = (Ax.width - btn.width) / 2;
+        btn.x = (640 - btn.width) / 2;
         btn.text(buttonStuff[0]);
         add(btn);
         pos += btn.height + 10;
