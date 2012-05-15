@@ -117,7 +117,7 @@ package {
       } else {
         egg = new Egg(Math.floor(Math.random() * 2)); 
       }
-
+      egg.points = 2;
       spawnEgg(egg);
       
     }
