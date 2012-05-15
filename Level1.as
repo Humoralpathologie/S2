@@ -1,23 +1,69 @@
 package {
   import org.axgl.*;
   import org.axgl.text.*;
+  import com.gskinner.motion.*;
+  import com.gskinner.motion.easing.*;
   
   public class Level1 extends LevelState {
     // Assets
     [Embed(source='assets/images/level01bg.png')] protected var Background:Class;
+    [Embed(source='assets/images/BaumschattenAußenLV1.png')] protected var ShadowOut:Class;
+    [Embed(source='assets/images/BaumschattenInnenLV1.png')] protected var ShadowIn:Class;
     // Variablen
     private var _background:AxSprite = null;
-    
+    private var _treeShadow1:AxSprite;
+    private var _treeShadow2:AxSprite;
+    private var _rotated1:Boolean = false;    
+    private var _rotated2:Boolean = false;    
+
     override public function create():void {
       super.create();
+      _treeShadow1 = new AxSprite(Ax.width/2 - 600, Ax.height/2 - 450, ShadowOut);
+      _treeShadow1.origin.x = Ax.width/2;
+      _treeShadow1.origin.y = Ax.height/2;
+      _treeShadow1.angle = -3;
+      _treeShadow2 = new AxSprite(Ax.width/2 - 600, Ax.height/2 - 450, ShadowIn);
+      _treeShadow2.origin.x = Ax.width/2;
+      _treeShadow2.origin.y = Ax.height/2;
+      _treeShadow2.angle = 4;
       _switchLevel = new SwitchLevel(Level1, Level2);
       _snake.lives = 1;
       Egg.ROTTEN = 100;      
+      
+      animateShadowIn();     
+      animateShadowOut();     
+      
+      add(_treeShadow1);
+      add(_treeShadow2);
     
+    }
+/*
+    private function funct1():void {
+        _rotated1 = true;
+    }
+    private function funct2():void {
+        _rotated2 = true;
+    } */
+    private function animateShadowOut():void {
+      var funct:Function = function():void {
+        new GTween(_treeShadow1, 5, {angle: -3}, {onComplete: animateShadowOut});
+      }
+      new GTween(_treeShadow1, 5, {angle:3}, {onComplete: funct});
+    }
+
+    private function animateShadowIn():void {
+      var rand1:int = Math.floor(Math.random() * 11);
+      var rand2:int = Math.floor(Math.random() * 11);
+      var funct:Function = function():void {
+        new GTween(_treeShadow2, 5, {angle: -3}, {onComplete: animateShadowIn});
+      }
+      new GTween(_treeShadow2, 5, {angle: 4}, {onComplete: funct});
+
     }
 
     override public function update():void {
       super.update();
+
       if (_eggAmount == 40 && _snake.lives != 2) {
         _snake.lives++;
         //_bup.play();
