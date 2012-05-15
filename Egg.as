@@ -24,6 +24,9 @@ package {
     protected var _points:int;
     protected var _eggType:int;
     
+    // Set this to true when starting to remove the egg from the body.
+    public var removing:Boolean = false;  
+    
     public function Egg(eggType:int = 0, x:int = 0, y:int = 0 ){
       super(x, y);
       

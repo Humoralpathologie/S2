@@ -6,6 +6,7 @@ package {
   import org.axgl.util.*;
   import com.gskinner.motion.*;
   import com.gskinner.motion.easing.*;
+  import flash.utils.*;
   
   public class LevelState extends AxState {
     [Embed(source='assets/SnakeSounds/schluck2tiefer.mp3')] protected var BiteSound:Class;
@@ -311,6 +312,40 @@ package {
       _bonusTimer = 2;
 
     }
+
+    protected function removeAndExplodeCombo(combo:Array):void {
+      var interval:int;
+      var prefib:int = 1;
+      var fib:int = 1;
+      var temp:int = 0;
+
+      for(var i:int = 0; i < combo.length; i++) {
+        combo[i].removing = true;
+      }
+
+      var func:Function = function():void {
+        if(combo.length > 0) {
+          var egg:Egg = (combo.pop() as Egg);
+          if(egg) {
+            _score += fib;
+            showPoints(egg, '+' + String(fib), new AxColor(Math.random(), Math.random(), Math.random(), 1));
+            temp = fib; 
+            fib+= prefib;
+            prefib = temp;
+            AxParticleSystem.emit("combo", egg.x, egg.y);
+            _snake.body.remove(egg);
+            
+          } else {
+            clearInterval(interval);
+          }
+        } else {
+          clearInterval(interval);
+        }
+      }
+
+      func();
+      interval = setInterval(func, 300);
+    }
     
     /*
      * Should be overridden for different scoring.
@@ -322,13 +357,7 @@ package {
         for(j = 0; j < _currentCombos.length; j++) {
           combo = _currentCombos[j];
           _combos += 1;
-          for(i = 0; i < combo.length; i++) {
-            showPoints(combo[i], '+' + String(combo.length), new AxColor(Math.random(), Math.random(), Math.random(), 1));
-            _score += combo.length;
-            AxParticleSystem.emit("combo", combo[i].x, combo[i].y);
-            _snake.body.remove(combo[i]);
-            
-          }
+          removeAndExplodeCombo(combo);
         }
         _snake.faster();
         _currentCombos = null;
@@ -338,9 +367,10 @@ package {
         //FlxG.log("checking for combos...");
         var bodyArray:Array = new Array();
         for(i = 0; i < _snake.body.members.length - 1; i++) {
-          bodyArray.push(_snake.body.members[i]);
+          if(!(_snake.body.members[i] as Egg).removing) {
+            bodyArray.push(_snake.body.members[i]);
+          }
         }
-        trace(bodyArray);
         var combos:Array = checkCombos(bodyArray);
         if(combos.length > 0) {
           _currentCombos = combos;
