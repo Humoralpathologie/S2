@@ -13,11 +13,12 @@ package {
     private var _background:AxSprite = null;
     private var _treeShadow1:AxSprite;
     private var _treeShadow2:AxSprite;
-    private var _rotated1:Boolean = false;    
-    private var _rotated2:Boolean = false;    
-
+    private var _timer:int = 0;
+    private var t1:GTween;
+    private var t2:GTween;
     override public function create():void {
       super.create();
+
       _treeShadow1 = new AxSprite(Ax.width/2 - 600, Ax.height/2 - 450, ShadowOut);
       _treeShadow1.origin.x = Ax.width/2;
       _treeShadow1.origin.y = Ax.height/2;
@@ -29,41 +30,29 @@ package {
       _switchLevel = new SwitchLevel(Level1, Level2);
       _snake.lives = 1;
       Egg.ROTTEN = 100;      
-      
-      animateShadowIn();     
-      animateShadowOut();     
+      animateShadow();     
       
       add(_treeShadow1);
       add(_treeShadow2);
     
     }
-/*
-    private function funct1():void {
-        _rotated1 = true;
-    }
-    private function funct2():void {
-        _rotated2 = true;
-    } */
-    private function animateShadowOut():void {
-      var funct:Function = function():void {
-        new GTween(_treeShadow1, 5, {angle: -3}, {onComplete: animateShadowOut});
-      }
-      new GTween(_treeShadow1, 5, {angle:3}, {onComplete: funct});
+
+    private function animateShadow():void {
+      t1 = new GTween(_treeShadow1, 5, {angle:5}, {reflect:true});
+      t2 = new GTween(_treeShadow2, 5, {angle:-10}, {reflect:true});
+      _tweens.push(t1); 
+      _tweens.push(t2); 
     }
 
-    private function animateShadowIn():void {
-      var rand1:int = Math.floor(Math.random() * 11);
-      var rand2:int = Math.floor(Math.random() * 11);
-      var funct:Function = function():void {
-        new GTween(_treeShadow2, 5, {angle: -3}, {onComplete: animateShadowIn});
-      }
-      new GTween(_treeShadow2, 5, {angle: 4}, {onComplete: funct});
-
-    }
 
     override public function update():void {
       super.update();
-
+      _timer++;
+      if (_timer == 30) {
+        t1.setValue("angle", Math.floor(Math.random() * 10) + 2);
+        t2.setValue("angle", (Math.floor(Math.random() * 5) + 2) * -1);
+        _timer = 0;
+      }
       if (_eggAmount == 40 && _snake.lives != 2) {
         _snake.lives++;
         //_bup.play();
