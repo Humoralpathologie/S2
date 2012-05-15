@@ -372,7 +372,7 @@ package {
       _timer += Ax.dt;
       if(_timer >= _speed){
         if(_alive){
-          if(Ax.overlap(_head, _body)){
+          if(Ax.overlap(_head, _body) && !Ax.overlap(_head, _body.members[_body.members.length - 1])){
             die();
           }
           move();
