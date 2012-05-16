@@ -88,10 +88,12 @@ package {
     override protected function switchLevel():void {
       SaveGame.unlockLevel(2);
       SaveGame.saveScore(1, _score);
+      _switchLevel.score = _score;
       Ax.switchState(_switchLevel);
     }
 
     override protected function levelOver():void {
+      _switchLevel.score = _score;
       _switchLevel.gameOver();
       SaveGame.saveScore(1, _score);
       Ax.switchState(_switchLevel);

@@ -64,6 +64,7 @@ package {
 
     override protected function checkWinConditions():void {
       if(_combos >= 10 || _eggAmount >= 100 || _timerMin >= 4) {
+        _switchLevel.score = _score;
         Ax.switchState(_switchLevel);
       }
     }
