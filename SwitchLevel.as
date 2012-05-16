@@ -12,6 +12,7 @@ package {
     [Embed(source='assets/images/menu/menu-egg-redo.png')] protected var Replay:Class;
     [Embed(source='assets/images/menu/menu-egg-back.png')] protected var Back:Class;
     [Embed(source='assets/images/menu/menu-egg-next.png')] protected var Next:Class;
+    [Embed(source='assets/images/menu/bird.png')] protected var Bird:Class;
     //[Embed(source='assets/SnakeSounds/TailWhip.mp3')] protected var Whip:Class;
     [Embed(source='assets/SnakeSounds/mouseclick.mp3')] protected var ClickSound:Class;
 
@@ -22,10 +23,20 @@ package {
     private var _background:AxSprite;
     private var _boardLeft:AxSprite;
     private var _boardRight:AxSprite;
-    
+
+    //birdemic birds
+    private var _bird1:AxSprite;
+    private var _bird2:AxSprite;
+    private var _bird3:AxSprite;
+    private var _birds:Object;
+    private var triggered:Boolean = false;    
+
     private var _scoreText:AxText;
     private var _counter:Object;
     private var _score:int;
+    private var _timeBonus:int;
+    private var _liveBonus:int;
+    private var _EXP:int;
 
     private var _preState:Class;
     private var _nextState:Class;    
@@ -37,6 +48,7 @@ package {
       _tweens = new Vector.<GTween>;
       _preState = preState;
       _nextState = nextState;
+      
 
       _background = new AxSprite(0, 0, Background);
 
@@ -62,9 +74,13 @@ package {
       _backToMenu.onClick(switchToState(MenuState, _backToMenu));
 
       add(_background);
+
+      birdemic();
+
       add(_boardLeft);
       add(_boardRight);
       
+  
       add(_playNextLevel);
       add(_replay);
       add(_backToMenu);
@@ -73,6 +89,67 @@ package {
     
     }
     
+    private function birdemic():void {
+      _bird1 = new AxSprite(500, 50);
+      _bird1.load(Bird, 140, 50);
+      _bird1.scale.x = _bird1.scale.y = 0.3;
+      _bird1.addAnimation("fly", [0,1,1,1,2,2,1], 4);
+
+      _bird2 = new AxSprite(530, 40);
+      _bird2.load(Bird, 140, 50);
+      _bird2.scale.x = _bird2.scale.y = 0.5;
+      _bird2.addAnimation("fly", [0,0,0,1,2,2,2,1], 4);
+
+      _bird3 = new AxSprite(520, 80);
+      _bird3.load(Bird, 140, 50);
+      _bird3.scale.x = _bird3.scale.y = 0.2;
+      _bird3.addAnimation("fly", [0,1,2,2], 4);
+
+      _birds = {
+        alpha1: 0,
+        alpha2: 0,
+        alpha3: 0
+      }      
+      _bird1.alpha = 0.0;
+      _bird2.alpha = 0.0;
+      _bird3.alpha = 0.0;
+
+      add(_bird1);
+      add(_bird2);
+      add(_bird3);
+    }
+    
+    private function trigger():void {
+      if (_bird1.alpha > 0 && _bird2.alpha > 0 && _bird3.alpha > 0) {
+        _bird1.animate("fly");
+        _bird2.animate("fly");
+        _bird3.animate("fly");
+
+      }
+
+      if ( !triggered && (_bird1.clicked() || _bird2.clicked() || _bird3.clicked())) {
+        
+        var func:Function = function(tween:GTween):void {
+          triggered = false; 
+          _tween.setValues({alpha1: 0, alpha2: 0, alpha3: 0});
+          _tween.autoPlay = false;
+        }
+        triggered = true;
+        var _tween:GTween = new GTween(_birds, 5, {alpha1: 1, alpha2: 1, alpha3: 1}, {onComplete: func});
+        _tweens.push(_tween);
+      }
+      
+        _bird1.alpha = Number(_birds.alpha1);
+        _bird2.alpha = Number(_birds.alpha2);
+        _bird3.alpha = Number(_birds.alpha3);
+    }
+    
+    public function submitPoints(score:int, timeBonus:int, liveBonus:int, EXP:int):void {
+      _score = score;
+      _timeBonus = timeBonus;
+      _liveBonus = liveBonus;
+      _EXP = EXP;
+    }
     public function set score(score:int):void {
       _score = score;
       var tween:GTween = new GTween(_counter, 3, {i: _score}, {ease: Exponential.easeOut});
@@ -81,7 +158,8 @@ package {
 
     override public function update():void {
       super.update();
-        _scoreText.text = "Score: " + String(Math.floor(_counter.i));
+      trigger();
+        _scoreText.text = "SCORE: " + String(Math.floor(_counter.i));
     }
 
     public function switchToState(state:Class, button:AxButton):Function {
