@@ -456,6 +456,7 @@ package {
         tween.end();
       }
       _tweens = null;
+      Ax.zoom = 1;
       super.dispose();
     }
   }
