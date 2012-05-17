@@ -148,10 +148,10 @@ package {
       _head.animate('right_0');
 
       for (var i:int = 0; i < _body.members.length; i++) {
-        _body.members[i].x = _head.x - 15;
+        _body.members[i].x = _head.x;
         _body.members[i].y = _head.y;
       }
-      _tail.alpha == 0;
+      _tail.alpha = 0;
       _mps = _startMps;
       setEmoLevel();
       _speed = 1 / _mps;

@@ -6,6 +6,7 @@ package {
   import org.axgl.util.*;
   import com.gskinner.motion.*;
   import com.gskinner.motion.easing.*;
+  import flash.debugger.enterDebugger;
   
   public class LevelState extends AxState {
     [Embed(source='assets/SnakeSounds/schluck2tiefer.mp3')] protected var BiteSound:Class;
@@ -19,7 +20,9 @@ package {
     */
 
     protected var _hole:AxSprite;
-
+    protected var _holeTween:GTween;    
+    protected var _tailTween:GTween;    
+  
     protected var _snake:Snake;
     protected var _food:AxGroup;
     protected var _score:int;
@@ -75,7 +78,7 @@ package {
       _particles.add(AxParticleSystem.register(effect));
 
       _score = 0;
-      _snake = new Snake(10);
+      _snake = new Snake(2);
       _food = new AxGroup();
 
       _bonusBar = new AxSprite(450,32);
@@ -84,13 +87,17 @@ package {
 
       _obstacles = new AxGroup();
       
-      _hole = new AxSprite(150 - 15, 150);
+      _hole = new AxSprite(150, 150);
       _hole.load(Hole);      
       _hole.width = 15;
       _hole.height = 15;
-      _hole.offset.x = 13;
+      _hole.offset.x = 15;
 
-      _hole.alpha = 1;
+      _holeTween = new GTween(_hole, 2, {alpha: 1});  
+      _tailTween = new GTween(_snake.tail, 2, {alpha: 0});  
+    
+      _tweens.push(_holeTween);
+      _tweens.push(_tailTween);
 
       addBackgrounds();
       addObstacles();
@@ -213,15 +220,18 @@ package {
   
      }
     
+    private function inHole():Boolean {
+      return _snake.tail.x == 150 && _snake.tail.y == 150;
 
+    }
+    
     protected function fadeOutHole():void {
-      if (!_snake.tail.overlaps(_hole)) {
-        if (_hole.alpha > 0) {
-          _hole.alpha -= 0.01;
-        }
-        if (_snake.tail.alpha < 1) {
-          _snake.tail.alpha += 0.3;
-        }
+      trace("x:" + String(_snake.tail.x));
+      trace("y:" + String(_snake.tail.y));
+      if (!inHole() && _hole.alpha >= 1) {
+        enterDebugger(); 
+        _holeTween.setValue("alpha", 0);
+        _tailTween.setValue("alpha", 1);
       }
       
     }
