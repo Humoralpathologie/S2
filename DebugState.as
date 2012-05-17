@@ -5,6 +5,7 @@ package {
       var screens:Array = [ ["Level Select", switcher(LevelSelect)],
                             ["Level End", switcher(SwitchLevel)],
                             ["Intro Movie", switcher(MovieState)],
+                            ["Leaderboard", switcher(LeaderBoard)],
                             ["Unlock Levels", function():void{SaveGame.unlockLevels();}],
                             ["Lock Levels", function():void{SaveGame.initializeData();}],
                             ["Tweening test", switcher(TweenTestState)]

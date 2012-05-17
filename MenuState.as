@@ -2,6 +2,7 @@ package {
   import org.axgl.*;
   import org.axgl.text.*;
   import org.axgl.render.*;
+  import flash.text.*;
   
   public class MenuState extends AxState {
 
@@ -13,6 +14,7 @@ package {
     private var _bg:AxSprite;
     private var _playButton:AxButton;
     private var _playLevel:AxButton;    
+    private var _lbButton:AxButton;    
     
     override public function create():void {
       super.create();
@@ -30,7 +32,7 @@ package {
       add(_snakeTitleText);
 
       //Ax.mouse.show();
-      
+     
       makeButtons();
     }
 
@@ -43,10 +45,15 @@ package {
       _playLevel.x = (640 - _playLevel.width) / 2;
       _playLevel.text("Select Level");
       _playLevel.onClick(switchToState(LevelSelect));
+      _lbButton = new AxButton(640/2-40, 300 + 80); //, "Select Level", switchToState(LevelSelect));
+      _lbButton.x = (640 - _lbButton.width) / 2;
+      _lbButton.text("Leaderboard");
+      _lbButton.onClick(switchToState(LeaderBoard));
       //var debugBtn:FlxButton = new FlxButton(0, _playLevel.y + _playLevel.height + 10, "Debug", switchToState(DebugState));
       //debugBtn.x = (FlxG.width - debugBtn.width) / 2; 
       add(_playButton);
       add(_playLevel);   
+      add(_lbButton);
       //add(debugBtn);
     }
 
