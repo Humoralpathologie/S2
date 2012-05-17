@@ -225,6 +225,7 @@ package {
       _previousFacing = _head.facing;
       if(_newPart){ 
         (_newPart as Egg).eat();
+        (_newPart as Egg).mps = mps;
         var swap:AxSprite;
         _body.remove(_tail);
         _body.add(_newPart);
@@ -261,6 +262,14 @@ package {
 
       }
 
+      animateTail();      
+      
+      _head.step();
+      _head.direction = _nextDirection;
+
+    }
+
+    private function animateTail():void {
       switch(_tail.facing) {
         case AxEntity.RIGHT:
             _tail.animate('right');
@@ -275,10 +284,6 @@ package {
             _tail.animate('down');
           break;
       }
-      
-      _head.step();
-      _head.direction = _nextDirection;
-
     }
 
     private function setEmoLevel():void {
@@ -301,12 +306,24 @@ package {
     }
      
     public function faster():void {
-      if(_mps < 30)
-        _mps += 1;
-            
+      if(mps < 30) {
+        mps += 1;
+      }
+      for each(var block:SmoothBlock in _body.members) {
+        block.mps = mps;
+      }
+      _head.mps = mps;
       setEmoLevel();
-      _speed = 1 / _mps;
     }
+
+    private function selfOverlap():Boolean {
+      var ret:Boolean = false;
+      for each(var block:SmoothBlock in _body.members) {
+        ret = ret || (block.tileX == _head.tileX && block.tileY == _head.tileY);
+      }
+      return ret;
+    }
+
     override public function update():void {
       super.update();
       
@@ -375,9 +392,9 @@ package {
       _timer += Ax.dt;
       if(_timer >= _speed){
         if(_alive){
-          /*if(Ax.overlap(_head, _body)){
+          if(selfOverlap()){
             die();
-          }*/
+          }
           move();
         } else if(_resurrect) {
           resurrect();
