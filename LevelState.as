@@ -8,6 +8,7 @@ package {
   import com.gskinner.motion.*;
   import com.gskinner.motion.easing.*;
   import flash.utils.*;
+  import flash.debugger.enterDebugger;
   
   public class LevelState extends AxState {
     [Embed(source='assets/SnakeSounds/schluck2tiefer.mp3')] protected var BiteSound:Class;
@@ -21,7 +22,8 @@ package {
     */
 
     protected var _hole:AxSprite;
-
+    protected var _holeTween:GTween;    
+  
     protected var _snake:Snake;
     protected var _food:AxGroup;
     protected var _score:int;
@@ -88,13 +90,15 @@ package {
 
       _obstacles = new AxGroup();
       
-      _hole = new AxSprite(150 - 15, 150);
+      _hole = new AxSprite(150, 150);
       _hole.load(Hole);      
       _hole.width = 15;
       _hole.height = 15;
-      _hole.offset.x = 13;
+      _hole.offset.x = 15;
 
-      _hole.alpha = 1;
+      _holeTween = new GTween(_hole, 2, {alpha: 1}, {ease: Exponential.easeOut});  
+    
+      _tweens.push(_holeTween);
 
       addBackgrounds();
       addObstacles();
@@ -212,19 +216,14 @@ package {
     protected function fadeInHole():void {
       if (!_snake.alive) {
         _hole.alpha = 1;
-        _snake.tail.alpha = 0;
       }
      }
     
-
     protected function fadeOutHole():void {
-      if (!_snake.tail.overlaps(_hole)) {
-        if (_hole.alpha > 0) {
-          _hole.alpha -= 0.01;
-        }
-        if (_snake.tail.alpha < 1) {
-          _snake.tail.alpha += 0.3;
-        }
+      if (!_hole.overlaps(_snake.body.members[_snake.body.members.length - 2]) && _hole.alpha >= 1) {
+        //enterDebugger(); 
+        _snake.tail.alpha = 1;
+        _holeTween.setValue("alpha", 0);
       }
       
     }
@@ -243,9 +242,6 @@ package {
 
       zoomKeys();
 
-      fadeInHole();
-      fadeOutHole();
-
       _snakeSpeed = _snake.mps - 9;
 
       checkWinConditions();      
@@ -257,9 +253,11 @@ package {
       collideScreen();
       collideObstacles();
 
+      fadeInHole();
       if(_snake.lives <= 0) {
         levelOver();
       } else if(_snake.alive) {
+        fadeOutHole();
         _shownDeathScreen = false;
       } else {
         if(_shownDeathScreen) {

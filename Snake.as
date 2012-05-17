@@ -60,7 +60,7 @@ package {
 
       _body = new AxGroup();
 
-      fillBody(_body);
+      fillBody();
       resurrect();
 
       add(_body);
@@ -159,7 +159,7 @@ package {
       _head.animate('right_0');
 
       for (var i:int = 0; i < _body.members.length; i++) {
-        _body.members[i].x = _head.x - 15;
+        _body.members[i].x = _head.x;
         _body.members[i].y = _head.y;
       }
       _tail.alpha == 0;
@@ -168,7 +168,7 @@ package {
       _alive = true;
     }
 
-    private function fillBody(group:AxGroup):void {
+    private function fillBody():void {
       var i:int;
       for(i = 1; i <= 4; i++){
         var part:AxSprite;
@@ -191,7 +191,7 @@ package {
           (part as Egg).eat();
         }
         part.facing = AxEntity.RIGHT;
-        group.add(part);
+        _body.add(part);
       } 
     }
 
@@ -395,8 +395,10 @@ package {
           if(selfOverlap()){
             die();
           }
+      trace("x:" + String(tail.x));
+      trace("y:" + String(tail.y));
           move();
-        } else if(_resurrect) {
+        } else {// if(_resurrect) {
           resurrect();
         }
         _timer -= _speed;
