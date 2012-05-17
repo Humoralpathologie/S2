@@ -154,8 +154,8 @@ package {
       _head.tileY = 10;
       _head.offset.x = 15;
       _head.offset.y = 30;
-      _head.direction = AxEntity.RIGHT;
       _previousFacing = _head.facing;
+      _head.direction = AxEntity.RIGHT;
       _head.animate('right_0');
 
       for (var i:int = 0; i < _body.members.length; i++) {
@@ -234,6 +234,7 @@ package {
         _justAte = true;
       }  
 
+      _head.direction = _nextDirection;
       for(var i:int = _body.members.length - 1 ; i >= 0; i--){
         var part:SmoothBlock;
         var prePart:SmoothBlock;
@@ -263,9 +264,7 @@ package {
       }
 
       animateTail();      
-      
       _head.step();
-      _head.direction = _nextDirection;
 
     }
 
@@ -328,15 +327,19 @@ package {
       super.update();
       
       if(Ax.keys.pressed(AxKey.UP) && _previousFacing != AxEntity.DOWN){
+        _head.facing = AxEntity.UP;
         _nextDirection = AxEntity.UP;
       } else
       if(Ax.keys.pressed(AxKey.DOWN) && _previousFacing != AxEntity.UP){
+        _head.facing = AxEntity.DOWN;
         _nextDirection = AxEntity.DOWN;
       } else 
       if(Ax.keys.pressed(AxKey.RIGHT) && _previousFacing != AxEntity.LEFT){
+        _head.facing = AxEntity.RIGHT;
         _nextDirection = AxEntity.RIGHT;
       } else 
       if(Ax.keys.pressed(AxKey.LEFT) && _previousFacing != AxEntity.RIGHT){
+        _head.facing = AxEntity.LEFT;
         _nextDirection = AxEntity.LEFT;
       } 
 
@@ -395,8 +398,6 @@ package {
           if(selfOverlap()){
             die();
           }
-      trace("x:" + String(tail.x));
-      trace("y:" + String(tail.y));
           move();
         } else {// if(_resurrect) {
           resurrect();

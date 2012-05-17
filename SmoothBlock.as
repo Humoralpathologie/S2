@@ -53,6 +53,8 @@ package {
           tileX += 1;
           break;
       }  
+      x = tileX * _size;
+      y = tileY * _size;
     }
 
     public function set mps(n:int):void {
