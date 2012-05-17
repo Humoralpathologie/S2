@@ -12,7 +12,7 @@ package {
       super.create();
       _snake.lives = 3;
       Egg.ROTTEN = 100;      
-      _switchLevel = new SwitchLevel(Level2, Level3);
+      _switchLevel = new SwitchLevel( Level2, Level3);
     }
 
     override protected function addBackgrounds():void {
@@ -49,6 +49,7 @@ package {
     override protected function levelOver():void {
       SaveGame.saveScore(2, _score);
       _switchLevel.gameOver();
+      _switchLevel.score = _score;
       Ax.switchState(_switchLevel);
       
     }
@@ -57,6 +58,7 @@ package {
       if(_combos >= 10) {
         SaveGame.saveScore(2, _score);
         SaveGame.unlockLevel(3);
+        _switchLevel.score = _score;
         Ax.switchState(_switchLevel);
       }
     }

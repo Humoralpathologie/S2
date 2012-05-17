@@ -1,5 +1,10 @@
 package {
   import org.axgl.*;
+  import org.axgl.text.*;
+  import org.axgl.render.*;
+  import org.axgl.util.*;
+  import com.gskinner.motion.*;
+  import com.gskinner.motion.easing.*;
 
   public class SwitchLevel extends AxState {
     [Embed(source='assets/images/menu/menu_iphone_background.png')] protected var Background:Class;
@@ -17,13 +22,19 @@ package {
     private var _background:AxSprite;
     private var _boardLeft:AxSprite;
     private var _boardRight:AxSprite;
+    
+    private var _scoreText:AxText;
+    private var _counter:Object;
+    private var _score:int;
 
     private var _preState:Class;
     private var _nextState:Class;    
+    private var _tweens:Vector.<GTween>;
 
     public function SwitchLevel(preState:Class, nextState:Class) {
       super();
       
+      _tweens = new Vector.<GTween>;
       _preState = preState;
       _nextState = nextState;
 
@@ -31,6 +42,10 @@ package {
 
       _boardLeft = new AxSprite(60, 30, Board);    
       _boardRight = new AxSprite(_boardLeft.x + _boardLeft.width + 40, 30, Board);    
+      
+      _counter = {i: 0}
+      _scoreText = new AxText(_boardLeft.x + 10, _boardLeft.y + 10, null, "Score: ");
+      _scoreText.scale.x = _scoreText.scale.y = 2;
 
       var mid:int = 640 / 2 - 60;      
 
@@ -54,7 +69,19 @@ package {
       add(_replay);
       add(_backToMenu);
       
+      add(_scoreText);
     
+    }
+    
+    public function set score(score:int):void {
+      _score = score;
+      var tween:GTween = new GTween(_counter, 3, {i: _score}, {ease: Exponential.easeOut});
+      _tweens.push(tween);
+    }
+
+    override public function update():void {
+      super.update();
+        _scoreText.text = "Score: " + String(Math.floor(_counter.i));
     }
 
     public function switchToState(state:Class, button:AxButton):Function {

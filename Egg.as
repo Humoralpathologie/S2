@@ -43,7 +43,7 @@ package {
       offset.y = 6;
       offset.x = 1;
 
-      _points = null;
+      _points = 2;
 
     }
 

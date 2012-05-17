@@ -1,21 +1,57 @@
 package {
   import org.axgl.*;
   import org.axgl.text.*;
+  import com.gskinner.motion.*;
+  import com.gskinner.motion.easing.*;
   
   public class Level1 extends LevelState {
     // Assets
     [Embed(source='assets/images/level01bg.png')] protected var Background:Class;
+    [Embed(source='assets/images/BaumschattenAußenLV1.png')] protected var ShadowOut:Class;
+    [Embed(source='assets/images/BaumschattenInnenLV1.png')] protected var ShadowIn:Class;
     // Variablen
     private var _background:AxSprite = null;
-    
+    private var _treeShadow1:AxSprite;
+    private var _treeShadow2:AxSprite;
+    private var _timer:int = 0;
+    private var t1:GTween;
+    private var t2:GTween;
     override public function create():void {
       super.create();
+
+      _treeShadow1 = new AxSprite(Ax.width/2 - 600, Ax.height/2 - 450, ShadowOut);
+      _treeShadow1.origin.x = Ax.width/2;
+      _treeShadow1.origin.y = Ax.height/2;
+      _treeShadow1.angle = -3;
+      _treeShadow2 = new AxSprite(Ax.width/2 - 600, Ax.height/2 - 450, ShadowIn);
+      _treeShadow2.origin.x = Ax.width/2;
+      _treeShadow2.origin.y = Ax.height/2;
+      _treeShadow2.angle = 4;
       _switchLevel = new SwitchLevel(Level1, Level2);
       _snake.lives = 1;
+      animateShadow();     
+      
+      add(_treeShadow1);
+      add(_treeShadow2);
+    
     }
+
+    private function animateShadow():void {
+      t1 = new GTween(_treeShadow1, 5, {angle:5}, {reflect:true});
+      t2 = new GTween(_treeShadow2, 5, {angle:-10}, {reflect:true});
+      _tweens.push(t1); 
+      _tweens.push(t2); 
+    }
+
 
     override public function update():void {
       super.update();
+      _timer++;
+      if (_timer == 30) {
+        t1.setValue("angle", Math.floor(Math.random() * 10) + 2);
+        t2.setValue("angle", (Math.floor(Math.random() * 5) + 2) * -1);
+        _timer = 0;
+      }
       if (_eggAmount == 40 && _snake.lives != 2) {
         _snake.lives++;
         //_bup.play();
@@ -51,10 +87,12 @@ package {
     override protected function switchLevel():void {
       SaveGame.unlockLevel(2);
       SaveGame.saveScore(1, _score);
+      _switchLevel.score = _score;
       Ax.switchState(_switchLevel);
     }
 
     override protected function levelOver():void {
+      _switchLevel.score = _score;
       _switchLevel.gameOver();
       SaveGame.saveScore(1, _score);
       Ax.switchState(_switchLevel);
