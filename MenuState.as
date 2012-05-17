@@ -15,6 +15,7 @@ package {
     private var _playButton:AxButton;
     private var _playLevel:AxButton;    
     private var _lbButton:AxButton;    
+    private var _arcadeButton:AxButton;
     
     override public function create():void {
       super.create();
@@ -49,12 +50,14 @@ package {
       _lbButton.x = (640 - _lbButton.width) / 2;
       _lbButton.text("Leaderboard");
       _lbButton.onClick(switchToState(LeaderBoard));
-      //var debugBtn:FlxButton = new FlxButton(0, _playLevel.y + _playLevel.height + 10, "Debug", switchToState(DebugState));
-      //debugBtn.x = (FlxG.width - debugBtn.width) / 2; 
+      _arcadeButton = new AxButton(640/2-40, 300 + 120); //, "Select Level", switchToState(LevelSelect));
+      _arcadeButton.x = (640 - _arcadeButton.width) / 2;
+      _arcadeButton.text("ARCADE MODE YEAH");
+      _arcadeButton.onClick(switchToState(Arcade));
       add(_playButton);
       add(_playLevel);   
+      add(_arcadeButton);
       add(_lbButton);
-      //add(debugBtn);
     }
 
     private function switchToState(state:Class):Function {

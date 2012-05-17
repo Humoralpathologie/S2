@@ -2,24 +2,27 @@ package {
   import org.axgl.*;
   import org.axgl.text.*;
   
-  public class Level1 extends LevelState {
+  public class Arcade extends LevelState {
     // Assets
-    [Embed(source='assets/images/level01bg.png')] protected var Background:Class;
+    [Embed(source='assets/images/arcade.png')] protected var Background:Class;
     // Variablen
     private var _background:AxSprite = null;
     
     override public function create():void {
       super.create();
-      _switchLevel = new SwitchLevel(Level1, Level2);
-      _snake.lives = 1;
+      _snake.lives = 2;
+      Ax.camera.bounds = new AxRect(0,0,990,900);
     }
 
     override public function update():void {
       super.update();
       if (_eggAmount == 35 && _snake.lives != 2) {
         _snake.lives++;
-        //_bup.play();
       }
+    }
+    
+    override protected function onScreen(sprite:AxSprite):Boolean {
+      return sprite.x > 0 && sprite.x < 990 && sprite.y > 0 && sprite.y < 900; 
     }
     
     override protected function addBackgrounds():void {
@@ -28,36 +31,27 @@ package {
     }
     
     override protected function addObstacles():void {
-      var stone1:AxSprite = new AxSprite(135,0);      
-      stone1.create(90,45,0x00ff00ff);
-      var stone2:AxSprite = new AxSprite(150,15);      
-      stone2.create(45,45,0x000000ff);
-      _obstacles.add(stone1);
-      _obstacles.add(stone2);
-      add(_obstacles);
     }
     
     override protected function addHud():void {
-      _hud = new Hud(["lives", "time", "score", "egg"]); 
+      _hud = new Hud(["lives", "time", "score"]); 
       add(_hud);
     }
     override protected function updateHud():void {
       _hud.livesText = String(_snake.lives);
       _hud.timeText = _timerHud;
-      _hud.eggText = String(_eggAmount) + "/50";
       _hud.scoreText = String(_score); 
     }
 
     override protected function switchLevel():void {
-      SaveGame.unlockLevel(2);
-      SaveGame.saveScore(1, _score);
-      Ax.switchState(_switchLevel);
+      SaveGame.saveScore(100, _score);
+      Ax.switchState(new SwitchLevel(Arcade, MenuState));
     }
 
     override protected function levelOver():void {
       _switchLevel.gameOver();
-      SaveGame.saveScore(1, _score);
-      Ax.switchState(_switchLevel);
+      SaveGame.saveScore(100, _score);
+      Ax.switchState(new MenuState);
     }
 
     override protected function spawnFood():void {
@@ -71,7 +65,6 @@ package {
       }
       egg.points = 2;
       spawnEgg(egg);
-      
     }
 
 
@@ -92,7 +85,7 @@ package {
     }
 
     override protected function checkWinConditions():void {
-      if(_eggAmount >= 30) {
+      if(_timerMin >= 3) {
         switchLevel();
       }
     }
