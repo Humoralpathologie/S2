@@ -4,6 +4,7 @@ package {
   import org.axgl.particle.*;
   import org.axgl.render.*;
   import org.axgl.util.*;
+  import org.axgl.input.*;
   import com.gskinner.motion.*;
   import com.gskinner.motion.easing.*;
   import flash.utils.*;
@@ -192,8 +193,8 @@ package {
       }
     }
 
-    private function onScreen(sprite:AxSprite):Boolean {
-      return sprite.x > 0 && sprite.x < 640 && sprite.y > 0 && sprite.y < 480; 
+    protected function onScreen(sprite:AxSprite):Boolean {
+      return sprite.x > 0 && sprite.x < 990 && sprite.y > 0 && sprite.y < 900; 
     }
 
     protected function collideScreen():void {
@@ -213,7 +214,6 @@ package {
         _hole.alpha = 1;
         _snake.tail.alpha = 0;
       }
-  
      }
     
 
@@ -229,8 +229,20 @@ package {
       
     }
 
+    protected function zoomKeys():void {
+      if(Ax.keys.pressed(AxKey.PLUS)) {
+        Ax.zoom += 0.1;
+      }
+      if(Ax.keys.pressed(AxKey.MINUS)) {
+        Ax.zoom -= 0.1;
+      }
+    }
+
     override public function update():void {
       super.update();
+
+      zoomKeys();
+
       fadeInHole();
       fadeOutHole();
 
