@@ -7,7 +7,7 @@ package {
     [Embed(source='assets/images/snake_tail_tilemap.png')] protected var Tail:Class;
     [Embed(source='assets/SnakeSounds/Pickup_Coin.mp3')] protected var Bling:Class;
 
-    private var _head:AxSprite;
+    private var _head:SmoothBlock;
     private var _tail:AxSprite;
     private var _body:AxGroup;
     private var _timer:Number;
@@ -21,20 +21,19 @@ package {
     private var _justAte:Boolean = false;
     private var _alive:Boolean;
     private var _resurrect:Boolean = false;
+    private var _cameraHead:AxSprite;
+    private var _nextDirection:uint = AxEntity.RIGHT;
     
     private var _startMps:Number;
     private var _emoLevel:int;    
 
     public function Snake(movesPerSecond:Number = 1) { 
       super();
-      
       _startMps = movesPerSecond;
-      _mps = _startMps;
-      _speed = 1 / _mps;
       _timer = 0;
 
-      _head = new AxSprite(15 * 10, 15 * 10);
-      //_head.makeGraphic(16,16);
+      _head = new SmoothBlock(2, 2);
+
       _head.load(Head, 45, 75);
       _head.addAnimation('right_0',[0,1], 3);
       _head.addAnimation('left_0',[2,3], 3);
@@ -98,12 +97,25 @@ package {
       return _lives;
     }
 
+    public function get tileY():int {
+      return int(y / 15);
+    }
+
+    public function get tileX():int {
+      return int(y / 15);
+    }
+
     public function set lives(n:int):void {
       _lives = n;
     }    
 
     public function get mps():Number {
       return 1 / _speed; 
+    }
+
+    public function set mps(n:Number):void {
+      _speed = 1 / n;
+      _mps = n;
     }
 
     public function set nextPos(pos:AxPoint):void {
@@ -113,7 +125,6 @@ package {
     public function get body():AxGroup {
       return _body;
     }
-
 
     public function get justAte():Boolean {
       if(_justAte){
@@ -139,11 +150,11 @@ package {
     }
 
     private function resurrect():void {
-      _head.x = 150;
-      _head.y = 150;
+      _head.tileX = 10;
+      _head.tileY = 10;
       _head.offset.x = 15;
       _head.offset.y = 30;
-      _head.facing = AxEntity.RIGHT;
+      _head.direction = AxEntity.RIGHT;
       _previousFacing = _head.facing;
       _head.animate('right_0');
 
@@ -152,19 +163,17 @@ package {
         _body.members[i].y = _head.y;
       }
       _tail.alpha == 0;
-      _mps = _startMps;
+      mps = _startMps;
       setEmoLevel();
-      _speed = 1 / _mps;
       _alive = true;
     }
-
 
     private function fillBody(group:AxGroup):void {
       var i:int;
       for(i = 1; i <= 4; i++){
         var part:AxSprite;
         if(i == 4) {
-          part = new AxSprite(_head.x - 15, _head.y);
+          part = new SmoothBlock(_head.tileX - 1, _head.tileY);
           // This should be somewhere else.
           part.load(Tail, 45, 45);
           part.width = 15;
@@ -210,7 +219,6 @@ package {
         } else {
           (part as Egg).animate("horizontal");
         }
-        
     }
 
     private function move():void {
@@ -226,10 +234,10 @@ package {
       }  
 
       for(var i:int = _body.members.length - 1 ; i >= 0; i--){
-        var part:AxSprite;
-        var prePart:AxSprite;
+        var part:SmoothBlock;
+        var prePart:SmoothBlock;
         var preFacing:uint;
-        part = (_body.members[i] as AxSprite);
+        part = (_body.members[i] as SmoothBlock);
         preFacing = part.facing;
 
           if (i != _body.members.length - 1) {
@@ -237,37 +245,20 @@ package {
           }
 
           if(i == 0){
-            part.x = _head.x;
-            part.y = _head.y; 
-            part.facing = head.facing;
+            part.tileX = _head.tileX;
+            part.tileY = _head.tileY; 
+            part.direction = head.facing;
           } else {
-            prePart = (_body.members[i - 1] as AxSprite);
-            part.x = prePart.x;
-            part.y = prePart.y;
-            part.facing = prePart.facing;
+            prePart = (_body.members[i - 1] as SmoothBlock);
+            part.tileX = prePart.tileX;
+            part.tileY = prePart.tileY;
+            part.direction = prePart.facing;
             //body tile in angle
             if (i != _body.members.length - 1 && preFacing != part.facing) {
               (part as Egg).animate("angle");
             } 
           }
-      }
 
-      var xSpeed:int = 0;
-      var ySpeed:int = 0;
-      
-      switch(_head.facing) {
-        case AxEntity.RIGHT:
-            xSpeed = 15;
-          break;
-        case AxEntity.LEFT:
-            xSpeed = -15;
-          break;
-        case AxEntity.UP:
-            ySpeed = -15;
-          break;
-        case AxEntity.DOWN:
-            ySpeed = 15;
-          break;
       }
 
       switch(_tail.facing) {
@@ -284,15 +275,9 @@ package {
             _tail.animate('down');
           break;
       }
-
-      if(_nextPos) {
-        _head.x = _nextPos.x;
-        _head.y = _nextPos.y;
-        _nextPos = null;
-      } else {
-        _head.x += xSpeed;
-        _head.y += ySpeed;
-      }
+      
+      _head.step();
+      _head.direction = _nextDirection;
 
     }
 
@@ -326,16 +311,16 @@ package {
       super.update();
       
       if(Ax.keys.pressed(AxKey.UP) && _previousFacing != AxEntity.DOWN){
-        _head.facing = AxEntity.UP;
+        _nextDirection = AxEntity.UP;
       } else
       if(Ax.keys.pressed(AxKey.DOWN) && _previousFacing != AxEntity.UP){
-        _head.facing = AxEntity.DOWN;
+        _nextDirection = AxEntity.DOWN;
       } else 
       if(Ax.keys.pressed(AxKey.RIGHT) && _previousFacing != AxEntity.LEFT){
-        _head.facing = AxEntity.RIGHT;
+        _nextDirection = AxEntity.RIGHT;
       } else 
       if(Ax.keys.pressed(AxKey.LEFT) && _previousFacing != AxEntity.RIGHT){
-        _head.facing = AxEntity.LEFT;
+        _nextDirection = AxEntity.LEFT;
       } 
 
       if(Ax.mouse.pressed(0)){
@@ -390,9 +375,9 @@ package {
       _timer += Ax.dt;
       if(_timer >= _speed){
         if(_alive){
-          if(Ax.overlap(_head, _body)){
+          /*if(Ax.overlap(_head, _body)){
             die();
-          }
+          }*/
           move();
         } else if(_resurrect) {
           resurrect();

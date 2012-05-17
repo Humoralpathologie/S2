@@ -1,7 +1,7 @@
 package {
   import org.axgl.*;
 
-  public class Egg extends AxSprite {
+  public class Egg extends SmoothBlock {
 
     [Embed(source='assets/images/eatenEggBlue.png')] protected static var EatenEggBlue:Class;
     [Embed(source='assets/images/eatenEggGreenPointed.png')] protected static var EatenEggGreenPointed:Class;
