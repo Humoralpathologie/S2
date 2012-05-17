@@ -61,7 +61,7 @@ package {
 
       _body = new AxGroup();
 
-      fillBody(_body);
+      fillBody();
       resurrect();
 
       add(_body);
@@ -139,6 +139,7 @@ package {
     }
 
     private function resurrect():void {
+      _alive = true;
       _head.x = 150;
       _head.y = 150;
       _head.offset.x = 15;
@@ -151,15 +152,14 @@ package {
         _body.members[i].x = _head.x;
         _body.members[i].y = _head.y;
       }
-      _tail.alpha = 0;
+      tail.alpha = 0;
       _mps = _startMps;
       setEmoLevel();
       _speed = 1 / _mps;
-      _alive = true;
     }
 
 
-    private function fillBody(group:AxGroup):void {
+    private function fillBody():void {
       var i:int;
       for(i = 1; i <= 4; i++){
         var part:AxSprite;
@@ -182,7 +182,7 @@ package {
           (part as Egg).eat();
         }
         part.facing = AxEntity.RIGHT;
-        group.add(part);
+        _body.add(part);
       } 
     }
 
@@ -375,8 +375,10 @@ package {
           if(Ax.overlap(_head, _body) && !Ax.overlap(_head, _body.members[_body.members.length - 1])){
             die();
           }
+      trace("x:" + String(tail.x));
+      trace("y:" + String(tail.y));
           move();
-        } else if(_resurrect) {
+        } else {// if(_resurrect) {
           resurrect();
         }
         _timer -= _speed;

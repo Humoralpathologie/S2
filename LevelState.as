@@ -21,7 +21,6 @@ package {
 
     protected var _hole:AxSprite;
     protected var _holeTween:GTween;    
-    protected var _tailTween:GTween;    
   
     protected var _snake:Snake;
     protected var _food:AxGroup;
@@ -78,7 +77,7 @@ package {
       _particles.add(AxParticleSystem.register(effect));
 
       _score = 0;
-      _snake = new Snake(2);
+      _snake = new Snake(10);
       _food = new AxGroup();
 
       _bonusBar = new AxSprite(450,32);
@@ -93,11 +92,9 @@ package {
       _hole.height = 15;
       _hole.offset.x = 15;
 
-      _holeTween = new GTween(_hole, 2, {alpha: 1});  
-      _tailTween = new GTween(_snake.tail, 2, {alpha: 0});  
+      _holeTween = new GTween(_hole, 2, {alpha: 1}, {ease: Exponential.easeOut});  
     
       _tweens.push(_holeTween);
-      _tweens.push(_tailTween);
 
       addBackgrounds();
       addObstacles();
@@ -215,31 +212,21 @@ package {
     protected function fadeInHole():void {
       if (!_snake.alive) {
         _hole.alpha = 1;
-        _snake.tail.alpha = 0;
       }
   
      }
     
-    private function inHole():Boolean {
-      return _snake.tail.x == 150 && _snake.tail.y == 150;
-
-    }
-    
     protected function fadeOutHole():void {
-      trace("x:" + String(_snake.tail.x));
-      trace("y:" + String(_snake.tail.y));
-      if (!inHole() && _hole.alpha >= 1) {
-        enterDebugger(); 
+      if (!_hole.overlaps(_snake.body.members[_snake.body.members.length - 2]) && _hole.alpha >= 1) {
+        //enterDebugger(); 
+        _snake.tail.alpha = 1;
         _holeTween.setValue("alpha", 0);
-        _tailTween.setValue("alpha", 1);
       }
       
     }
 
     override public function update():void {
       super.update();
-      fadeInHole();
-      fadeOutHole();
 
       _snakeSpeed = _snake.mps - 9;
 
@@ -252,9 +239,11 @@ package {
       collideScreen();
       collideObstacles();
 
+      fadeInHole();
       if(_snake.lives <= 0) {
         levelOver();
       } else if(_snake.alive) {
+        fadeOutHole();
         _shownDeathScreen = false;
       } else {
         if(_shownDeathScreen) {
