@@ -3,6 +3,8 @@ All art assets are © 2012 by Henrik Haberman and Tim Schierbaum.
 
 GTween (http://gskinner.com/libraries/gtween/) is licensed under a MIT License. 
 
+The preloader is adapted from the standard Flixel preloader has this license: https://github.com/AdamAtomic/flixel/blob/master/license.txt
+
 The code and art assets are not free to use. You can read, modify and compile them for your personal or educational use, but you can't redistribute any modified code, assets or resulting binaries.
 
 We want other people to be able to learn from this code and see how we did it. Have fun!
