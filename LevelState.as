@@ -30,6 +30,8 @@ package {
     protected var _bonusTimer:Number = 0;
     protected var _bonusTimerPoints:Number = 0;
     protected var _bonusBar:AxSprite;
+    protected var _bonusBarColor:AxColor;
+    protected var _bonusBack:AxSprite;
     protected var _obstacles:AxGroup;
     protected var _unspawnable:AxGroup;
     protected var _currentCombos:Array;
@@ -88,7 +90,14 @@ package {
 
       _bonusBar = new AxSprite(450,32);
       _bonusBar.scale.x = 0;
-      _bonusBar.create(1,8,0xffff0000);
+      _bonusBar.create(1, 8, 0xffffffff);
+      
+      _bonusBack = new AxSprite(0, 0);
+      _bonusBack.visible = false;
+      _bonusBack.create(27, 10, 0x70000000);
+      
+      _bonusBarColor = new AxColor(0, 1, 0);
+      _bonusBar.color = _bonusBarColor;
 
       _obstacles = new AxGroup();
       
@@ -116,6 +125,7 @@ package {
       add(_snake);
       add(_food);
       add(_particles);
+      add(_bonusBack);
       add(_bonusBar);
       addHud();
     }
@@ -183,15 +193,20 @@ package {
     }    
 
     protected function updateBonusBar():void {
-      if(_bonusTimer > 0) {
+      if (_bonusTimer > 0) {
         _bonusBar.scale.x = (_bonusTimer / 2) * 25;
+        _bonusBar.color.green = (_bonusTimer / 2);
+        _bonusBar.color.red = 1 - _bonusBar.color.green;
       } else {
         _bonusTimerPoints = 0;
         _bonusBar.scale.x = 0;
+        _bonusBack.visible = false;
       }
 
       _bonusBar.x = _snake.head.x - 5;
       _bonusBar.y = _snake.head.y - 24;
+      _bonusBack.x = _bonusBar.x - 1;
+      _bonusBack.y = _bonusBar.y - 1;
     }
 
     protected function collideFood():void {
@@ -294,8 +309,8 @@ package {
       var pointo:AxText = new AxText(egg.screen.x + dx, egg.screen.y + dy, null, points);
       pointo.scroll.x = 0;
       pointo.scroll.y = 0;
-      pointo.scale.x = 4;
-      pointo.scale.y = 4;
+      pointo.scale.x = 2;
+      pointo.scale.y = 2;
       if(color) {
         pointo.color = color;
       }
@@ -303,8 +318,8 @@ package {
         pointo.exists = false; 
       }
       //var tween:GTween = new GTween(pointo, 2, {x:(((_pointDirection + 1) % 4 < 2) ? 640 : 0), y:((_pointDirection % 4 < 2) ? 480 : 0), alpha: 0}, {onComplete: func});
-      var tween:GTween = new GTween(pointo, 2, {x: 320, y: 0, alpha: 0}, {onComplete: func});
-      
+      var tween:GTween = new GTween(pointo, 1, {x: 320, y: 0, alpha: 0}, {onComplete: func, ease:Exponential.easeIn});
+      var tween:GTween = new GTween(pointo.scale, 1, {x: 6, y: 6} );
       _tweens.push(tween);
       _pointDirection = (_pointDirection + 1) % 4
       add(pointo);
@@ -340,6 +355,7 @@ package {
       _score += points;
       showPoints(egg, egg.points.toString(), ((points < 0) ? new AxColor(1,0,0,1) : null ));
       _bonusTimer = 2;
+      _bonusBack.visible = true;
 
     }
 
