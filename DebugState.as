@@ -24,7 +24,7 @@ package {
 
     public function switcher(to:Class):Function {
       if(to == SwitchLevel){
-        return function():void{Ax.switchState(new to("Just some text about whatever", DebugState, DebugState, "No Time"))};
+        return function():void{Ax.switchState(new to( DebugState, DebugState))};
       } else {
         return function():void{Ax.switchState(new to)};
       }

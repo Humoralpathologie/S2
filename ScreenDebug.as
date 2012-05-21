@@ -3,11 +3,11 @@ package {
   import org.axgl.text.*;
   import org.axgl.render.*;
 
-  [SWF(width='640', height='480', backgroundColor='#aa0000')]
+  [SWF(width='960', height='640', backgroundColor='#aa0000')]
   public class ScreenDebug extends Ax {
     public function ScreenDebug() {
       SaveGame.load();
-      super(DebugState,640, 480);
+      super(DebugState);
     }
     override public function create():void {
 			Ax.debuggerEnabled = true;
