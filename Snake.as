@@ -150,17 +150,19 @@ package {
     }
 
     private function resurrect():void {
-      _head.tileX = 10;
+      _head.tileX = 11;
       _head.tileY = 10;
       _head.offset.x = 15;
       _head.offset.y = 30;
       _previousFacing = _head.facing;
       _head.direction = AxEntity.RIGHT;
+      _nextDirection = AxEntity.RIGHT;
       _head.animate('right_0');
 
       for (var i:int = 0; i < _body.members.length; i++) {
-        _body.members[i].x = _head.x;
-        _body.members[i].y = _head.y;
+        (_body.members[i] as SmoothBlock).tileX = _head.tileX - 1;
+        (_body.members[i] as SmoothBlock).tileY = _head.tileY;
+        (_body.members[i] as SmoothBlock).direction = AxEntity.RIGHT;
       }
       _tail.alpha == 0;
       mps = _startMps;
@@ -348,30 +350,38 @@ package {
           switch(_head.facing) {
             case AxEntity.UP:
               _head.facing = AxEntity.RIGHT;
+              _nextDirection = AxEntity.RIGHT;
               break;
             case AxEntity.DOWN: 
               _head.facing = AxEntity.LEFT;
+              _nextDirection = AxEntity.LEFT;
               break;
             case AxEntity.RIGHT:
               _head.facing = AxEntity.DOWN;
+              _nextDirection = AxEntity.DOWN;
               break;
             case AxEntity.LEFT:
               _head.facing = AxEntity.UP;
+              _nextDirection = AxEntity.UP;
               break;
           }
         } else {
           switch(_head.facing) {
             case AxEntity.UP:
               _head.facing = AxEntity.LEFT;
+              _nextDirection = AxEntity.LEFT;
               break;
             case AxEntity.DOWN: 
               _head.facing = AxEntity.RIGHT;
+              _nextDirection = AxEntity.RIGHT;
               break;
             case AxEntity.RIGHT:
               _head.facing = AxEntity.UP;
+              _nextDirection = AxEntity.UP;
               break;
             case AxEntity.LEFT:
               _head.facing = AxEntity.DOWN;
+              _nextDirection = AxEntity.DOWN;
               break;
           }
         }

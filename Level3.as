@@ -11,7 +11,7 @@ package {
     override public function create():void {
       super.create();
       _snake.lives = 3;
-      Egg.ROTTEN = 1;      
+      _levelNumber = 3;
       _switchLevel = new SwitchLevel(Level3, Level3);
     }
     override protected function addBackgrounds():void {
@@ -62,11 +62,8 @@ package {
       _hud.poisonText = String(_poisonEgg);
     }
 
-    override protected function checkWinConditions():void {
-      if(_combos >= 10 || _eggAmount >= 100 || _timerMin >= 4) {
-        _switchLevel.score = _score;
-        Ax.switchState(_switchLevel);
-      }
+    override protected function checkWinConditions():Boolean {
+      return(_combos >= 10 || _eggAmount >= 100 || _timerMin >= 4)
     }
 
 

@@ -37,6 +37,7 @@ package {
     protected var _combos:int = 0;
     protected var _eggAmount:int = 0;
     protected var _poisonEgg:int = 0;
+    protected var _levelNumber:int = 0;
 
     protected var _timerSec:Number = 0;
     protected var _timerMin:Number = 0;    
@@ -49,6 +50,7 @@ package {
     protected var _particles:AxGroup;
 
     protected var _shownDeathScreen:Boolean = false;
+    protected var _shownWinScreen:Boolean = false;
 
     protected var _pointDirection:uint = 0;
     protected var _tweens:Vector.<GTween>;
@@ -142,8 +144,11 @@ package {
     }
     
     protected function switchLevel():void {
+      SaveGame.unlockLevel(_levelNumber + 1);
+      SaveGame.saveScore(_levelNumber, _score);
+      _switchLevel.score = _score;
+      Ax.switchState(_switchLevel);
     }
-
 
     protected function updateTimers():void {
       _bonusTimer -= Ax.dt;
@@ -244,7 +249,14 @@ package {
 
       _snakeSpeed = _snake.mps - 9;
 
-      checkWinConditions();      
+      if (checkWinConditions()) {
+       if (_shownWinScreen) {
+          Ax.switchState(_switchLevel);
+        } else {
+          Ax.pushState(new SnakeWin);
+          _shownWinScreen = true;
+        }
+      };      
 
       updateTimers();
       updateBonusBar();
@@ -274,12 +286,12 @@ package {
       Ax.camera.follow(_snake.head);
     }
 
-    protected function checkWinConditions():void {
-
+    protected function checkWinConditions():Boolean {
+      return false;
     }
 
-    protected function showPoints(egg:AxSprite, points:String, color:AxColor = null):void {
-      var pointo:AxText = new AxText(egg.screen.x, egg.screen.y, null, points);
+    protected function showPoints(egg:AxSprite, points:String, color:AxColor = null, dx:int = 0, dy:int = 0 ):void {
+      var pointo:AxText = new AxText(egg.screen.x + dx, egg.screen.y + dy, null, points);
       pointo.scroll.x = 0;
       pointo.scroll.y = 0;
       pointo.scale.x = 4;
@@ -309,8 +321,9 @@ package {
       AxParticleSystem.emit("eat-egg", snakeHead.x, snakeHead.y);
 
       _food.remove(egg);
-      
-      if(egg.type != Egg.ROTTEN){
+            
+      //if(egg.type != Egg.ROTTEN)
+      if(egg.points > 0) {
         _snake.swallow(egg);
       } else {
         _poisonEgg++;
@@ -320,7 +333,7 @@ package {
     
       if(_bonusTimer > 0) {
         _bonusTimerPoints += 2;
-        showPoints(egg, '+' + String(_bonusTimerPoints), new AxColor(1,1,0,1));
+        showPoints(egg, '+' + String(_bonusTimerPoints), new AxColor(1,1,0,1),20,20);
         _score += _bonusTimerPoints;
       }
 

@@ -11,6 +11,7 @@ package {
     override public function create():void {
       super.create();
       _snake.lives = 2;
+      _levelNumber = 100;
       Ax.camera.bounds = new AxRect(0,0,990,900);
     }
 
@@ -84,10 +85,8 @@ package {
       return res.filter(largerThanThree);
     }
 
-    override protected function checkWinConditions():void {
-      if(_timerMin >= 3) {
-        switchLevel();
-      }
+    override protected function checkWinConditions():Boolean {
+      return(_timerMin >= 3);
     }
 
   }

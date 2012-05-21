@@ -8,7 +8,7 @@ package {
 
   [Embed(source='assets/SnakeSounds/SuperSnakeLoop.mp3')] protected var Music:Class;
   [Embed(source='assets/images/cover_schrift_gelb.png')] protected var Title:Class;
-  [Embed(source='assets/images/cover_hintergrund.png')] protected var Background:Class;
+  [Embed(source='assets/images/cover_iphone4.png')] protected var Background:Class;
     
     private var _snakeTitleText:AxSprite;
     private var _bg:AxSprite;
@@ -21,16 +21,16 @@ package {
       super.create();
       Ax.background = new AxColor(0,0,0);
 
-      _bg = new AxSprite(0,0);
-      _bg.load(Background);
+      _bg = new AxSprite(0,0, Background);
+      //_bg.load(Background);
      
 
-      _snakeTitleText = new AxSprite(0,0);
-      _snakeTitleText.load(Title);
+      //_snakeTitleText = new AxSprite(0,0);
+      //_snakeTitleText.load(Title);
   
       //Ax.music(Music);
       add(_bg);     
-      add(_snakeTitleText);
+      //add(_snakeTitleText);
 
       //Ax.mouse.show();
      
@@ -53,7 +53,7 @@ package {
       _arcadeButton = new AxButton(640/2-40, 300 + 120); //, "Select Level", switchToState(LevelSelect));
       _arcadeButton.x = (640 - _arcadeButton.width) / 2;
       _arcadeButton.text("ARCADE MODE YEAH");
-      _arcadeButton.onClick(switchToState(Arcade));
+      _arcadeButton.onClick(switchToState(ArcadeMenu));
       add(_playButton);
       add(_playLevel);   
       add(_arcadeButton);

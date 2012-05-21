@@ -19,6 +19,8 @@ package {
     override public function create():void {
       super.create();
 
+      _levelNumber = 1;
+      
       _treeShadow1 = new AxSprite(Ax.width/2 - 600, Ax.height/2 - 450, ShadowOut);
       _treeShadow1.origin.x = Ax.width/2;
       _treeShadow1.origin.y = Ax.height/2;
@@ -84,13 +86,6 @@ package {
       _hud.scoreText = String(_score); 
     }
 
-    override protected function switchLevel():void {
-      SaveGame.unlockLevel(2);
-      SaveGame.saveScore(1, _score);
-      _switchLevel.score = _score;
-      Ax.switchState(_switchLevel);
-    }
-
     override protected function levelOver():void {
       _switchLevel.score = _score;
       _switchLevel.gameOver();
@@ -129,10 +124,8 @@ package {
       return res.filter(largerThanThree);
     }
 
-    override protected function checkWinConditions():void {
-      if(_eggAmount >= 50) {
-        switchLevel();
-      }
+    override protected function checkWinConditions():Boolean {
+      return (_eggAmount >= 50);
     }
 
   }

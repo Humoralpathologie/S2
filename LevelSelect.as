@@ -2,6 +2,7 @@ package {
   import org.axgl.*;
   import org.axgl.text.*;
   import org.axgl.render.*;
+  import flash.utils.*;
   
   public class LevelSelect extends AxState {
 
@@ -70,7 +71,9 @@ package {
 
     private function switchToState(state:Class, title:String, objective:String, timeLimit:String):Function {
       return function ():void {
+        var instance:AxState = new state;
         //var levelDescr:LevelDescription = new LevelDescription(state, title, objective, timeLimit);
+        //setTimeout(function(){Ax.switchState(instance)}, 3000);
         Ax.switchState(new state);
       }
     }
