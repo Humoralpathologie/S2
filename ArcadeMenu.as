@@ -13,6 +13,8 @@ package
     [Embed(source = "assets/images/combo-xtralife.png")] private var _comboXtralife:Class;
     [Embed(source = "assets/images/info-button.png")] private var _infoButton:Class;
     [Embed(source = "assets/images/combo-special.png")] private var _comboSpecial:Class;
+    [Embed(source = "assets/images/text_arcade mode.png")] private var _textArcadeMode:Class;
+    
     
     override public function create():void {
       var _bgSprite:AxSprite = new AxSprite(0, 0, _bg);
@@ -30,6 +32,9 @@ package
       var _comboSpecialSprite2:AxSprite = new AxSprite(376 + 60, 112 + 30, _comboSpecial);
       var _comboSpecialSprite3:AxSprite = new AxSprite(587 + 60, 112 + 30, _comboSpecial);
       
+      var _textArcadeModeSprite:AxSprite = new AxSprite(0, 20, _textArcadeMode);
+      _textArcadeModeSprite.x = (960 - _textArcadeModeSprite.width) / 2;
+      
       add(_bgSprite);
       add(_greyBoxSprite);
       add(_comboSpeedSprite);
@@ -44,6 +49,8 @@ package
       add(_comboSpecialSprite1);
       add(_comboSpecialSprite2);
       add(_comboSpecialSprite3);
+      
+      add(_textArcadeModeSprite);
     }
   }
     
