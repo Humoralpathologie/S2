@@ -2,7 +2,7 @@ package {
   import org.axgl.*;
   import org.axgl.text.*;
   import org.axgl.input.*;
-  import org.humoralpathologie.axgleffects.*;
+  import com.gskinner.motion.*;
   public class SnakeWin extends AxState {
     // TODO: Use better image
     [Embed(source='assets/images/doofy-lion.png')] protected var sadSnake:Class;
@@ -10,8 +10,10 @@ package {
     private var _addedText:Boolean = false;
 
     override public function create():void {
-      var fsprite:FloodFilledSprite = new FloodFilledSprite(0,0,sadSnake,8);
+      var fsprite:AxSprite = new AxSprite(0, 0, sadSnake);
+      fsprite.y = Ax.height;
       fsprite.x = (640 - fsprite.width) / 2;
+      new GTween(fsprite, 2, { y: 0 } );
 
       add(fsprite);
     }

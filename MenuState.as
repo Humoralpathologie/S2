@@ -53,7 +53,7 @@ package {
       _arcadeButton = new AxButton(640/2-40, 300 + 120); //, "Select Level", switchToState(LevelSelect));
       _arcadeButton.x = (640 - _arcadeButton.width) / 2;
       _arcadeButton.text("ARCADE MODE YEAH");
-      _arcadeButton.onClick(switchToState(ArcadeMenu));
+      _arcadeButton.onClick(switchToState(Arcade));
       add(_playButton);
       add(_playLevel);   
       add(_arcadeButton);

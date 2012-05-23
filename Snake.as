@@ -23,6 +23,7 @@ package {
     private var _resurrect:Boolean = false;
     private var _cameraHead:AxSprite;
     private var _nextDirection:uint = AxEntity.RIGHT;
+    private var _followBox:AxSprite;
     
     private var _startMps:Number;
     private var _emoLevel:int;    
@@ -59,11 +60,17 @@ package {
       _head.flip = AxEntity.NONE;
 
       _body = new AxGroup();
+      
+      _followBox = new AxSprite(0,0);
+      _followBox.create(150, 150, 0x44ff0000);
+      _followBox.width = 150;
+      _followBox.height = 150;
 
       fillBody();
       resurrect();
 
       add(_body);
+      add(_followBox);
       add(_head);
     }
 /********************************************
@@ -83,6 +90,10 @@ package {
     
     public function set resurrectNext(b:Boolean):void {
       _resurrect = b; 
+    }
+    
+    public function get followBox():AxEntity {
+      return _followBox;
     }
 
     public function get tail():AxSprite {
@@ -150,7 +161,7 @@ package {
     }
 
     private function resurrect():void {
-      _head.tileX = 11;
+      _head.tileX = 9;
       _head.tileY = 10;
       _head.offset.x = 15;
       _head.offset.y = 30;
@@ -160,8 +171,9 @@ package {
       _head.animate('right_0');
 
       for (var i:int = 0; i < _body.members.length; i++) {
-        (_body.members[i] as SmoothBlock).tileX = _head.tileX - 1;
-        (_body.members[i] as SmoothBlock).tileY = _head.tileY;
+        // Put them offscreen
+        (_body.members[i] as SmoothBlock).tileX = -10;
+        (_body.members[i] as SmoothBlock).tileY = -10;
         (_body.members[i] as SmoothBlock).direction = AxEntity.RIGHT;
       }
       _tail.alpha == 0;
@@ -325,8 +337,22 @@ package {
       return ret;
     }
 
+    private function updateFollowBox():void {
+      if (_head.x < followBox.x) {
+        _followBox.x = _head.x;
+      } else if (_head.x + _head.width > _followBox.x + _followBox.width) {
+        _followBox.x = _head.x - (_followBox.width - _head.width);
+      } 
+      if (_head.y < _followBox.y) {
+        _followBox.y = _head.y;
+      } else if (_head.y + _head.height > _followBox.y + _followBox.height) {
+        _followBox.y = _head.y - (_followBox.height - _head.height);
+      }      
+    }
     override public function update():void {
       super.update();
+      
+      updateFollowBox();
       
       if(Ax.keys.pressed(AxKey.UP) && _previousFacing != AxEntity.DOWN){
         _head.facing = AxEntity.UP;

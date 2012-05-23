@@ -84,7 +84,7 @@ package {
 
       _score = 0;
       _snake = new Snake(10);
-      Ax.camera.follow(_snake.head);
+      Ax.camera.follow(_snake.followBox);
       Ax.camera.bounds = new AxRect(0,0,640,480);
       _food = new AxGroup();
 
@@ -240,7 +240,7 @@ package {
      }
     
     protected function fadeOutHole():void {
-      if (!_hole.overlaps(_snake.body.members[_snake.body.members.length - 2]) && _hole.alpha >= 1) {
+      if (_snake.tail.x >= 0 && _hole.alpha >= 1) {
         //enterDebugger(); 
         _snake.tail.alpha = 1;
         _holeTween.setValue("alpha", 0);
@@ -266,6 +266,7 @@ package {
 
       if (checkWinConditions()) {
        if (_shownWinScreen) {
+         _switchLevel.score = _score;
           Ax.switchState(_switchLevel);
         } else {
           Ax.pushState(new SnakeWin);
@@ -298,7 +299,7 @@ package {
       doCombos();
 
       updateHud();
-      Ax.camera.follow(_snake.head);
+      //Ax.camera.follow(_snake.head);
     }
 
     protected function checkWinConditions():Boolean {
@@ -318,8 +319,9 @@ package {
         pointo.exists = false; 
       }
       //var tween:GTween = new GTween(pointo, 2, {x:(((_pointDirection + 1) % 4 < 2) ? 640 : 0), y:((_pointDirection % 4 < 2) ? 480 : 0), alpha: 0}, {onComplete: func});
-      var tween:GTween = new GTween(pointo, 1, {x: 320, y: 0, alpha: 0}, {onComplete: func, ease:Exponential.easeIn});
-      var tween:GTween = new GTween(pointo.scale, 1, {x: 6, y: 6} );
+      var tween:GTween = new GTween(pointo, 1, { x: 320, y: 0, alpha: 0 }, { onComplete: func, ease:Exponential.easeIn } );
+      _tweens.push(tween);
+      tween = new GTween(pointo.scale, 1, {x: 6, y: 6} );
       _tweens.push(tween);
       _pointDirection = (_pointDirection + 1) % 4
       add(pointo);
@@ -496,6 +498,7 @@ package {
       }
       _tweens = null;
       Ax.zoom = 1;
+      Ax.camera.reset();
       super.dispose();
     }
   }
