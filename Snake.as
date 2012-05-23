@@ -100,7 +100,7 @@ package {
       return _tail;
     }
 
-    public function get head():AxSprite {
+    public function get head():SmoothBlock {
       return _head;
     }
 

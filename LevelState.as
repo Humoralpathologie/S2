@@ -215,7 +215,7 @@ package {
 
     protected function collideFood():void {
       for(var i:int = 0; i < _food.members.length; i++){
-        if(_snake.head.overlaps(_food.members[i])){
+        if(_snake.head.tileX == (_food.members[i] as SmoothBlock).tileX && _snake.head.tileY == (_food.members[i] as SmoothBlock).tileY) {
           eat(_snake.head, (_food.members[i] as Egg));
         }
       }
@@ -230,7 +230,7 @@ package {
         _snake.die();
       }
     }
-
+    
     protected function collideObstacles():void {
       if(_snake.alive && Ax.overlap(_snake.head, _obstacles)) {
         _snake.die();
@@ -248,8 +248,7 @@ package {
         //enterDebugger(); 
         _snake.tail.alpha = 1;
         _holeTween.setValue("alpha", 0);
-      }
-      
+      }     
     }
 
     protected function zoomKeys():void {
@@ -497,8 +496,8 @@ package {
       wTiles -= 2; // Left and right;
       hTiles -= 7; // 6 top, 1 bottom;
       do {
-        egg.x = int(1 + (Math.random() * wTiles)) * 15;
-        egg.y = int(6 + (Math.random() * hTiles)) * 15;
+        egg.tileX = int(1 + (Math.random() * wTiles));
+        egg.tileY = int(6 + (Math.random() * hTiles));
       } while(Ax.overlap(egg,_unspawnable));
       _food.add(egg);
     }
