@@ -22,8 +22,8 @@ package {
       }
     }
     
-    override protected function onScreen(sprite:AxSprite):Boolean {
-      return sprite.x > 0 && sprite.x < 990 && sprite.y > 0 && sprite.y < 900; 
+    override protected function onScreen(sprite:SmoothBlock):Boolean {
+      return sprite.tileX * 15 >= 0 && sprite.tileX * 15 < 990 && sprite.tileY * 15 >= 0 && sprite.tileY * 15 < 900; 
     }
     
     override protected function addBackgrounds():void {

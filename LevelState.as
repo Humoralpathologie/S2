@@ -221,8 +221,8 @@ package {
       }
     }
 
-    protected function onScreen(sprite:AxSprite):Boolean {
-      return sprite.x > 0 && sprite.x < 640 && sprite.y > 0 && sprite.y < 480; 
+    protected function onScreen(sprite:SmoothBlock):Boolean {
+      return sprite.tileX * 15 >= 0 && sprite.tileX * 15 < 640 && sprite.tileY * 15 >= 0 && sprite.tileY * 15 < 480; 
     }
 
     protected function collideScreen():void {
