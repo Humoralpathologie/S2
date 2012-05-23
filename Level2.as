@@ -12,7 +12,7 @@ package {
       super.create();
       _snake.lives = 3;
       _levelNumber = 2;
-      _switchLevel = new SwitchLevel( Level2, Level3);
+      _switchLevel = new SwitchLevel(Level2, Level3);
     }
 
     override protected function addBackgrounds():void {
@@ -50,8 +50,7 @@ package {
       SaveGame.saveScore(2, _score);
       _switchLevel.gameOver();
       _switchLevel.score = _score;
-      Ax.switchState(_switchLevel);
-      
+      Ax.switchState(_switchLevel);     
     }
 
     override protected function checkWinConditions():Boolean {

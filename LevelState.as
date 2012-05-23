@@ -265,13 +265,14 @@ package {
       super.update();
 
       zoomKeys();
+      
+      Ax.camera.follow(_snake.followBox);
 
       _snakeSpeed = _snake.mps - 9;
 
       if (checkWinConditions()) {
        if (_shownWinScreen) {
-         _switchLevel.score = _score;
-          Ax.switchState(_switchLevel);
+          switchLevel();
         } else {
           Ax.pushState(new SnakeWin);
           _shownWinScreen = true;
@@ -286,8 +287,13 @@ package {
       collideObstacles();
 
       fadeInHole();
-      if(_snake.lives <= 0) {
-        levelOver();
+      if (_snake.lives <= 0) {
+        if(_shownDeathScreen) {
+          levelOver();
+        } else {
+          _shownDeathScreen = true;
+          Ax.pushState(new SnakeDeath);
+        }
       } else if(_snake.alive) {
         fadeOutHole();
         _shownDeathScreen = false;
@@ -388,9 +394,11 @@ package {
             _snake.body.remove(egg);
             
           } else {
+            _combos += 1;
             clearInterval(interval);
           }
         } else {
+          _combos += 1;
           clearInterval(interval);
         }
       }
@@ -408,7 +416,6 @@ package {
       if(_currentCombos && _comboTimer <= 0) {
         for(j = 0; j < _currentCombos.length; j++) {
           combo = _currentCombos[j];
-          _combos += 1;
           removeAndExplodeCombo(combo);
         }
         _snake.faster();

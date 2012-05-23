@@ -175,8 +175,10 @@ package {
         (_body.members[i] as SmoothBlock).tileX = -10;
         (_body.members[i] as SmoothBlock).tileY = -10;
         (_body.members[i] as SmoothBlock).direction = AxEntity.RIGHT;
+        (_body.members[i] as SmoothBlock).mps = _startMps;
       }
       _tail.alpha == 0;
+      _head.mps = _startMps;
       mps = _startMps;
       setEmoLevel();
       _alive = true;

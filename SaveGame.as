@@ -46,6 +46,7 @@ package {
     }
 
     public static function unlockLevel(n:Number):void {
+      trace("Unlocking " + n);
       _sharedObject.data.levels[n].unlocked = true;
       _sharedObject.flush();
     } 
