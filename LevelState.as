@@ -165,6 +165,7 @@ package {
       _comboTimer -= Ax.dt;
 
       //for duration of the play
+      //TODO: This should only seconds.
       _timerSec += Ax.dt;
       if (_timerSec >= 60) {
         _timerMin += 1;
@@ -176,7 +177,7 @@ package {
     protected function convertTimer():String {
       var _sec:String;
       var _min:String;
-      
+      //TODO: Use built-in functions
       if (Math.floor(_timerSec) < 10) {
         _sec = "0" + String(Math.floor(_timerSec));
       } else {
@@ -193,12 +194,15 @@ package {
     }    
 
     protected function updateBonusBar():void {
-      if (_bonusTimer > 0) {
-        _bonusBar.scale.x = (_bonusTimer / 2) * 25;
-        _bonusBar.color.green = (_bonusTimer / 2);
+      // Displays as if bonus time ran for 2 seconds, even if it's actually 2.5
+      if (_bonusTimer > 0.5) {
+        _bonusBar.scale.x = ((_bonusTimer - 0.5) / 2) * 25;
+        _bonusBar.color.green = ((_bonusTimer - 0.5) / 2);
         _bonusBar.color.red = 1 - _bonusBar.color.green;
       } else {
-        _bonusTimerPoints = 0;
+        if(_bonusTimer <= 0) {
+          _bonusTimerPoints = 0;
+        }
         _bonusBar.scale.x = 0;
         _bonusBack.visible = false;
       }
@@ -356,7 +360,7 @@ package {
 
       _score += points;
       showPoints(egg, egg.points.toString(), ((points < 0) ? new AxColor(1,0,0,1) : null ));
-      _bonusTimer = 2;
+      _bonusTimer = 2.5;
       _bonusBack.visible = true;
 
     }
