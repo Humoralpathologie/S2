@@ -8,7 +8,7 @@ package {
     [Embed(source='assets/SnakeSounds/Pickup_Coin.mp3')] protected var Bling:Class;
 
     private var _head:SmoothBlock;
-    private var _tail:AxSprite;
+    private var _tail:SmoothBlock;
     private var _body:AxGroup;
     private var _timer:Number;
     private var _speed:Number;
@@ -185,7 +185,7 @@ package {
     private function fillBody():void {
       var i:int;
       for(i = 1; i <= 4; i++){
-        var part:AxSprite;
+        var part:SmoothBlock;
         if(i == 4) {
           part = new SmoothBlock(_head.tileX - 1, _head.tileY);
           // This should be somewhere else.
@@ -237,13 +237,16 @@ package {
 
     private function move():void {
       _previousFacing = _head.facing;
+      _tail.visible = true;
       if(_newPart){ 
         (_newPart as Egg).eat();
         (_newPart as Egg).mps = mps;
-        var swap:AxSprite;
         _body.remove(_tail);
         _body.add(_newPart);
         _body.add(_tail);
+
+        _tail.visible = false;
+        
         _newPart = null;
         _justAte = true;
       }  
