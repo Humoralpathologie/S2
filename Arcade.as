@@ -8,9 +8,16 @@ package {
     // Variablen
     private var _background:AxSprite = null;
     
+    public function Arcade():void {
+      super();
+      _levelWidth = 990;
+      _levelHeight = 900;
+    }
+    
     override public function create():void {
       super.create();
-      _comboSet.addCombo(new Combo);
+      
+      _comboSet.addCombo(new FasterCombo);
       _comboSet.addCombo(new ShuffleCombo);
       _comboSet.addCombo(new ExtraLifeCombo);
       _comboSet.addCombo(new ExtraTimeCombo);
@@ -21,7 +28,6 @@ package {
       
       _snake.lives = 2;
       _levelNumber = 100;
-      Ax.camera.bounds = new AxRect(0, 0, 990, 900);
       _timeLeft = 3 * 60;
     }
 
@@ -30,10 +36,6 @@ package {
       if (_eggAmount == 35 && _snake.lives != 2) {
         _snake.lives++;
       }
-    }
-    
-    override protected function onScreen(sprite:SmoothBlock):Boolean {
-      return sprite.tileX * 15 >= 0 && sprite.tileX * 15 < 990 && sprite.tileY * 15 >= 0 && sprite.tileY * 15 < 900; 
     }
     
     override protected function addBackgrounds():void {

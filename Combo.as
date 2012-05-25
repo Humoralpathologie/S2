@@ -1,6 +1,6 @@
 package  
 {  
-    import org.axgl.AxState;
+  import org.axgl.AxState;
   public class Combo 
   {
     private var _trigger:Array;
@@ -8,13 +8,9 @@ package
     public var repeat:Boolean = false;
     
     public function Combo() {
-      repeat = true;
-      trigger = [EggTypes.EGGA, EggTypes.EGGA, EggTypes.EGGA];
     }
     
     public function effect(state:LevelState):void {
-      state.snake.faster();
-      state.showMessage("Faster!");
     }
     
     public function set trigger(trig:Array):void {

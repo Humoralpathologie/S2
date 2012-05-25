@@ -41,6 +41,9 @@ package {
     protected var _eggAmount:int = 0;
     protected var _poisonEgg:int = 0;
     protected var _levelNumber:int = 0;
+    
+    protected var _levelWidth:int = 640;
+    protected var _levelHeight:int = 480;
 
     protected var _timerSec:Number = 0;
     protected var _timerMin:Number = 0;    
@@ -93,7 +96,7 @@ package {
       _score = 0;
       _snake = new Snake(10);
       Ax.camera.follow(_snake.followBox);
-      Ax.camera.bounds = new AxRect(0,0,640,480);
+      Ax.camera.bounds = new AxRect(0,0,_levelWidth,_levelHeight);
       _food = new AxGroup();
 
       _bonusBar = new AxSprite(450,32);
@@ -242,7 +245,7 @@ package {
     }
 
     protected function onScreen(sprite:SmoothBlock):Boolean {
-      return sprite.tileX * 15 >= 0 && sprite.tileX * 15 < 640 && sprite.tileY * 15 >= 0 && sprite.tileY * 15 < 480; 
+      return sprite.tileX * 15 >= 0 && sprite.tileX * 15 < _levelWidth && sprite.tileY * 15 >= 0 && sprite.tileY * 15 < _levelHeight; 
     }
 
     protected function collideScreen():void {
@@ -532,7 +535,7 @@ package {
     }
 
     protected function spawnFood():void {
-      reallySpawnFood(2);
+      reallySpawnFood(3);
     }
     
     protected function reallySpawnFood(n:int):void {
@@ -541,8 +544,8 @@ package {
     }
 
     public function spawnEgg(egg:Egg):void {
-      var wTiles:int = 640 / 15;
-      var hTiles:int = 480 / 15;
+      var wTiles:int = _levelWidth / 15;
+      var hTiles:int = _levelHeight / 15;
       wTiles -= 2; // Left and right;
       hTiles -= 7; // 6 top, 1 bottom;
       do {

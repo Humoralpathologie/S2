@@ -19,7 +19,7 @@ package {
     override public function create():void {
       super.create();
       
-      _comboSet.addCombo(new Combo);
+      _comboSet.addCombo(new FasterCombo);
 
       _levelNumber = 1;
       

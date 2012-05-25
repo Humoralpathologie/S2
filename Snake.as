@@ -23,7 +23,7 @@ package {
     private var _resurrect:Boolean = false;
     private var _cameraHead:AxSprite;
     private var _nextDirection:uint = AxEntity.RIGHT;
-    private var _followBox:AxSprite;
+    private var _followBox:AxEntity;
     
     private var _startMps:Number;
     private var _emoLevel:int;    
@@ -61,8 +61,7 @@ package {
 
       _body = new AxGroup();
       
-      _followBox = new AxSprite(0,0);
-      _followBox.create(150, 150, 0x44ff0000);
+      _followBox = new AxEntity(0,0);
       _followBox.width = 150;
       _followBox.height = 150;
 
