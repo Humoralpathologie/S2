@@ -17,6 +17,8 @@ package {
       _comboSet.addCombo(new NoRottenCombo);
       _comboSet.addCombo(new GoldenCombo);
       
+      _switchLevel = new SwitchLevel(Arcade, MenuState);
+      
       _snake.lives = 2;
       _levelNumber = 100;
       Ax.camera.bounds = new AxRect(0, 0, 990, 900);
@@ -55,7 +57,7 @@ package {
     override protected function switchLevel():void {
       SaveGame.saveScore(100, _score);
       _switchLevel.score = _score;
-      Ax.switchState(new SwitchLevel(Arcade, MenuState));
+      Ax.switchState(_switchLevel);
     }
 
     override protected function levelOver():void {

@@ -47,6 +47,7 @@ package {
       for each(var validCombo:Object in validCombos) {
         comboEggs.push({eggs: eggs.slice(validCombo.eggs[0], validCombo.eggs[1]), combo: validCombo.combo}); 
       }
+      
       return comboEggs;
     }
   }
