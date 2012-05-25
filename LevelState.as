@@ -307,9 +307,9 @@ package {
       _timeLeft -= Ax.dt;
 
       zoomKeys();
-      if (Capabilities.isDebugger) {
+      //if (Capabilities.isDebugger) {
         debugKeys();
-      }
+      //}
       
       Ax.camera.follow(_snake.followBox);
 
