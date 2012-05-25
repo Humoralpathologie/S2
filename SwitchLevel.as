@@ -1,6 +1,7 @@
 package {
   import org.axgl.*;
   import org.axgl.text.*;
+  import org.axgl.sound.*;
   import org.axgl.render.*;
   import org.axgl.util.*;
   import com.gskinner.motion.*;
@@ -15,6 +16,8 @@ package {
     [Embed(source='assets/images/menu/bird.png')] protected var Bird:Class;
     //[Embed(source='assets/SnakeSounds/TailWhip.mp3')] protected var Whip:Class;
     [Embed(source='assets/SnakeSounds/mouseclick.mp3')] protected var ClickSound:Class;
+
+    private var _click:AxSound;    
 
     private var _playNextLevel:AxButton;
     private var _replay:AxButton;
@@ -32,10 +35,19 @@ package {
     private var triggered:Boolean = false;    
 
     private var _scoreText:AxText;
-    private var _counter:Object;
+    private var _scoreCounter:Object;
     private var _score:int;
+
+    private var _timeBonusText:AxText;
+    private var _timeBCounter:Object;
     private var _timeBonus:int;
+
+    private var _liveBonusText:AxText;
+    private var _liveBCounter:Object;
     private var _liveBonus:int;
+  
+    private var _EXPText:AxText;
+    private var _EXPCounter:Object;
     private var _EXP:int;
 
     private var _preState:Class;
@@ -55,10 +67,21 @@ package {
       _boardLeft = new AxSprite(60, 30, Board);    
       _boardRight = new AxSprite(_boardLeft.x + _boardLeft.width + 40, 30, Board);    
       
-      _counter = {i: 0}
+      _scoreCounter = {i: 0};
       _scoreText = new AxText(_boardLeft.x + 10, _boardLeft.y + 10, null, "Score: ");
       _scoreText.scale.x = _scoreText.scale.y = 2;
 
+      _timeBCounter = {i: 0};
+      _timeBonusText = new AxText(_scoreText.x, _scoreText.y + 30, null, "Time Bonus: ");
+      _timeBonusText.scale.x = _timeBonusText.scale.y = 2;
+
+      _liveBCounter = {i: 0};
+      _liveBonusText = new AxText(_timeBonusText.x, _timeBonusText.y + 30, null, "Live Bonus: ");
+      _liveBonusText.scale.x = _liveBonusText.scale.y = 2;
+
+      _EXPCounter = {i: 0};
+      _EXPText = new AxText(_liveBonusText.x, _liveBonusText.y + 60, null, "EXP: ");
+      _EXPText.scale.x = _EXPText.scale.y = 2;
       var mid:int = 640 / 2 - 60;      
 
       _replay = new AxButton(mid, 330); 
@@ -73,6 +96,7 @@ package {
       _backToMenu.load(Back, 100, 110);
       _backToMenu.onClick(switchToState(MenuState, _backToMenu));
 
+      _click = new AxSound(ClickSound);
       add(_background);
 
       birdemic();
@@ -86,6 +110,9 @@ package {
       add(_backToMenu);
       
       add(_scoreText);
+      add(_timeBonusText);
+      add(_liveBonusText);
+      add(_EXPText);
     
     }
     
@@ -150,20 +177,35 @@ package {
       _liveBonus = liveBonus;
       _EXP = EXP;
     }
+
+    public function tweenPoints():void {
+      
+      var tweenScore:GTween = new GTween(_scoreCounter, 2, {i: _score}, {ease: Exponential.easeOut});
+      var tweenLive:GTween = new GTween(_liveBCounter, 2, {i: _liveBonus}, {ease: Exponential.easeOut});
+      var tweenTime:GTween = new GTween(_timeBCounter, 2, {i: _timeBonus}, {ease: Exponential.easeOut});
+      var tweenEXP:GTween = new GTween(_EXPCounter, 2, {i: _EXP}, {ease: Exponential.easeOut});
+      _tweens.push(tweenScore);
+      _tweens.push(tweenLive);
+      _tweens.push(tweenTime);
+      _tweens.push(tweenEXP);
+    }
+
     public function set score(score:int):void {
       _score = score;
-      var tween:GTween = new GTween(_counter, 3, {i: _score}, {ease: Exponential.easeOut});
-      _tweens.push(tween);
     }
 
     override public function update():void {
       super.update();
       trigger();
-        _scoreText.text = "SCORE: " + String(Math.floor(_counter.i));
+        _scoreText.text = "SCORE: " + String(Math.floor(_scoreCounter.i));
+        _liveBonusText.text = "Live Bonus: " + String(Math.floor(_liveBCounter.i));
+        _timeBonusText.text = "Time Bonus: " + String(Math.floor(_timeBCounter.i));
+        _EXPText.text = "EXP: " + String(Math.floor(_EXPCounter.i));
     }
 
     public function switchToState(state:Class, button:AxButton):Function {
       return function():void { 
+        _click.play();
         Ax.switchState(new state);
       }
     }

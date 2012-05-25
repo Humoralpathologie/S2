@@ -1,5 +1,6 @@
 package {
   import org.axgl.*;
+  import org.axgl.sound.*;
   import org.axgl.text.*;
   import org.axgl.particle.*;
   import org.axgl.render.*;
@@ -12,15 +13,13 @@ package {
   import flash.system.Capabilities;
   
   public class LevelState extends AxState {
-    [Embed(source='assets/SnakeSounds/schluck2tiefer.mp3')] protected var BiteSound:Class;
-    [Embed(source='assets/SnakeSounds/bup.mp3')] protected var Bup:Class;
+    [Embed(source='assets/SoundFX/Fressen/Biss1.mp3')] protected var BiteSound:Class;
+    [Embed(source='assets/SoundFX/KomboSounds/SchwanzEffekt1.mp3')] protected var Bup:Class;
     [Embed(source='assets/images/shell.png')] protected static var Shell:Class;
     [Embed(source='assets/images/hole.png')] protected var Hole:Class;
     
-    /* 
-    protected var _biteSound:FlxSound;
-    protected var _bup:FlxSound;
-    */
+    protected var _biteSound:AxSound;
+    protected var _bup:AxSound;
 
     protected var _hole:AxSprite;
     protected var _holeTween:GTween;    
@@ -66,6 +65,8 @@ package {
     override public function create():void {
       super.create();
       
+      _biteSound = new AxSound(BiteSound);
+      _bup = new AxSound(Bup);
       Ax.zoom = 1.5;
 
       _tweens = new Vector.<GTween>;
@@ -129,6 +130,7 @@ package {
 
       add(_hole);
 
+
       spawnFoods(3);
       add(_snake);
       add(_food);
@@ -169,14 +171,26 @@ package {
       }
     }
 
+    protected function submitPoints():void {
+      var timeBonus:int = 30;
+      var liveBonus:int = _snake.lives * 100;
+      var _EXP:int = timeBonus + liveBonus + _score;
+      _switchLevel.submitPoints(_score, timeBonus, liveBonus, _EXP);
+    }
+    
     //to override in each level along with switchLevel()
     protected function levelOver():void {
+      _switchLevel.score = _score;
+      _switchLevel.tweenPoints();
+      _switchLevel.gameOver();
+      Ax.switchState(_switchLevel);
     }
     
     protected function switchLevel():void {
       SaveGame.unlockLevel(_levelNumber + 1);
       SaveGame.saveScore(_levelNumber, _score);
-      _switchLevel.score = _score;
+      submitPoints();
+      _switchLevel.tweenPoints();
       Ax.switchState(_switchLevel);
     }
 
@@ -236,6 +250,7 @@ package {
     protected function collideFood():void {
       for(var i:int = 0; i < _food.members.length; i++){
         if(_snake.head.tileX == (_food.members[i] as SmoothBlock).tileX && _snake.head.tileY == (_food.members[i] as SmoothBlock).tileY) {
+          _biteSound.play();
           eat(_snake.head, (_food.members[i] as Egg));
         }
       }
@@ -374,10 +389,10 @@ package {
         pointo.exists = false; 
       }
       //var tween:GTween = new GTween(pointo, 2, {x:(((_pointDirection + 1) % 4 < 2) ? 640 : 0), y:((_pointDirection % 4 < 2) ? 480 : 0), alpha: 0}, {onComplete: func});
-      var tween:GTween = new GTween(pointo, 1, { x: 320, y: 0, alpha: 0 }, { onComplete: func, ease:Exponential.easeIn } );
-      _tweens.push(tween);
-      tween = new GTween(pointo.scale, 1, {x: 6, y: 6} );
-      _tweens.push(tween);
+      var tween1:GTween = new GTween(pointo, 1, {x: 320, y: 0, alpha: 0}, {onComplete: func, ease:Exponential.easeIn});
+      var tween2:GTween = new GTween(pointo.scale, 1, {x: 6, y: 6} );
+      _tweens.push(tween1);
+      _tweens.push(tween2);
       _pointDirection = (_pointDirection + 1) % 4
       add(pointo);
     } 
@@ -388,7 +403,6 @@ package {
 
     protected function eat(snakeHead:AxSprite, egg:Egg):void {
       spawnFood();
-      //_biteSound.play();
 
       var points:int = 0;
       _eggAmount++;
@@ -503,6 +517,8 @@ package {
           combo = _currentCombos[j];
           removeAndExplodeCombo(combo.eggs);
           combo.combo.effect(this);
+          _combos += 1;
+          _bup.play();
         }
         _currentCombos = null;
       }

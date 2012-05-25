@@ -58,20 +58,13 @@ package {
       _hud.livesText = String(_snake.lives);
       _hud.timeText = _timerHud;
       _hud.speedText = (_snakeSpeed < 10) ? "0" + String(_snakeSpeed) : String(_snakeSpeed);
-      _hud.scoreText = String(111); 
+      _hud.scoreText = String(_score); 
       _hud.comboText = String(_combos) + "/10"; 
       _hud.poisonText = String(_poisonEgg);
     }
 
     override protected function checkWinConditions():Boolean {
       return(_combos >= 10 || _eggAmount >= 100 || _timerMin >= 4)
-    }
-
-
-    override protected function levelOver():void {
-      _switchLevel.gameOver();
-      Ax.switchState(_switchLevel);
-      
     }
 
   }

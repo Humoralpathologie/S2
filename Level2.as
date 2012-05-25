@@ -46,12 +46,6 @@ package {
       
     }
 
-    override protected function levelOver():void {
-      SaveGame.saveScore(2, _score);
-      _switchLevel.gameOver();
-      _switchLevel.score = _score;
-      Ax.switchState(_switchLevel);     
-    }
 
     override protected function checkWinConditions():Boolean {
       return (_combos >= 10);
