@@ -1,26 +1,39 @@
 package {
+  import flash.text.engine.BreakOpportunity;
   import org.axgl.*;
 
-  public class Egg extends SmoothBlock {
+  public class Egg extends SmoothBlock {  
 
-    [Embed(source='assets/images/eatenEggBlue.png')] protected static var EatenEggBlue:Class;
-    [Embed(source='assets/images/eatenEggGreenPointed.png')] protected static var EatenEggGreenPointed:Class;
-    [Embed(source='assets/images/eatenEggCross.png')] protected static var EatenEggCross:Class;
-    [Embed(source='assets/images/eatenEggWhite.png')] protected static var EatenEggWhite:Class;
-    [Embed(source='assets/images/eatenEggGreen.png')] protected static var EatenEggGreen:Class;
+    [Embed(source = "assets/images/egg00-tilemap.png")] protected static var EggZero:Class;
+    [Embed(source='assets/images/egg_a-tilemap.png')] protected static var EggA:Class;
+    [Embed(source='assets/images/egg_b-tilemap.png')] protected static var EggB:Class;
+    [Embed(source = 'assets/images/egg_c-tilemap.png')] protected static var EggC:Class;
+    
+    [Embed(source = "assets/images/eatenEggZero.png")] protected static var EatenEggZero:Class;
+    [Embed(source = "assets/images/eatenEggA.png")] protected static var EatenEggA:Class;
+    [Embed(source = "assets/images/eatenEggB.png")] protected static var EatenEggB:Class;
+    [Embed(source = "assets/images/eatenEggC.png")] protected static var EatenEggC:Class;
+    [Embed(source = "assets/images/eatenEggRotten.png")] protected static var EatenEggRotten:Class;
+    
+    [Embed(source = 'assets/images/egg_rotten-tilemap.png')] protected static var EggRotten:Class 
 
-    [Embed(source='assets/images/eggBlue.png')] protected static var EggBlue:Class;
-    [Embed(source='assets/images/eggGreenPointed.png')] protected static var EggGreenPointed:Class;
-    [Embed(source='assets/images/eggCross.png')] protected static var EggCross:Class;
-    [Embed(source='assets/images/eggWhite.png')] protected static var EggWhite:Class;
-    [Embed(source='assets/images/eggGreen.png')] protected static var EggGreen:Class 
+    [Embed(source = 'assets/images/egg_gold-tilemap.png')] protected static var EggGolden:Class;
+    [Embed(source = "assets/images/egg_shuffle-tilemap.png")] protected static var EggShuffle:Class;
+    
     [Embed(source='assets/images/shell.png')] protected static var ShellB:Class;
 
-    protected static var eatenGraphics:Array = [EatenEggGreen, EatenEggWhite, EatenEggBlue, EatenEggGreenPointed, EatenEggCross];
-    protected static var eggGraphics:Array = [EggGreen, EggWhite, EggBlue, EggGreenPointed, EggCross]
+    protected static var eatenGraphics:Array = [EatenEggZero, EatenEggA, EatenEggB, EatenEggC, EatenEggRotten];
+    protected static var eggGraphics:Array = [EggZero, EggA, EggB, EggC, EggRotten, EggGolden, EggShuffle]
 
-    public static var ROTTEN:uint = 1;
+    public static const EGGZERO:uint = 0;
+    public static const EGGA:uint = 1;
+    public static const EGGB:uint = 2;
+    public static const EGGC:uint = 3;   
+    public static const ROTTEN:uint = 4;
+    public static const GOLDEN:uint = 5;
+    public static const SHUFFLE:uint = 6;
    
+    
     protected var _points:int;
     protected var _eggType:int;
     
@@ -42,9 +55,6 @@ package {
       height = 15;
       offset.y = 6;
       offset.x = 1;
-
-      _points = 2;
-
     }
 
     public function eat():void{
@@ -62,11 +72,16 @@ package {
       if(_points) {
         return _points;
       } else {
-        if(_eggType == ROTTEN){
-          return -5;
-        } else {
-          return 2;
+        var ret:int = 2;
+        switch(_eggType) {
+          case EggTypes.ROTTEN:
+              ret = -5;
+              break;
+          case EggTypes.GOLDEN:
+              ret = 100;
+              break;
         }
+        return ret;
       }
     }
 

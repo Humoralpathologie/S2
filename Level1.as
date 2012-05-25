@@ -18,6 +18,8 @@ package {
     private var t2:GTween;
     override public function create():void {
       super.create();
+      
+      _comboSet.addCombo(new Combo);
 
       _levelNumber = 1;
       
@@ -103,25 +105,9 @@ package {
         egg = new Egg(Math.floor(Math.random() * 2)); 
       }
       egg.points = 2;
+      egg = new Egg(1);
       spawnEgg(egg);
       
-    }
-
-
-    override protected function checkCombos(arr:Array):Array {
-      var res:Array;
-
-      var largerThanThree:Function = function(el:Array, i:int, arr:Array):Boolean { 
-        return el.length >= 3;
-      };
-      
-      var sameEggType:Function = function(currArr:Array, el:Object):Boolean{
-        return ((currArr[0] as Egg).type == (el as Egg).type) && ((currArr[0] as Egg).type == 2);
-      };
-
-      res = groupArray(sameEggType,arr); 
-
-      return res.filter(largerThanThree);
     }
 
     override protected function checkWinConditions():Boolean {

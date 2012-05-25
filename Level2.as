@@ -10,6 +10,7 @@ package {
 
     override public function create():void {
       super.create();
+      _comboSet.addCombo(new Combo);
       _snake.lives = 3;
       _levelNumber = 2;
       _switchLevel = new SwitchLevel(Level2, Level3);
@@ -67,22 +68,6 @@ package {
       _hud.speedText = (_snakeSpeed < 10) ? "0" + String(_snakeSpeed) : String(_snakeSpeed);
       _hud.scoreText = String(_score); 
       _hud.comboText = String(_combos) + "/10"; 
-    }
-
-    override protected function checkCombos(arr:Array):Array {
-      var res:Array;
-
-      var largerThanThree:Function = function(el:Array, i:int, arr:Array):Boolean { 
-        return el.length >= 3;
-      };
-      
-      var sameEggType:Function = function(currArr:Array, el:Object):Boolean{
-        return ((currArr[0] as Egg).type == (el as Egg).type) && ((currArr[0] as Egg).type == 2);
-      };
-
-      res = groupArray(sameEggType,arr); 
-
-      return res.filter(largerThanThree);
     }
 
   }

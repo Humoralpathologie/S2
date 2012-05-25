@@ -10,9 +10,17 @@ package {
     
     override public function create():void {
       super.create();
+      _comboSet.addCombo(new Combo);
+      _comboSet.addCombo(new ShuffleCombo);
+      _comboSet.addCombo(new ExtraLifeCombo);
+      _comboSet.addCombo(new ExtraTimeCombo);
+      _comboSet.addCombo(new NoRottenCombo);
+      _comboSet.addCombo(new GoldenCombo);
+      
       _snake.lives = 2;
       _levelNumber = 100;
-      Ax.camera.bounds = new AxRect(0,0,990,900);
+      Ax.camera.bounds = new AxRect(0, 0, 990, 900);
+      _timeLeft = 3 * 60;
     }
 
     override public function update():void {
@@ -40,12 +48,13 @@ package {
     }
     override protected function updateHud():void {
       _hud.livesText = String(_snake.lives);
-      _hud.timeText = _timerHud;
+      _hud.timeText = String(_timeLeft.toFixed(1));
       _hud.scoreText = String(_score); 
     }
 
     override protected function switchLevel():void {
       SaveGame.saveScore(100, _score);
+      _switchLevel.score = _score;
       Ax.switchState(new SwitchLevel(Arcade, MenuState));
     }
 
@@ -56,38 +65,14 @@ package {
     }
 
     override protected function spawnFood():void {
-      var rand:int = Math.floor(Math.random() * 10);
+      var rand:int = Math.floor(Math.random() * 5);
       var egg:Egg;
-
-      if (rand > 6) {
-        egg = new Egg(2);  
-      } else {
-        egg = new Egg(Math.floor(Math.random() * 2)); 
-      }
-      egg.points = 2;
+      egg = new Egg(rand);
       spawnEgg(egg);
     }
 
-
-    override protected function checkCombos(arr:Array):Array {
-      var res:Array;
-
-      var largerThanThree:Function = function(el:Array, i:int, arr:Array):Boolean { 
-        return el.length >= 3;
-      };
-      
-      var sameEggType:Function = function(currArr:Array, el:Object):Boolean{
-        return ((currArr[0] as Egg).type == (el as Egg).type) && ((currArr[0] as Egg).type == 2);
-      };
-
-      res = groupArray(sameEggType,arr); 
-
-      return res.filter(largerThanThree);
-    }
-
     override protected function checkWinConditions():Boolean {
-      return(_timerMin >= 3);
+      return(_timeLeft < 0);
     }
-
   }
 }

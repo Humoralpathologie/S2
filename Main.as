@@ -10,6 +10,7 @@ package {
     }
     override public function create():void {
 			Ax.debuggerEnabled = true;
+      Ax.debugger.active = true;
     }
   }
 }

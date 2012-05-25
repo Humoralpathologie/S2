@@ -9,6 +9,7 @@ package {
   import com.gskinner.motion.easing.*;
   import flash.utils.*;
   import flash.debugger.enterDebugger;
+  import flash.system.Capabilities;
   
   public class LevelState extends AxState {
     [Embed(source='assets/SnakeSounds/schluck2tiefer.mp3')] protected var BiteSound:Class;
@@ -56,6 +57,11 @@ package {
 
     protected var _pointDirection:uint = 0;
     protected var _tweens:Vector.<GTween>;
+    
+    protected var _comboSet:ComboSet = null;
+    
+    protected var _shuffleCount:int = -1;
+    protected var _timeLeft:Number = -1;
 
     override public function create():void {
       super.create();
@@ -63,6 +69,8 @@ package {
       Ax.zoom = 1.5;
 
       _tweens = new Vector.<GTween>;
+      
+      _comboSet = new ComboSet();
 
       _particles = new AxGroup();
       var effect:AxParticleEffect = new AxParticleEffect('eat-egg', Shell, 5);
@@ -130,6 +138,18 @@ package {
       addHud();
     }
 
+    public function get snake():Snake {
+      return _snake;
+    }
+    
+    public function set timeLeft(time:Number):void {
+      _timeLeft = time;
+    }
+    
+    public function get timeLeft():Number {
+      return _timeLeft;
+    }
+    
     /* Sort of abstract functions */
     protected function addBackgrounds():void {
     }
@@ -259,11 +279,37 @@ package {
         Ax.zoom -= 0.1;
       }
     }
+    
+    protected function debugKeys():void {
+      if (Ax.keys.pressed(AxKey.A)) {
+        spawnEgg(new Egg(EggTypes.EGGA));
+      }
+      if (Ax.keys.pressed(AxKey.B)) {
+        spawnEgg(new Egg(EggTypes.EGGB));
+      }
+      if (Ax.keys.pressed(AxKey.C)) {
+        spawnEgg(new Egg(EggTypes.EGGC));
+      }
+      if (Ax.keys.pressed(AxKey.S)) {
+        spawnEgg(new Egg(EggTypes.SHUFFLE));
+      }
+      if (Ax.keys.pressed(AxKey.G)) {
+        spawnEgg(new Egg(EggTypes.GOLDEN));
+      }
+      if (Ax.keys.pressed(AxKey.R)) {
+        spawnEgg(new Egg(EggTypes.ROTTEN));
+      }
+    }
 
     override public function update():void {
       super.update();
+      
+      _timeLeft -= Ax.dt;
 
       zoomKeys();
+      if (Capabilities.isDebugger) {
+        debugKeys();
+      }
       
       Ax.camera.follow(_snake.followBox);
 
@@ -336,6 +382,9 @@ package {
       add(pointo);
     } 
 
+    protected function doRotten():void {
+    
+    }
 
     protected function eat(snakeHead:AxSprite, egg:Egg):void {
       spawnFood();
@@ -348,15 +397,29 @@ package {
 
       _food.remove(egg);
             
-      //if(egg.type != Egg.ROTTEN)
-      if(egg.points > 0) {
+      if(egg.points > 0 && egg.type < 5) {
         _snake.swallow(egg);
       } else {
         _poisonEgg++;
+        doRotten();
       }
+      
+      if (egg.type == EggTypes.SHUFFLE) {
+        // http://www.milkisevil.com/blog/2010/as3-vector-shuffle-randomize/
+        function shuffleVector( a:Object, b:Object ):int
+        {
+          return Math.floor( Math.random() * 3 - 1 );
+        }
+        var tail:AxSprite = _snake.tail;
+        _snake.body.remove(tail);
+        _snake.body.members.sort(shuffleVector);
+        _snake.body.add(tail);
+        _shuffleCount = _snake.body.members.length;
+        _snake.justAte = true;
+      }
+      
       points += egg.points;
-     
-    
+         
       if(_bonusTimer > 0) {
         _bonusTimerPoints += 2;
         showPoints(egg, '+' + String(_bonusTimerPoints), new AxColor(1,1,0,1),20,20);
@@ -364,16 +427,39 @@ package {
       }
 
       _score += points;
-      showPoints(egg, egg.points.toString(), ((points < 0) ? new AxColor(1,0,0,1) : null ));
-      _bonusTimer = 2.5;
-      _bonusBack.visible = true;
+      
+      showPoints(egg, egg.points.toString(), ((points < 0) ? new AxColor(1, 0, 0, 1) : null ));
+      if(egg.type != EggTypes.ROTTEN) {
+        _bonusTimer = 2.5;
+        _bonusBack.visible = true; 
+      } else {
+        _bonusTimer = 0;
+        _bonusBack.visible = false;
+      }
 
+    }
+    
+    public function showMessage(message:String):void {
+      var text:AxText = new AxText(snake.head.screen.x, snake.head.screen.y , null, message);
+      text.scroll.x = 0;
+      text.scroll.y = 0;
+      text.scale.x = 4;
+      text.scale.y = 4;
+      
+      var func:Function = function(tween:GTween):void {
+        text.exists = false; 
+      }
+      //var tween:GTween = new GTween(pointo, 2, {x:(((_pointDirection + 1) % 4 < 2) ? 640 : 0), y:((_pointDirection % 4 < 2) ? 480 : 0), alpha: 0}, {onComplete: func});
+      var tween:GTween = new GTween(text, 1, { x: 320, y: 0, alpha: 0 }, { onComplete: func, ease:Exponential.easeIn } );
+      _tweens.push(tween);
+      
+      add(text);
     }
 
     protected function removeAndExplodeCombo(combo:Array):void {
       var interval:int;
-      var prefib:int = 1;
-      var fib:int = 1;
+      var prefib:int = 2;
+      var fib:int = 3;
       var temp:int = 0;
 
       for(var i:int = 0; i < combo.length; i++) {
@@ -410,30 +496,31 @@ package {
      * Should be overridden for different scoring.
      */
     protected function doCombos():void {
-      var combo:Array;
+      var combo:Object;
       var j:int, i:int;
       if(_currentCombos && _comboTimer <= 0) {
         for(j = 0; j < _currentCombos.length; j++) {
           combo = _currentCombos[j];
-          removeAndExplodeCombo(combo);
+          removeAndExplodeCombo(combo.eggs);
+          combo.combo.effect(this);
         }
-        _snake.faster();
         _currentCombos = null;
       }
       if(_snake.justAte) {
         trace("checking for combos");
-        //FlxG.log("checking for combos...");
         var bodyArray:Array = new Array();
+        
         for(i = 0; i < _snake.body.members.length - 1; i++) {
           if(!(_snake.body.members[i] as Egg).removing) {
             bodyArray.push(_snake.body.members[i]);
           }
         }
-        var combos:Array = checkCombos(bodyArray);
+        
+        var combos:Array = _comboSet.checkCombos(bodyArray);
         if(combos.length > 0) {
           _currentCombos = combos;
           for(j = 0; j < _currentCombos.length; j++) {
-            combo = _currentCombos[j];
+            combo = _currentCombos[j].eggs;
             for(i = 0; i < combo.length; i++) {
               combo[i].flicker(2);
             }
@@ -442,47 +529,10 @@ package {
         _comboTimer = 2;
       }
       
-      //FlxG.score = _score;
-    }
-
-    /**
-     * A generic helper function for grouping arrays.
-     * You need to write a group function that takes two arguments:
-     * - The current array
-     * - The new element
-     * The function then has to return true if the new element
-     * belongs into the current array and false if it belongs
-     * in a new one.
-     */
-    protected function groupArray(group:Function, arr:Array):Array {
-      if(arr.length == 0) {
-        return [];
-      }
-
-      var groups:Array = [[arr[0]]];
-      for(var j:int = 1; j < arr.length; j++){
-        var el:Object = arr[j];
-        var currArr:Array = groups[groups.length - 1];
-        if(group(currArr, el)) {
-          currArr.push(el);
-        } else {
-          groups.push([el]);
-        }
-      }
-      return groups;
-    }
-    
-    /**
-     * This has to be overridden in your level to actually check any combos.
-     * It should check for all possible combos and return them in an array
-     * of arrays.
-     */
-    protected function checkCombos(arr:Array):Array {
-      return [];
     }
 
     protected function spawnFood():void {
-      reallySpawnFood(3);
+      reallySpawnFood(2);
     }
     
     protected function reallySpawnFood(n:int):void {
@@ -490,7 +540,7 @@ package {
       spawnEgg(egg);
     }
 
-    protected function spawnEgg(egg:Egg):void {
+    public function spawnEgg(egg:Egg):void {
       var wTiles:int = 640 / 15;
       var hTiles:int = 480 / 15;
       wTiles -= 2; // Left and right;

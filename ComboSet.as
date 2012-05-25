@@ -1,0 +1,49 @@
+package {
+  public class ComboSet {
+    
+    private var _combos:Array;
+    
+    public function ComboSet() {
+      _combos = [];
+    }
+    
+    public function addCombo(combo:Combo):void {
+      _combos.push(combo);
+    }
+    
+    private function eggSort(a:Object, b:Object):int {
+      if (a.eggs[0] > b.eggs[0]) {
+          return 1;
+        } else if (a.eggs[0] < b.eggs[0]) {
+          return -1;
+        } else {
+          return 0;
+        }
+    }
+    
+    public function checkCombos(eggs:Array):Array {
+      var results:Array = [];
+      var validCombos:Array = [];
+      var comboEggs:Array = [];
+      
+      for each(var combo:Combo in _combos) {
+        for each(var oneCombo:Array in combo.check(eggs)){
+          results.push( { eggs: oneCombo, combo: combo } );
+        }
+      }
+     
+      results.sort(eggSort);
+      
+      for each(var result:Object in results) {
+        if (validCombos.length == 0 || (validCombos[validCombos.length - 1].eggs[1] <= result.eggs[0])) {
+          validCombos.push(result); 
+        }
+      }
+      
+      for each(var validCombo:Object in validCombos) {
+        comboEggs.push({eggs: eggs.slice(validCombo.eggs[0], validCombo.eggs[1]), combo: validCombo.combo}); 
+      }
+      return comboEggs;
+    }
+  }
+}

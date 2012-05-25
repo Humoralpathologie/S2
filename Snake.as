@@ -145,6 +145,10 @@ package {
         return false;
       }
     }
+    
+    public function set justAte(b:Boolean):void {
+      _justAte = b;
+    }
 /*******************************************/
 
     private function tailEgg():Egg {
