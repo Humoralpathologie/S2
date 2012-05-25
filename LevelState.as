@@ -1,5 +1,6 @@
 package {
   import org.axgl.*;
+  import org.axgl.sound.*;
   import org.axgl.text.*;
   import org.axgl.particle.*;
   import org.axgl.render.*;
@@ -11,15 +12,13 @@ package {
   import flash.debugger.enterDebugger;
   
   public class LevelState extends AxState {
-    [Embed(source='assets/SnakeSounds/schluck2tiefer.mp3')] protected var BiteSound:Class;
-    [Embed(source='assets/SnakeSounds/bup.mp3')] protected var Bup:Class;
+    [Embed(source='assets/SoundFX/Fressen/biss1.mp3')] protected var BiteSound:Class;
+    [Embed(source='assets/SoundFX/KomboSound/schwanzEffekt1.mp3')] protected var Bup:Class;
     [Embed(source='assets/images/shell.png')] protected static var Shell:Class;
     [Embed(source='assets/images/hole.png')] protected var Hole:Class;
     
-    /* 
-    protected var _biteSound:FlxSound;
-    protected var _bup:FlxSound;
-    */
+    protected var _biteSound:AxSound;
+    protected var _bup:AxSound;
 
     protected var _hole:AxSprite;
     protected var _holeTween:GTween;    
@@ -60,6 +59,8 @@ package {
     override public function create():void {
       super.create();
       
+      _biteSound = new AxSound(BiteSound);
+      _bup = new AxSound(Bup);
       Ax.zoom = 1.5;
 
       _tweens = new Vector.<GTween>;
@@ -120,6 +121,7 @@ package {
       _unspawnable.add(_obstacles);
 
       add(_hole);
+
 
       spawnFoods(3);
       add(_snake);
@@ -212,6 +214,7 @@ package {
     protected function collideFood():void {
       for(var i:int = 0; i < _food.members.length; i++){
         if(_snake.head.overlaps(_food.members[i])){
+          _biteSound.play();
           eat(_snake.head, (_food.members[i] as Egg));
         }
       }
@@ -318,9 +321,10 @@ package {
         pointo.exists = false; 
       }
       //var tween:GTween = new GTween(pointo, 2, {x:(((_pointDirection + 1) % 4 < 2) ? 640 : 0), y:((_pointDirection % 4 < 2) ? 480 : 0), alpha: 0}, {onComplete: func});
-      var tween:GTween = new GTween(pointo, 1, {x: 320, y: 0, alpha: 0}, {onComplete: func, ease:Exponential.easeIn});
-      var tween:GTween = new GTween(pointo.scale, 1, {x: 6, y: 6} );
-      _tweens.push(tween);
+      var tween1:GTween = new GTween(pointo, 1, {x: 320, y: 0, alpha: 0}, {onComplete: func, ease:Exponential.easeIn});
+      var tween2:GTween = new GTween(pointo.scale, 1, {x: 6, y: 6} );
+      _tweens.push(tween1);
+      _tweens.push(tween2);
       _pointDirection = (_pointDirection + 1) % 4
       add(pointo);
     } 
@@ -328,7 +332,6 @@ package {
 
     protected function eat(snakeHead:AxSprite, egg:Egg):void {
       spawnFood();
-      //_biteSound.play();
 
       var points:int = 0;
       _eggAmount++;
@@ -403,6 +406,7 @@ package {
         for(j = 0; j < _currentCombos.length; j++) {
           combo = _currentCombos[j];
           _combos += 1;
+          _bup.play();
           removeAndExplodeCombo(combo);
         }
         _snake.faster();

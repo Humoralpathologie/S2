@@ -3,6 +3,9 @@ package {
   import org.axgl.text.*;
   import org.axgl.render.*;
   import flash.text.*;
+  import com.gskinner.motion.*;
+  import com.gskinner.motion.easing.*;
+  import flash.utils.*;
   
   public class MenuState extends AxState {
 
@@ -16,7 +19,12 @@ package {
     private var _playLevel:AxButton;    
     private var _lbButton:AxButton;    
     private var _arcadeButton:AxButton;
-    
+    private var _setting:AxButton;
+
+    private var _menuBoard:AxSprite;
+    private var _boardTween:GTween;
+    private var _settingTween:GTween;
+ 
     override public function create():void {
       super.create();
       Ax.background = new AxColor(0,0,0);
@@ -35,6 +43,7 @@ package {
       //Ax.mouse.show();
      
       makeButtons();
+      menuSelections();
     }
 
     private function makeButtons():void{
@@ -58,6 +67,18 @@ package {
       add(_playLevel);   
       add(_arcadeButton);
       add(_lbButton);
+    }
+
+    private function menuSelections():void {
+      _menuBoard = new AxSprite(0, Ax.height);
+      _menuBoard.create(640, 30, 0xffffffff);
+      add(_menuBoard);  
+      _setting = new AxButton(_menuBoard.x + 10, _menuBoard.y + 5);
+      _setting.text("SETTING");
+      _setting.onClick(switchToState(ArcadeMenu));
+      add(_setting);    
+      _boardTween = new GTween(_menuBoard, 2, {y: Ax.height - 50});
+      _settingTween = new GTween(_setting, 2, {y: Ax.height - 45});
     }
 
     private function switchToState(state:Class):Function {

@@ -32,11 +32,22 @@ package {
       _switchLevel = new SwitchLevel(Level1, Level2);
       _snake.lives = 1;
       animateShadow();     
+      _switchLevel = new SwitchLevel(Level1, Level2);
       
       add(_treeShadow1);
       add(_treeShadow2);
     
     }
+
+    override protected function levelOver():void {
+      var time:int = _timerMin * 60 + _timerSec;
+      var timeBonus:int = (4 * 60 - time) > 0 ? (4 * 60 - time) * 10 : 0;
+      var liveBonus:int = _snake.lives * 100;
+      _switchLevel.submitPoints(_score, timeBonus, liveBonus, liveBonus + timeBonus + _score);
+      SaveGame.unlockLevel(_levelNumber + 1);
+      SaveGame.saveScore(_levelNumber, _score);
+    }
+
 
     private function animateShadow():void {
       t1 = new GTween(_treeShadow1, 5, {angle:5}, {reflect:true});
@@ -84,13 +95,6 @@ package {
       _hud.timeText = _timerHud;
       _hud.eggText = String(_eggAmount) + "/50";
       _hud.scoreText = String(_score); 
-    }
-
-    override protected function levelOver():void {
-      _switchLevel.score = _score;
-      _switchLevel.gameOver();
-      SaveGame.saveScore(1, _score);
-      Ax.switchState(_switchLevel);
     }
 
     override protected function spawnFood():void {
