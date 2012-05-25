@@ -12,10 +12,10 @@ package {
     }
     
     private function eggSort(a:Object, b:Object):int {
-      if (a.eggs[0] > b.eggs[0]) {
-          return 1;
-        } else if (a.eggs[0] < b.eggs[0]) {
+      if (a.eggs[1] > b.eggs[1]) {
           return -1;
+        } else if (a.eggs[1] < b.eggs[1]) {
+          return 1;
         } else {
           return 0;
         }
@@ -35,7 +35,7 @@ package {
       results.sort(eggSort);
       
       for each(var result:Object in results) {
-        if (validCombos.length == 0 || (validCombos[validCombos.length - 1].eggs[1] <= result.eggs[0])) {
+        if (validCombos.length == 0 || (validCombos[validCombos.length - 1].eggs[0] >= result.eggs[1])) {
           validCombos.push(result); 
         }
       }

@@ -48,7 +48,8 @@ package tests {
       var oneCombo = [new MockEgg(EggTypes.EGGA), new MockEgg(EggTypes.EGGC), new MockEgg(EggTypes.EGGB), new MockEgg(EggTypes.EGGC), new MockEgg(EggTypes.EGGB), new MockEgg(EggTypes.EGGA)];
       var partialThenCombo = [new MockEgg(EggTypes.EGGC), new MockEgg(EggTypes.EGGB), new MockEgg(EggTypes.EGGC), new MockEgg(EggTypes.EGGB), new MockEgg(EggTypes.EGGC), new MockEgg(EggTypes.EGGB), new MockEgg(EggTypes.EGGA)];
       var differentCombos = [new MockEgg(EggTypes.EGGA), new MockEgg(EggTypes.EGGA), new MockEgg(EggTypes.EGGA), new MockEgg(EggTypes.EGGC), new MockEgg(EggTypes.EGGB), new MockEgg(EggTypes.EGGC), new MockEgg(EggTypes.EGGB), new MockEgg(EggTypes.EGGA)];
-      
+      var overlappingCombos = [new MockEgg(EggTypes.EGGC), new MockEgg(EggTypes.EGGB), new MockEgg(EggTypes.EGGC), new MockEgg(EggTypes.EGGB), new MockEgg(EggTypes.EGGA),new MockEgg(EggTypes.EGGA), new MockEgg(EggTypes.EGGA)];
+
       var combo:Combo = new ShuffleCombo();
       var aaacombo:Combo = new Combo();
       var comboSet:ComboSet = new ComboSet();
@@ -65,6 +66,11 @@ package tests {
       
       results = comboSet.checkCombos(differentCombos);
       assertEquals(2, results.length);
+      
+      // If two combos overlap, the one further to the end gets used.
+      results = comboSet.checkCombos(overlappingCombos);
+      assertEquals(1, results.length)
+      assertEquals(3, results[0].eggs.length);
       
     }
   }
