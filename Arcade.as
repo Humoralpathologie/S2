@@ -29,6 +29,8 @@ package {
       _snake.lives = 2;
       _levelNumber = 100;
       _timeLeft = 3 * 60;
+      
+      _spawnRotten = true;
     }
 
     override public function update():void {
@@ -69,7 +71,7 @@ package {
     }
 
     override protected function spawnFood():void {
-      var rand:int = Math.floor(Math.random() * 5);
+      var rand:int = Math.floor(Math.random() * 4);
       var egg:Egg;
       egg = new Egg(rand);
       spawnEgg(egg);

@@ -67,7 +67,6 @@ package {
       return(_combos >= 10 || _eggAmount >= 100 || _timerMin >= 4)
     }
 
-
     override protected function levelOver():void {
       _switchLevel.gameOver();
       Ax.switchState(_switchLevel);

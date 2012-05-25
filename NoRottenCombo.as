@@ -7,7 +7,7 @@ package {
     }
     
     override public function effect(state:LevelState):void {
-      // Actually do it.
+      state.rottenEggs.clear();
       state.showMessage("No Rotten Eggs!");
     }
   }

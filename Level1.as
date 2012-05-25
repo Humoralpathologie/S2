@@ -105,7 +105,6 @@ package {
         egg = new Egg(Math.floor(Math.random() * 2)); 
       }
       egg.points = 2;
-      egg = new Egg(1);
       spawnEgg(egg);
       
     }
