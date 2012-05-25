@@ -12,8 +12,8 @@ package {
   import flash.debugger.enterDebugger;
   
   public class LevelState extends AxState {
-    [Embed(source='assets/SoundFX/Fressen/biss1.mp3')] protected var BiteSound:Class;
-    [Embed(source='assets/SoundFX/KomboSound/schwanzEffekt1.mp3')] protected var Bup:Class;
+    [Embed(source='assets/SoundFX/Fressen/Biss1.mp3')] protected var BiteSound:Class;
+    [Embed(source='assets/SoundFX/KomboSounds/SchwanzEffekt1.mp3')] protected var Bup:Class;
     [Embed(source='assets/images/shell.png')] protected static var Shell:Class;
     [Embed(source='assets/images/hole.png')] protected var Hole:Class;
     
@@ -151,14 +151,26 @@ package {
       }
     }
 
+    protected function submitPoints():void {
+      var timeBonus:int = 30;
+      var liveBonus:int = _snake.lives * 100;
+      var _EXP:int = timeBonus + liveBonus + _score;
+      _switchLevel.submitPoints(_score, timeBonus, liveBonus, _EXP);
+    }
+    
     //to override in each level along with switchLevel()
     protected function levelOver():void {
+      _switchLevel.score = _score;
+      _switchLevel.tweenPoints();
+      _switchLevel.gameOver();
+      Ax.switchState(_switchLevel);
     }
     
     protected function switchLevel():void {
       SaveGame.unlockLevel(_levelNumber + 1);
       SaveGame.saveScore(_levelNumber, _score);
-      _switchLevel.score = _score;
+      submitPoints();
+      _switchLevel.tweenPoints();
       Ax.switchState(_switchLevel);
     }
 
@@ -269,7 +281,7 @@ package {
 
       if (checkWinConditions()) {
        if (_shownWinScreen) {
-          Ax.switchState(_switchLevel);
+          switchLevel();
         } else {
           Ax.pushState(new SnakeWin);
           _shownWinScreen = true;

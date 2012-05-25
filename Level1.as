@@ -39,16 +39,6 @@ package {
     
     }
 
-    override protected function levelOver():void {
-      var time:int = _timerMin * 60 + _timerSec;
-      var timeBonus:int = (4 * 60 - time) > 0 ? (4 * 60 - time) * 10 : 0;
-      var liveBonus:int = _snake.lives * 100;
-      _switchLevel.submitPoints(_score, timeBonus, liveBonus, liveBonus + timeBonus + _score);
-      SaveGame.unlockLevel(_levelNumber + 1);
-      SaveGame.saveScore(_levelNumber, _score);
-    }
-
-
     private function animateShadow():void {
       t1 = new GTween(_treeShadow1, 5, {angle:5}, {reflect:true});
       t2 = new GTween(_treeShadow2, 5, {angle:-10}, {reflect:true});
@@ -129,8 +119,9 @@ package {
     }
 
     override protected function checkWinConditions():Boolean {
-      return (_eggAmount >= 50);
+      return (_eggAmount >= 10);
     }
+
 
   }
 }

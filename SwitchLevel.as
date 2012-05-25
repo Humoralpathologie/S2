@@ -114,7 +114,6 @@ package {
       add(_liveBonusText);
       add(_EXPText);
     
-      tweenPoints();
     }
     
     private function birdemic():void {
@@ -182,8 +181,8 @@ package {
     public function tweenPoints():void {
       
       var tweenScore:GTween = new GTween(_scoreCounter, 2, {i: _score}, {ease: Exponential.easeOut});
-      var tweenLive:GTween = new GTween(_liveBCounter, 2, {i: _timeBonus}, {ease: Exponential.easeOut});
-      var tweenTime:GTween = new GTween(_timeBCounter, 2, {i: _liveBonus}, {ease: Exponential.easeOut});
+      var tweenLive:GTween = new GTween(_liveBCounter, 2, {i: _liveBonus}, {ease: Exponential.easeOut});
+      var tweenTime:GTween = new GTween(_timeBCounter, 2, {i: _timeBonus}, {ease: Exponential.easeOut});
       var tweenEXP:GTween = new GTween(_EXPCounter, 2, {i: _EXP}, {ease: Exponential.easeOut});
       _tweens.push(tweenScore);
       _tweens.push(tweenLive);
@@ -191,13 +190,17 @@ package {
       _tweens.push(tweenEXP);
     }
 
+    public function set score(score:int):void {
+      _score = score;
+    }
+
     override public function update():void {
       super.update();
       trigger();
         _scoreText.text = "SCORE: " + String(Math.floor(_scoreCounter.i));
-        _liveBonusText.text = "SCORE: " + String(Math.floor(_liveBCounter.i));
-        _timeBonusText.text = "SCORE: " + String(Math.floor(_timeBCounter.i));
-        _EXPText.text = "SCORE: " + String(Math.floor(_EXPCounter.i));
+        _liveBonusText.text = "Live Bonus: " + String(Math.floor(_liveBCounter.i));
+        _timeBonusText.text = "Time Bonus: " + String(Math.floor(_timeBCounter.i));
+        _EXPText.text = "EXP: " + String(Math.floor(_EXPCounter.i));
     }
 
     public function switchToState(state:Class, button:AxButton):Function {
