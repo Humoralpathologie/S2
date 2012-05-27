@@ -43,6 +43,9 @@ package {
     protected var _eggAmount:int = 0;
     protected var _poisonEgg:int = 0;
     protected var _levelNumber:int = 0;
+    
+    protected var _levelWidth:int = 640;
+    protected var _levelHeight:int = 480;
 
     protected var _timerSec:Number = 0;
     protected var _timerMin:Number = 0;    
@@ -64,6 +67,11 @@ package {
     
     protected var _shuffleCount:int = -1;
     protected var _timeLeft:Number = -1;
+    
+    protected var _spawnRotten:Boolean = false;
+    protected var _rottenEggs:AxGroup;
+    protected var _rottenFrequency:Number = 2;
+    protected var _rottenSpawnTimer:Number = 2;
 
     override public function create():void {
       super.create();
@@ -77,6 +85,8 @@ package {
       _tweens = new Vector.<GTween>;
       
       _comboSet = new ComboSet();
+      
+      _rottenEggs = new AxGroup();
 
       _particles = new AxGroup();
       var effect:AxParticleEffect = new AxParticleEffect('eat-egg', Shell, 5);
@@ -99,7 +109,7 @@ package {
       _score = 0;
       _snake = new Snake(10);
       Ax.camera.follow(_snake.followBox);
-      Ax.camera.bounds = new AxRect(0,0,640,480);
+      Ax.camera.bounds = new AxRect(0,0,_levelWidth,_levelHeight);
       _food = new AxGroup();
 
       _bonusBar = new AxSprite(450,32);
@@ -139,6 +149,7 @@ package {
       spawnFoods(3);
       add(_snake);
       add(_food);
+      add(_rottenEggs);
       add(_particles);
       add(_bonusBack);
       add(_bonusBar);
@@ -155,6 +166,10 @@ package {
     
     public function get timeLeft():Number {
       return _timeLeft;
+    }
+    
+    public function get rottenEggs():AxGroup {
+      return _rottenEggs;
     }
     
     /* Sort of abstract functions */
@@ -202,9 +217,10 @@ package {
     protected function updateTimers():void {
       _bonusTimer -= Ax.dt;
       _comboTimer -= Ax.dt;
+      _rottenSpawnTimer -= Ax.dt;
 
       //for duration of the play
-      //TODO: This should only seconds.
+      //TODO: This should only count seconds.
       _timerSec += Ax.dt;
       if (_timerSec >= 60) {
         _timerMin += 1;
@@ -260,9 +276,17 @@ package {
         }
       }
     }
+    
+    protected function collideRotten():void {
+      for(var i:int = 0; i < _rottenEggs.members.length; i++){
+        if(_snake.head.tileX == (_rottenEggs.members[i] as SmoothBlock).tileX && _snake.head.tileY == (_rottenEggs.members[i] as SmoothBlock).tileY) {
+          eatRotten(_snake.head, (_rottenEggs.members[i] as Egg));
+        }
+      }
+    }
 
     protected function onScreen(sprite:SmoothBlock):Boolean {
-      return sprite.tileX * 15 >= 0 && sprite.tileX * 15 < 640 && sprite.tileY * 15 >= 0 && sprite.tileY * 15 < 480; 
+      return sprite.tileX * 15 >= 0 && sprite.tileX * 15 < _levelWidth && sprite.tileY * 15 >= 0 && sprite.tileY * 15 < _levelHeight; 
     }
 
     protected function collideScreen():void {
@@ -327,9 +351,9 @@ package {
       _timeLeft -= Ax.dt;
 
       zoomKeys();
-      if (Capabilities.isDebugger) {
+      //if (Capabilities.isDebugger) {
         debugKeys();
-      }
+      //}
       
       Ax.camera.follow(_snake.followBox);
 
@@ -348,8 +372,13 @@ package {
       updateBonusBar();
       
       collideFood();
+      collideRotten();
       collideScreen();
       collideObstacles();
+      
+      if (_spawnRotten) {
+        spawnRotten();
+      }
 
       fadeInHole();
       if (_snake.lives <= 0) {
@@ -402,10 +431,23 @@ package {
       add(pointo);
     } 
 
-    protected function doRotten():void {
-    
-    }
 
+    protected function eatRotten(snakeHead:AxSprite, egg:Egg):void {
+      _poisonEgg++;
+      _bonusTimer = 0;
+      _bonusBack.visible = false;
+      _score += egg.points;
+      showPoints(egg, egg.points.toString(), new AxColor(1, 0, 0, 1));
+      _rottenEggs.remove(egg);
+    }
+    
+    protected function spawnRotten():void {
+      if (_rottenSpawnTimer <= 0) {
+        spawnEgg(new Egg(EggTypes.ROTTEN), true);
+        _rottenSpawnTimer += _rottenFrequency;
+      }
+    }
+    
     protected function eat(snakeHead:AxSprite, egg:Egg):void {
       spawnFood();
 
@@ -418,9 +460,6 @@ package {
             
       if(egg.points > 0 && egg.type < 5) {
         _snake.swallow(egg);
-      } else {
-        _poisonEgg++;
-        doRotten();
       }
       
       if (egg.type == EggTypes.SHUFFLE) {
@@ -448,14 +487,8 @@ package {
       _score += points;
       
       showPoints(egg, egg.points.toString(), ((points < 0) ? new AxColor(1, 0, 0, 1) : null ));
-      if(egg.type != EggTypes.ROTTEN) {
-        _bonusTimer = 2.5;
-        _bonusBack.visible = true; 
-      } else {
-        _bonusTimer = 0;
-        _bonusBack.visible = false;
-      }
-
+      _bonusTimer = 2.5;
+      _bonusBack.visible = true; 
     }
     
     public function showMessage(message:String):void {
@@ -553,7 +586,7 @@ package {
     }
 
     protected function spawnFood():void {
-      reallySpawnFood(2);
+      reallySpawnFood(3);
     }
     
     protected function reallySpawnFood(n:int):void {
@@ -561,16 +594,20 @@ package {
       spawnEgg(egg);
     }
 
-    public function spawnEgg(egg:Egg):void {
-      var wTiles:int = 640 / 15;
-      var hTiles:int = 480 / 15;
+    public function spawnEgg(egg:Egg, rotten:Boolean = false):void {
+      var wTiles:int = _levelWidth / 15;
+      var hTiles:int = _levelHeight / 15;
       wTiles -= 2; // Left and right;
       hTiles -= 7; // 6 top, 1 bottom;
       do {
         egg.tileX = int(1 + (Math.random() * wTiles));
         egg.tileY = int(6 + (Math.random() * hTiles));
-      } while(Ax.overlap(egg,_unspawnable));
-      _food.add(egg);
+      } while (Ax.overlap(egg, _unspawnable));
+      if (rotten) {
+        _rottenEggs.add(egg);
+      } else {
+        _food.add(egg);
+      }
     }
 
     override public function dispose():void {

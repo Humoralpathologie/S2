@@ -8,19 +8,29 @@ package {
     // Variablen
     private var _background:AxSprite = null;
     
+    public function Arcade():void {
+      super();
+      _levelWidth = 990;
+      _levelHeight = 900;
+    }
+    
     override public function create():void {
       super.create();
-      _comboSet.addCombo(new Combo);
+      
+      _comboSet.addCombo(new FasterCombo);
       _comboSet.addCombo(new ShuffleCombo);
       _comboSet.addCombo(new ExtraLifeCombo);
       _comboSet.addCombo(new ExtraTimeCombo);
       _comboSet.addCombo(new NoRottenCombo);
       _comboSet.addCombo(new GoldenCombo);
       
+      _switchLevel = new SwitchLevel(Arcade, MenuState);
+      
       _snake.lives = 2;
       _levelNumber = 100;
-      Ax.camera.bounds = new AxRect(0, 0, 990, 900);
       _timeLeft = 3 * 60;
+      
+      _spawnRotten = true;
     }
 
     override public function update():void {
@@ -28,10 +38,6 @@ package {
       if (_eggAmount == 35 && _snake.lives != 2) {
         _snake.lives++;
       }
-    }
-    
-    override protected function onScreen(sprite:SmoothBlock):Boolean {
-      return sprite.tileX * 15 >= 0 && sprite.tileX * 15 < 990 && sprite.tileY * 15 >= 0 && sprite.tileY * 15 < 900; 
     }
     
     override protected function addBackgrounds():void {
@@ -55,7 +61,7 @@ package {
     override protected function switchLevel():void {
       SaveGame.saveScore(100, _score);
       _switchLevel.score = _score;
-      Ax.switchState(new SwitchLevel(Arcade, MenuState));
+      Ax.switchState(_switchLevel);
     }
 
     override protected function levelOver():void {
@@ -65,7 +71,7 @@ package {
     }
 
     override protected function spawnFood():void {
-      var rand:int = Math.floor(Math.random() * 5);
+      var rand:int = Math.floor(Math.random() * 4);
       var egg:Egg;
       egg = new Egg(rand);
       spawnEgg(egg);

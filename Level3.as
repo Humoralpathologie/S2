@@ -10,7 +10,7 @@ package {
 
     override public function create():void {
       super.create();
-      _comboSet.addCombo(new Combo);
+      _comboSet.addCombo(new FasterCombo);
       _snake.lives = 3;
       _levelNumber = 3;
       _switchLevel = new SwitchLevel(Level3, Level3);

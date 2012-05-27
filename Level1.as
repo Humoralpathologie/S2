@@ -19,7 +19,7 @@ package {
     override public function create():void {
       super.create();
       
-      _comboSet.addCombo(new Combo);
+      _comboSet.addCombo(new FasterCombo);
 
       _levelNumber = 1;
       
@@ -99,7 +99,6 @@ package {
         egg = new Egg(Math.floor(Math.random() * 2)); 
       }
       egg.points = 2;
-      egg = new Egg(1);
       spawnEgg(egg);
       
     }
