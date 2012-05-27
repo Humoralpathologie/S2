@@ -34,6 +34,7 @@ package {
       _switchLevel = new SwitchLevel(Level1, Level2);
       _snake.lives = 1;
       animateShadow();     
+      _switchLevel = new SwitchLevel(Level1, Level2);
       
       add(_treeShadow1);
       add(_treeShadow2);
@@ -88,13 +89,6 @@ package {
       _hud.scoreText = String(_score); 
     }
 
-    override protected function levelOver():void {
-      _switchLevel.score = _score;
-      _switchLevel.gameOver();
-      SaveGame.saveScore(1, _score);
-      Ax.switchState(_switchLevel);
-    }
-
     override protected function spawnFood():void {
       var rand:int = Math.floor(Math.random() * 11);
       var egg:Egg;
@@ -112,6 +106,7 @@ package {
     override protected function checkWinConditions():Boolean {
       return (_eggAmount >= 50);
     }
+
 
   }
 }

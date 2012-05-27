@@ -1,28 +1,37 @@
 package {
   import org.axgl.*;
   import org.axgl.text.*;
+  import org.axgl.sound.*;
   import org.axgl.render.*;
   import org.axgl.util.*;
   import com.gskinner.motion.*;
   import com.gskinner.motion.easing.*;
 
   public class SwitchLevel extends AxState {
+    [Embed(source="/org/axgl/resource/Kroeger0665_Kopie.ttf", advancedAntiAliasing="true", fontFamily = "Kroeger", embedAsCFF="false")] public static const font:String;
     [Embed(source='assets/images/menu/menu_iphone_background.png')] protected var Background:Class;
     [Embed(source='assets/images/menu/menu_board.png')] protected var Board:Class;
     [Embed(source='assets/images/menu/menu-egg-redo.png')] protected var Replay:Class;
     [Embed(source='assets/images/menu/menu-egg-back.png')] protected var Back:Class;
     [Embed(source='assets/images/menu/menu-egg-next.png')] protected var Next:Class;
     [Embed(source='assets/images/menu/bird.png')] protected var Bird:Class;
-    //[Embed(source='assets/SnakeSounds/TailWhip.mp3')] protected var Whip:Class;
+    [Embed(source='assets/score\ board/leaderboard.png')] protected var Leaderboard:Class;
+    [Embed(source='assets/score\ board/score_board.png')] protected var Scoreboard:Class;
+    [Embed(source='assets/score\ board/score.png')] protected var Score:Class;
+    [Embed(source='assets/score\ board/time_bonus.png')] protected var TimeBonus:Class;
+    [Embed(source='assets/score\ board/life_bonus.png')] protected var LifeBonus:Class;
     [Embed(source='assets/SnakeSounds/mouseclick.mp3')] protected var ClickSound:Class;
 
+    private var _click:AxSound;    
+    private var _font:AxFont;
+    
     private var _playNextLevel:AxButton;
     private var _replay:AxButton;
     private var _backToMenu:AxButton;
 
     private var _background:AxSprite;
-    private var _boardLeft:AxSprite;
-    private var _boardRight:AxSprite;
+    private var _scoreboard:AxSprite;
+    private var _leaderboard:AxSprite;
 
     //birdemic birds
     private var _bird1:AxSprite;
@@ -31,11 +40,23 @@ package {
     private var _birds:Object;
     private var triggered:Boolean = false;    
 
+    private var _scorePic:AxSprite;
     private var _scoreText:AxText;
-    private var _counter:Object;
+    private var _scoreCounter:Object;
     private var _score:int;
+
+    private var _timeBonusPic:AxSprite;
+    private var _timeBonusText:AxText;
+    private var _timeBCounter:Object;
     private var _timeBonus:int;
+
+    private var _liveBonusPic:AxSprite;
+    private var _liveBonusText:AxText;
+    private var _liveBCounter:Object;
     private var _liveBonus:int;
+  
+    private var _EXPText:AxText;
+    private var _EXPCounter:Object;
     private var _EXP:int;
 
     private var _preState:Class;
@@ -45,6 +66,8 @@ package {
     public function SwitchLevel(preState:Class, nextState:Class) {
       super();
       
+      _font = AxFont.fromFont("Kroeger", true, 25, true);      
+
       _tweens = new Vector.<GTween>;
       _preState = preState;
       _nextState = nextState;
@@ -52,13 +75,23 @@ package {
 
       _background = new AxSprite(0, 0, Background);
 
-      _boardLeft = new AxSprite(60, 30, Board);    
-      _boardRight = new AxSprite(_boardLeft.x + _boardLeft.width + 40, 30, Board);    
+      _scoreboard = new AxSprite(60, 30, Scoreboard);    
+      _leaderboard = new AxSprite(_scoreboard.x + _scoreboard.width + 40, 30, Leaderboard);    
       
-      _counter = {i: 0}
-      _scoreText = new AxText(_boardLeft.x + 10, _boardLeft.y + 10, null, "Score: ");
-      _scoreText.scale.x = _scoreText.scale.y = 2;
+      _scoreCounter = {i: 0};
+      _scorePic = new AxSprite(_scoreboard.x + 20, _scoreboard.y + 80, Score);
+      _scoreText = new AxText(_scorePic.x + _scorePic.width + 10, _scorePic.y - 10, _font, "");
 
+      _timeBCounter = {i: 0};
+      _timeBonusPic = new AxSprite(_scorePic.x, _scorePic.y + _scorePic.height + 20, TimeBonus);
+      _timeBonusText = new AxText(_timeBonusPic.x + _timeBonusPic.width + 10, _timeBonusPic.y, _font, "");
+
+      _liveBCounter = {i: 0};
+      _liveBonusPic = new AxSprite(_timeBonusPic.x, _timeBonusPic.y + _timeBonusPic.height + 20, LifeBonus);
+      _liveBonusText = new AxText(_liveBonusPic.x + _liveBonusPic.width + 10, _liveBonusPic.y, _font, "");
+
+      _EXPCounter = {i: 0};
+      _EXPText = new AxText(_liveBonusText.x, _liveBonusText.y + 100, _font, "");
       var mid:int = 640 / 2 - 60;      
 
       _replay = new AxButton(mid, 330); 
@@ -73,19 +106,26 @@ package {
       _backToMenu.load(Back, 100, 110);
       _backToMenu.onClick(switchToState(MenuState, _backToMenu));
 
+      _click = new AxSound(ClickSound);
       add(_background);
 
       birdemic();
 
-      add(_boardLeft);
-      add(_boardRight);
+      add(_scoreboard);
+      add(_leaderboard);
       
   
       add(_playNextLevel);
       add(_replay);
       add(_backToMenu);
       
+      add(_scorePic);
+      add(_timeBonusPic);
+      add(_liveBonusPic);
       add(_scoreText);
+      add(_timeBonusText);
+      add(_liveBonusText);
+      add(_EXPText);
     
     }
     
@@ -150,20 +190,35 @@ package {
       _liveBonus = liveBonus;
       _EXP = EXP;
     }
+
+    public function tweenPoints():void {
+      
+      var tweenScore:GTween = new GTween(_scoreCounter, 2, {i: _score}, {ease: Exponential.easeOut});
+      var tweenLive:GTween = new GTween(_liveBCounter, 2, {i: _liveBonus}, {ease: Exponential.easeOut});
+      var tweenTime:GTween = new GTween(_timeBCounter, 2, {i: _timeBonus}, {ease: Exponential.easeOut});
+      var tweenEXP:GTween = new GTween(_EXPCounter, 2, {i: _EXP}, {ease: Exponential.easeOut});
+      _tweens.push(tweenScore);
+      _tweens.push(tweenLive);
+      _tweens.push(tweenTime);
+      _tweens.push(tweenEXP);
+    }
+
     public function set score(score:int):void {
       _score = score;
-      var tween:GTween = new GTween(_counter, 3, {i: _score}, {ease: Exponential.easeOut});
-      _tweens.push(tween);
     }
 
     override public function update():void {
       super.update();
       trigger();
-        _scoreText.text = "SCORE: " + String(Math.floor(_counter.i));
+        _scoreText.text = String(Math.floor(_scoreCounter.i));
+        _liveBonusText.text = String(Math.floor(_liveBCounter.i));
+        _timeBonusText.text = String(Math.floor(_timeBCounter.i));
+        _EXPText.text = String(Math.floor(_EXPCounter.i));
     }
 
     public function switchToState(state:Class, button:AxButton):Function {
       return function():void { 
+        _click.play();
         Ax.switchState(new state);
       }
     }
