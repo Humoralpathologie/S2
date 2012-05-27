@@ -8,6 +8,7 @@ package {
   import com.gskinner.motion.easing.*;
 
   public class SwitchLevel extends AxState {
+    [Embed(source="/org/axgl/resource/Kroeger0665_Kopie.ttf", advancedAntiAliasing="true", fontFamily = "Kroeger", embedAsCFF="false")] public static const font:String;
     [Embed(source='assets/images/menu/menu_iphone_background.png')] protected var Background:Class;
     [Embed(source='assets/images/menu/menu_board.png')] protected var Board:Class;
     [Embed(source='assets/images/menu/menu-egg-redo.png')] protected var Replay:Class;
@@ -18,7 +19,8 @@ package {
     [Embed(source='assets/SnakeSounds/mouseclick.mp3')] protected var ClickSound:Class;
 
     private var _click:AxSound;    
-
+    private var _font:AxFont;
+    
     private var _playNextLevel:AxButton;
     private var _replay:AxButton;
     private var _backToMenu:AxButton;
@@ -57,6 +59,8 @@ package {
     public function SwitchLevel(preState:Class, nextState:Class) {
       super();
       
+      _font = AxFont.fromFont("Kroeger", true, 25, true);      
+
       _tweens = new Vector.<GTween>;
       _preState = preState;
       _nextState = nextState;
@@ -68,20 +72,20 @@ package {
       _boardRight = new AxSprite(_boardLeft.x + _boardLeft.width + 40, 30, Board);    
       
       _scoreCounter = {i: 0};
-      _scoreText = new AxText(_boardLeft.x + 10, _boardLeft.y + 10, null, "Score: ");
-      _scoreText.scale.x = _scoreText.scale.y = 2;
+      _scoreText = new AxText(_boardLeft.x + 10, _boardLeft.y + 10, _font, "Score: ");
+      //_scoreText.scale.x = _scoreText.scale.y = 2;
 
       _timeBCounter = {i: 0};
-      _timeBonusText = new AxText(_scoreText.x, _scoreText.y + 30, null, "Time Bonus: ");
-      _timeBonusText.scale.x = _timeBonusText.scale.y = 2;
+      _timeBonusText = new AxText(_scoreText.x, _scoreText.y + 30, _font, "Time Bonus: ");
+      //_timeBonusText.scale.x = _timeBonusText.scale.y = 2;
 
       _liveBCounter = {i: 0};
-      _liveBonusText = new AxText(_timeBonusText.x, _timeBonusText.y + 30, null, "Live Bonus: ");
-      _liveBonusText.scale.x = _liveBonusText.scale.y = 2;
+      _liveBonusText = new AxText(_timeBonusText.x, _timeBonusText.y + 30, _font, "Live Bonus: ");
+      //_liveBonusText.scale.x = _liveBonusText.scale.y = 2;
 
       _EXPCounter = {i: 0};
-      _EXPText = new AxText(_liveBonusText.x, _liveBonusText.y + 60, null, "EXP: ");
-      _EXPText.scale.x = _EXPText.scale.y = 2;
+      _EXPText = new AxText(_liveBonusText.x, _liveBonusText.y + 60, _font, "EXP: ");
+      //_EXPText.scale.x = _EXPText.scale.y = 2;
       var mid:int = 640 / 2 - 60;      
 
       _replay = new AxButton(mid, 330); 

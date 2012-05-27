@@ -13,11 +13,14 @@ package {
   import flash.system.Capabilities;
   
   public class LevelState extends AxState {
+    [Embed(source="/org/axgl/resource/Kroeger0665_Kopie.ttf", advancedAntiAliasing="true", fontFamily = "Kroeger", embedAsCFF="false")] public static const font:String;
     [Embed(source='assets/SoundFX/Fressen/Biss1.mp3')] protected var BiteSound:Class;
     [Embed(source='assets/SoundFX/KomboSounds/SchwanzEffekt1.mp3')] protected var Bup:Class;
     [Embed(source='assets/images/shell.png')] protected static var Shell:Class;
     [Embed(source='assets/images/hole.png')] protected var Hole:Class;
     
+    private var _font:AxFont;
+
     protected var _biteSound:AxSound;
     protected var _bup:AxSound;
 
@@ -65,6 +68,8 @@ package {
     override public function create():void {
       super.create();
       
+      _font = AxFont.fromFont("Kroeger", true, 25, true);      
+
       _biteSound = new AxSound(BiteSound);
       _bup = new AxSound(Bup);
       Ax.zoom = 1.5;
@@ -377,11 +382,11 @@ package {
     }
 
     protected function showPoints(egg:AxSprite, points:String, color:AxColor = null, dx:int = 0, dy:int = 0 ):void {
-      var pointo:AxText = new AxText(egg.screen.x + dx, egg.screen.y + dy, null, points);
+      var pointo:AxText = new AxText(egg.screen.x + dx, egg.screen.y + dy, _font, points);
       pointo.scroll.x = 0;
       pointo.scroll.y = 0;
-      pointo.scale.x = 2;
-      pointo.scale.y = 2;
+      //pointo.scale.x = 2;
+      //pointo.scale.y = 2;
       if(color) {
         pointo.color = color;
       }
@@ -390,7 +395,7 @@ package {
       }
       //var tween:GTween = new GTween(pointo, 2, {x:(((_pointDirection + 1) % 4 < 2) ? 640 : 0), y:((_pointDirection % 4 < 2) ? 480 : 0), alpha: 0}, {onComplete: func});
       var tween1:GTween = new GTween(pointo, 1, {x: 320, y: 0, alpha: 0}, {onComplete: func, ease:Exponential.easeIn});
-      var tween2:GTween = new GTween(pointo.scale, 1, {x: 6, y: 6} );
+      var tween2:GTween = new GTween(pointo.scale, 1, {x: 4, y: 4} );
       _tweens.push(tween1);
       _tweens.push(tween2);
       _pointDirection = (_pointDirection + 1) % 4
@@ -454,11 +459,11 @@ package {
     }
     
     public function showMessage(message:String):void {
-      var text:AxText = new AxText(snake.head.screen.x, snake.head.screen.y , null, message);
+      var text:AxText = new AxText(snake.head.screen.x, snake.head.screen.y , _font, message);
       text.scroll.x = 0;
       text.scroll.y = 0;
-      text.scale.x = 4;
-      text.scale.y = 4;
+      text.scale.x = 2;
+      text.scale.y = 2;
       
       var func:Function = function(tween:GTween):void {
         text.exists = false; 
