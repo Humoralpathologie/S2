@@ -1,5 +1,6 @@
 package {
   import org.axgl.*;
+  import org.axgl.collision.AxGrid;
   import org.axgl.text.*;
   import org.axgl.particle.*;
   import org.axgl.render.*;
@@ -68,14 +69,21 @@ package {
     
     protected var _spawnRotten:Boolean = false;
     protected var _rottenEggs:AxGroup;
-    protected var _rottenFrequency:Number = 2;
-    protected var _rottenSpawnTimer:Number = 2;
-
+    protected var _rottenFrequency:Number = 10;
+    protected var _rottenSpawnTimer:Number = 10;
+    
+    protected var _startPosition:AxPoint;
+    
+    public function LevelState() {
+      super();
+      _startPosition = new AxPoint(10, 10);
+    }
+    
     override public function create():void {
       super.create();
       
       Ax.zoom = 1.5;
-
+      
       _tweens = new Vector.<GTween>;
       
       _comboSet = new ComboSet();
@@ -101,7 +109,7 @@ package {
       _particles.add(AxParticleSystem.register(effect));
 
       _score = 0;
-      _snake = new Snake(10);
+      _snake = new Snake(10, _startPosition);
       Ax.camera.follow(_snake.followBox);
       Ax.camera.bounds = new AxRect(0,0,_levelWidth,_levelHeight);
       _food = new AxGroup();
@@ -276,7 +284,10 @@ package {
     }
     
     protected function collideObstacles():void {
-      if(_snake.alive && Ax.overlap(_snake.head, _obstacles)) {
+      var spr:AxSprite = new AxSprite(_snake.head.tileX * 15, _snake.head.tileY * 15);
+      spr.width = 15;
+      spr.height = 15;
+      if (_snake.alive && Ax.overlap(spr, _obstacles, null, new AxGrid(_levelWidth, _levelHeight))) {
         _snake.die();
       }
     }
@@ -581,7 +592,7 @@ package {
       do {
         egg.tileX = int(1 + (Math.random() * wTiles));
         egg.tileY = int(6 + (Math.random() * hTiles));
-      } while (Ax.overlap(egg, _unspawnable));
+      } while (Ax.overlap(egg, _unspawnable, null, new AxGrid(_levelWidth, _levelHeight)));
       if (rotten) {
         _rottenEggs.add(egg);
       } else {

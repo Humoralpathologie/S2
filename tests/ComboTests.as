@@ -24,7 +24,7 @@ package tests {
       new MockEgg(EggTypes.EGGA),
       new MockEgg(EggTypes.EGGA)]
       
-      var combo:Combo = new Combo();
+      var combo:Combo = new FasterCombo();
       var comboSet:ComboSet = new ComboSet();
       comboSet.addCombo(combo);
       
@@ -51,7 +51,7 @@ package tests {
       var overlappingCombos = [new MockEgg(EggTypes.EGGC), new MockEgg(EggTypes.EGGB), new MockEgg(EggTypes.EGGC), new MockEgg(EggTypes.EGGB), new MockEgg(EggTypes.EGGA),new MockEgg(EggTypes.EGGA), new MockEgg(EggTypes.EGGA)];
 
       var combo:Combo = new ShuffleCombo();
-      var aaacombo:Combo = new Combo();
+      var aaacombo:Combo = new FasterCombo();
       var comboSet:ComboSet = new ComboSet();
       comboSet.addCombo(combo);
       comboSet.addCombo(aaacombo);

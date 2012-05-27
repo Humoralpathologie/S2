@@ -27,11 +27,15 @@ package {
     
     private var _startMps:Number;
     private var _emoLevel:int;    
+    
+    private var _startPosition:AxPoint;
 
-    public function Snake(movesPerSecond:Number = 1) { 
+    public function Snake(movesPerSecond:Number = 1, startPosition:AxPoint = null) { 
       super();
       _startMps = movesPerSecond;
       _timer = 0;
+      
+      _startPosition = startPosition;
 
       _head = new SmoothBlock(2, 2);
 
@@ -164,8 +168,8 @@ package {
     }
 
     private function resurrect():void {
-      _head.tileX = 9;
-      _head.tileY = 10;
+      _head.tileX = _startPosition.x;
+      _head.tileY = _startPosition.y;
       _head.offset.x = 15;
       _head.offset.y = 30;
       _previousFacing = _head.facing;

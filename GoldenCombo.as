@@ -2,7 +2,7 @@ package {
   public class GoldenCombo extends Combo {
     public function GoldenCombo() {
       super();
-      repeat = true;
+      repeat = false;
       trigger = [EggTypes.EGGB, EggTypes.EGGA, EggTypes.EGGC, EggTypes.EGGA, EggTypes.EGGC];
     }
     

@@ -12,6 +12,8 @@ package {
       super();
       _levelWidth = 990;
       _levelHeight = 900;
+      _startPosition.x = 20;
+      _startPosition.y = 20;
     }
     
     override public function create():void {
@@ -31,6 +33,12 @@ package {
       _timeLeft = 3 * 60;
       
       _spawnRotten = true;
+      
+      // Spawn 6 food (adds to spawnFoods in LevelState).
+      spawnFoods(3);
+      
+      // Visible obstacles for debugging
+      // add(_obstacles);
     }
 
     override public function update():void {
@@ -46,12 +54,82 @@ package {
     }
     
     override protected function addObstacles():void {
+      var obstacle:AxSprite;
+      obstacle = new AxSprite(0, 0);
+      obstacle.create(165, _levelHeight, 0x9900ff00);
+      _obstacles.add(obstacle);
+      
+      obstacle = new AxSprite(840, 0);
+      obstacle.create(_levelWidth - 840, _levelHeight, 0x9900ff00);
+      _obstacles.add(obstacle);
+      
+      var down:Array = [
+        [165, 615, 30],
+        [195, 630, 15],
+        [210, 645, 45],
+        [255, 660, 15],
+        [270, 675, 45],
+        [315, 690, 15],
+        [330, 750, 90],
+        [420, 765, 15],
+        [435, 780, 15],
+        [450, 795, 15 * 7],
+        [555, 780, 15 * 2],
+        [585, 765, 15 * 2],
+        [615, 750, 15 * 2],
+        [645, 735, 15 * 11],
+        [810, 525, 15 * 1],
+        [825, 510, 15 * 1]
+        
+      ];
+      
+      for each(var el:Array in down) {
+        obstacle = new AxSprite(el[0], el[1]);
+        obstacle.create(el[2], _levelHeight - obstacle.y, 0x9900ff00);
+        _obstacles.add(obstacle); 
+      }
+      
+      var up:Array = [
+        [165, 570, 15],
+        [180, 555, 15],
+        [195, 330, 15],
+        [210, 300, 15],
+        [225, 285, 15],
+        [240, 210, 15 * 8],
+        [360, 195, 15 * 10],
+        [510, 180, 15 * 9],
+        [645, 150, 4 * 15],
+        [705, 180, 7 * 15],
+        [810, 420, 2 * 15]
+        
+      ];
+      
+      for each(var el:Array in up) {
+        obstacle = new AxSprite(el[0], 0);
+        obstacle.create(el[2], el[1], 0x9900ff00);
+        _obstacles.add(obstacle); 
+      }
+          
+      var special:Array = [
+        [780, 540, 2 * 15, 8 * 15],
+        [750, 255, 4 * 15, 9 * 15],
+        [765, 240, 15, 15],
+        [780, 225, 15 * 2, 15 * 2]
+      ];
+      
+      for each(var el:Array in special) {
+        obstacle = new AxSprite(el[0], el[1]);
+        obstacle.create(el[2], el[3], 0x9900ff00);
+        _obstacles.add(obstacle);
+      }
+      
     }
     
     override protected function addHud():void {
       _hud = new Hud(["lives", "time", "score"]); 
       add(_hud);
     }
+    
     override protected function updateHud():void {
       _hud.livesText = String(_snake.lives);
       _hud.timeText = String(_timeLeft.toFixed(1));
