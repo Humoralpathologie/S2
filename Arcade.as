@@ -1,10 +1,12 @@
 package {
   import org.axgl.*;
+  import org.axgl.sound.AxMusic;
   import org.axgl.text.*;
   
   public class Arcade extends LevelState {
     // Assets
-    [Embed(source='assets/images/arcade.png')] protected var Background:Class;
+    [Embed(source = 'assets/images/arcade.png')] protected var Background:Class;
+    [Embed(source = "assets/music/eile_arcade1.mp3")] protected var BGM:Class;
     // Variablen
     private var _background:AxSprite = null;
     
@@ -19,6 +21,10 @@ package {
     override public function create():void {
       super.create();
       
+     // var bgm:AxMusic = new AxMusic(BGM,1);
+     // bgm.play();
+      Ax.music(BGM);
+      
       _comboSet.addCombo(new FasterCombo);
       _comboSet.addCombo(new ShuffleCombo);
       _comboSet.addCombo(new ExtraLifeCombo);
@@ -29,7 +35,7 @@ package {
       _switchLevel = new SwitchLevel(Arcade, MenuState);
       
       _snake.lives = 2;
-      _levelNumber = 100;
+      _levelNumber = 99;
       _timeLeft = 3 * 60;
       
       _spawnRotten = true;
@@ -134,18 +140,6 @@ package {
       _hud.livesText = String(_snake.lives);
       _hud.timeText = String(_timeLeft.toFixed(1));
       _hud.scoreText = String(_score); 
-    }
-
-    override protected function switchLevel():void {
-      SaveGame.saveScore(100, _score);
-      _switchLevel.score = _score;
-      Ax.switchState(_switchLevel);
-    }
-
-    override protected function levelOver():void {
-      _switchLevel.gameOver();
-      SaveGame.saveScore(100, _score);
-      Ax.switchState(new MenuState);
     }
 
     override protected function spawnFood():void {
