@@ -26,7 +26,9 @@ package {
      // bgm.play();
       //Ax.music(BGM);
       sound().group("BGM").add("Arcade", BGM);
-      sound().group("BGM").item("Arcade").play();
+      var bgm:SoundItem = sound().group("BGM").item("Arcade");
+      bgm.onPlay(function() { bgm.volume = 0.3; } );
+      bgm.play();
       
       _comboSet.addCombo(new FasterCombo);
       _comboSet.addCombo(new ShuffleCombo);
@@ -158,8 +160,8 @@ package {
     
     override public function dispose():void {
       var bgm:SoundItem = sound().group("BGM").item("Arcade");
-      bgm.stop();
-      //new GTween(bgm, 20, { volume: 1 } );
+      //bgm.stop();
+      new GTween(bgm, 2, { volume: 0 }, { onComplete: function() { bgm.stop(); }} );
       super.dispose();
     }
   }
