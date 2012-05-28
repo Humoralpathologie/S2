@@ -75,8 +75,8 @@ package {
 
       _background = new AxSprite(0, 0, Background);
 
-      _scoreboard = new AxSprite(60, 30, Scoreboard);    
-      _leaderboard = new AxSprite(_scoreboard.x + _scoreboard.width + 40, 30, Leaderboard);    
+      _scoreboard = new AxSprite(70, 30, Scoreboard);    
+      _leaderboard = new AxSprite(_scoreboard.width + 140, 30, Leaderboard);    
       
       _scoreCounter = {i: 0};
       _scorePic = new AxSprite(_scoreboard.x + 20, _scoreboard.y + 80, Score);
@@ -84,26 +84,26 @@ package {
 
       _timeBCounter = {i: 0};
       _timeBonusPic = new AxSprite(_scorePic.x, _scorePic.y + _scorePic.height + 20, TimeBonus);
-      _timeBonusText = new AxText(_timeBonusPic.x + _timeBonusPic.width + 10, _timeBonusPic.y, _font, "");
+      _timeBonusText = new AxText(_timeBonusPic.x + _timeBonusPic.width + 10, _timeBonusPic.y - 10, _font, "");
 
       _liveBCounter = {i: 0};
       _liveBonusPic = new AxSprite(_timeBonusPic.x, _timeBonusPic.y + _timeBonusPic.height + 20, LifeBonus);
-      _liveBonusText = new AxText(_liveBonusPic.x + _liveBonusPic.width + 10, _liveBonusPic.y, _font, "");
+      _liveBonusText = new AxText(_liveBonusPic.x + _liveBonusPic.width + 10, _liveBonusPic.y - 10, _font, "");
 
       _EXPCounter = {i: 0};
-      _EXPText = new AxText(_liveBonusText.x, _liveBonusText.y + 100, _font, "");
-      var mid:int = 640 / 2 - 60;      
+      _EXPText = new AxText(_scoreboard.x + 110, _liveBonusText.y + 145, _font, "");
+      var mid:Number =  960/ 2;      
 
-      _replay = new AxButton(mid, 330); 
-      _replay.load(Replay, 120, 147)
+      _replay = new AxButton(mid - (145/2), 460); 
+      _replay.load(Replay, 145, 178)
       _replay.onClick(switchToState(_preState, _replay));
 
-      _playNextLevel = new AxButton(mid + _replay.width + 10, _replay.y + 40);
-      _playNextLevel.load(Next, 100, 110)
+      _playNextLevel = new AxButton(mid + (145/2) + 30, _replay.y + 30);
+      _playNextLevel.load(Next, 135, 145)
       _playNextLevel.onClick(switchToState(_nextState, _playNextLevel));
 
-      _backToMenu = new AxButton(mid - 110, _replay.y + 40);
-      _backToMenu.load(Back, 100, 110);
+      _backToMenu = new AxButton(mid - (145/2) - 30 - 135, _replay.y + 30);
+      _backToMenu.load(Back, 135, 145);
       _backToMenu.onClick(switchToState(MenuState, _backToMenu));
 
       _click = new AxSound(ClickSound);
@@ -130,17 +130,17 @@ package {
     }
     
     private function birdemic():void {
-      _bird1 = new AxSprite(500, 50);
+      _bird1 = new AxSprite(860, 50);
       _bird1.load(Bird, 140, 50);
       _bird1.scale.x = _bird1.scale.y = 0.3;
       _bird1.addAnimation("fly", [0,1,1,1,2,2,1], 4);
 
-      _bird2 = new AxSprite(530, 40);
+      _bird2 = new AxSprite(890, 40);
       _bird2.load(Bird, 140, 50);
       _bird2.scale.x = _bird2.scale.y = 0.5;
       _bird2.addAnimation("fly", [0,0,0,1,2,2,2,1], 4);
 
-      _bird3 = new AxSprite(520, 80);
+      _bird3 = new AxSprite(880, 80);
       _bird3.load(Bird, 140, 50);
       _bird3.scale.x = _bird3.scale.y = 0.2;
       _bird3.addAnimation("fly", [0,1,2,2], 4);
