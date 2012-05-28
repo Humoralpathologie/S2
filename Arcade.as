@@ -1,7 +1,8 @@
 package {
+  import com.gskinner.motion.GTween;
   import org.axgl.*;
-  import org.axgl.sound.AxMusic;
   import org.axgl.text.*;
+  import com.rafaelrinaldi.sound.*;
   
   public class Arcade extends LevelState {
     // Assets
@@ -23,7 +24,9 @@ package {
       
      // var bgm:AxMusic = new AxMusic(BGM,1);
      // bgm.play();
-      Ax.music(BGM);
+      //Ax.music(BGM);
+      sound().group("BGM").add("Arcade", BGM);
+      sound().group("BGM").item("Arcade").play();
       
       _comboSet.addCombo(new FasterCombo);
       _comboSet.addCombo(new ShuffleCombo);
@@ -151,6 +154,13 @@ package {
 
     override protected function checkWinConditions():Boolean {
       return(_timeLeft < 0);
+    }
+    
+    override public function dispose():void {
+      var bgm:SoundItem = sound().group("BGM").item("Arcade");
+      bgm.stop();
+      //new GTween(bgm, 20, { volume: 1 } );
+      super.dispose();
     }
   }
 }
