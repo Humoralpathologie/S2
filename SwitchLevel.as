@@ -130,17 +130,17 @@ package {
     }
     
     private function birdemic():void {
-      _bird1 = new AxSprite(500, 50);
+      _bird1 = new AxSprite(860, 50);
       _bird1.load(Bird, 140, 50);
       _bird1.scale.x = _bird1.scale.y = 0.3;
       _bird1.addAnimation("fly", [0,1,1,1,2,2,1], 4);
 
-      _bird2 = new AxSprite(530, 40);
+      _bird2 = new AxSprite(890, 40);
       _bird2.load(Bird, 140, 50);
       _bird2.scale.x = _bird2.scale.y = 0.5;
       _bird2.addAnimation("fly", [0,0,0,1,2,2,2,1], 4);
 
-      _bird3 = new AxSprite(520, 80);
+      _bird3 = new AxSprite(880, 80);
       _bird3.load(Bird, 140, 50);
       _bird3.scale.x = _bird3.scale.y = 0.2;
       _bird3.addAnimation("fly", [0,1,2,2], 4);

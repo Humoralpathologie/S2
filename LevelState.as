@@ -15,14 +15,36 @@ package {
   public class LevelState extends AxState {
     [Embed(source="/org/axgl/resource/Kroeger0665_Kopie.ttf", advancedAntiAliasing="true", fontFamily = "Kroeger", embedAsCFF="false")] public static const font:String;
     [Embed(source='assets/SoundFX/Fressen/Biss1.mp3')] protected var BiteSound:Class;
-    [Embed(source='assets/SoundFX/KomboSounds/SchwanzEffekt1.mp3')] protected var Bup:Class;
+    [Embed(source='assets/SoundFX/KomboSounds/SchwanzEffekt1.mp3')] protected var Bup1:Class;
+    [Embed(source='assets/SoundFX/KomboSounds/SchwanzEffekt2.mp3')] protected var Bup2:Class;
+    [Embed(source='assets/SoundFX/KomboSounds/SchwanzEffekt3.mp3')] protected var Bup3:Class;
+    [Embed(source='assets/SoundFX/KomboSounds/SchwanzEffekt4.mp3')] protected var Bup4:Class;
+    [Embed(source='assets/SoundFX/KomboSounds/SchwanzEffekt5.mp3')] protected var Bup5:Class;
+    [Embed(source='assets/SoundFX/KomboSounds/SchwanzEffekt6.mp3')] protected var Bup6:Class;
+    [Embed(source='assets/SoundFX/KomboSounds/SchwanzEffekt7.mp3')] protected var Bup7:Class;
+    [Embed(source='assets/SoundFX/KomboSounds/SchwanzEffekt8.mp3')] protected var Bup8:Class;
+    [Embed(source='assets/SoundFX/KomboSounds/SchwanzEffekt9.mp3')] protected var Bup9:Class;
+    [Embed(source='assets/SoundFX/KomboSounds/SchwanzEffekt10.mp3')] protected var Bup10:Class;
+    [Embed(source='assets/SoundFX/KomboSounds/SchwanzEffekt11.mp3')] protected var Bup11:Class;
+    [Embed(source='assets/SoundFX/KomboSounds/SchwanzEffekt12.mp3')] protected var Bup12:Class;
+    [Embed(source='assets/SoundFX/KomboSounds/SchwanzEffekt13.mp3')] protected var Bup13:Class;
     [Embed(source='assets/images/shell.png')] protected static var Shell:Class;
     [Embed(source='assets/images/hole.png')] protected var Hole:Class;
     
     private var _font:AxFont;
 
     protected var _biteSound:AxSound;
-    protected var _bup:AxSound;
+    protected var _bup1:AxSound;
+    protected var _bup2:AxSound;
+    protected var _bup3:AxSound;
+    protected var _bup4:AxSound;
+    protected var _bup5:AxSound;
+    protected var _bup6:AxSound;
+    protected var _bup7:AxSound;
+    protected var _bup8:AxSound;
+    protected var _bup9:AxSound;
+    protected var _bup10:AxSound;
+    protected var _soundEffects:Array;
 
     protected var _hole:AxSprite;
     protected var _holeTween:GTween;    
@@ -78,8 +100,20 @@ package {
       
       _font = AxFont.fromFont("Kroeger", true, 25, true);      
 
+      //sound effects
       _biteSound = new AxSound(BiteSound);
-      _bup = new AxSound(Bup);
+      _bup1 = new AxSound(Bup1);
+      _bup2 = new AxSound(Bup2);
+      _bup3 = new AxSound(Bup3);
+      _bup4 = new AxSound(Bup4);
+      _bup5 = new AxSound(Bup5);
+      _bup6 = new AxSound(Bup6);
+      _bup7 = new AxSound(Bup7);
+      _bup8 = new AxSound(Bup8);
+      _bup9 = new AxSound(Bup9);
+      _bup10 = new AxSound(Bup10);
+      _soundEffects = [_bup1, _bup2, _bup3, _bup4, _bup5, _bup6, _bup7, _bup8, _bup9, _bup10];     
+
       Ax.zoom = 1.5;
 
       _tweens = new Vector.<GTween>;
@@ -414,8 +448,9 @@ package {
       var pointo:AxText = new AxText(egg.screen.x + dx, egg.screen.y + dy, _font, points);
       pointo.scroll.x = 0;
       pointo.scroll.y = 0;
-      //pointo.scale.x = 2;
-      //pointo.scale.y = 2;
+      pointo.scale.x = 0.5;
+      pointo.scale.y = 0.5;
+      pointo.alpha = 0.7;
       if(color) {
         pointo.color = color;
       }
@@ -513,6 +548,8 @@ package {
       var prefib:int = 2;
       var fib:int = 3;
       var temp:int = 0;
+      var soundCounter:int = 0;
+      var expoCounter:int = 0;
 
       for(var i:int = 0; i < combo.length; i++) {
         combo[i].removing = true;
@@ -522,26 +559,29 @@ package {
         if(combo.length > 0) {
           var egg:Egg = (combo.pop() as Egg);
           if(egg) {
+            expoCounter++;
             _score += fib;
             showPoints(egg, '+' + String(fib), new AxColor(Math.random(), Math.random(), Math.random(), 1));
             temp = fib; 
             fib+= prefib;
             prefib = temp;
+            _soundEffects[soundCounter].play();
             AxParticleSystem.emit("combo", egg.x, egg.y);
             _snake.body.remove(egg);
-            
+            soundCounter++;
+            setTimeout(func, (300 / (expoCounter * expoCounter)) + 100 );
           } else {
             _combos += 1;
-            clearInterval(interval);
+            //clearInterval(interval);
           }
         } else {
           _combos += 1;
-          clearInterval(interval);
+          //clearInterval(interval);
         }
       }
 
       func();
-      interval = setInterval(func, 300);
+      //interval = setInterval(func, 300);
     }
     
     /*
@@ -556,7 +596,6 @@ package {
           removeAndExplodeCombo(combo.eggs);
           combo.combo.effect(this);
           _combos += 1;
-          _bup.play();
         }
         _currentCombos = null;
       }
