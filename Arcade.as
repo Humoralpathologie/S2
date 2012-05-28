@@ -22,9 +22,6 @@ package {
     override public function create():void {
       super.create();
       
-     // var bgm:AxMusic = new AxMusic(BGM,1);
-     // bgm.play();
-      //Ax.music(BGM);
       sound().group("BGM").add("Arcade", BGM);
       var bgm:SoundItem = sound().group("BGM").item("Arcade");
       bgm.onPlay(function() { bgm.volume = 0.3; } );
@@ -54,9 +51,6 @@ package {
 
     override public function update():void {
       super.update();
-      if (_eggAmount == 35 && _snake.lives != 2) {
-        _snake.lives++;
-      }
     }
     
     override protected function addBackgrounds():void {
@@ -159,9 +153,7 @@ package {
     }
     
     override public function dispose():void {
-      var bgm:SoundItem = sound().group("BGM").item("Arcade");
-      //bgm.stop();
-      new GTween(bgm, 2, { volume: 0 }, { onComplete: function() { bgm.stop(); }} );
+      sound().group("BGM").item("Arcade").fade();
       super.dispose();
     }
   }

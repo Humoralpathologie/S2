@@ -1,5 +1,6 @@
 package com.rafaelrinaldi.sound
 {
+  import com.gskinner.motion.GTween;
 	import flash.events.ErrorEvent;
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
@@ -131,7 +132,14 @@ package com.rafaelrinaldi.sound
 			
 			return super.stop();
 		}
-
+    
+    public function fade(seconds:Number = 1, targetVolume:Number = 0 ) : SoundControl
+    {
+      new GTween(this, seconds, { volume: targetVolume }, { onComplete: function(tween:GTween) { tween.target.stop() }} );
+    
+      return this;      
+    }
+    
 		/** Cancel delay timeout. **/
 		public function cancel() : SoundItem
 		{
@@ -298,7 +306,7 @@ package com.rafaelrinaldi.sound
 				
 			}
 		}
-
+    
 		/**
 		 * Handle <code>Event.SOUND_COMPLETE</code>.
 		 * @private
