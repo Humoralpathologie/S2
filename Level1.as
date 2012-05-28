@@ -104,7 +104,7 @@ package {
     }
 
     override protected function checkWinConditions():Boolean {
-      return (_eggAmount >= 1);
+      return (_eggAmount >= 50);
     }
 
 
