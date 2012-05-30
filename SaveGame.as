@@ -56,6 +56,19 @@ package {
       _sharedObject.flush();
       publishScore();
     }
+    
+    public static function saveSpecial(special:Array):void {
+      _sharedObject.data.special = special;
+      _sharedObject.flush();
+    }
+    
+    public static function getSpecial():Array {
+      if (_sharedObject.data.special != null) {
+        return _sharedObject.data.special;
+      } else {
+        return [];
+      }
+    }
 
     public static function fullScore():Number {
       var n:Number = 0;
