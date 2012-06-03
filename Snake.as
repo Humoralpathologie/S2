@@ -66,14 +66,14 @@ package {
       _body = new AxGroup();
       
       _followBox = new AxEntity(0,0);
-      _followBox.width = 150;
-      _followBox.height = 150;
+      _followBox.width = 100;
+      _followBox.height = 100;
 
       fillBody();
       resurrect();
 
       add(_body);
-      add(_followBox);
+      //add(_followBox);
       add(_head);
     }
 /********************************************
@@ -360,11 +360,12 @@ package {
       } else if (_head.y + _head.height > _followBox.y + _followBox.height) {
         _followBox.y = _head.y - (_followBox.height - _head.height);
       }      
+      // To get center etc.
+      //_followBox.update();
     }
     override public function update():void {
       super.update();
       
-      updateFollowBox();
       
       if(Ax.keys.pressed(AxKey.UP) && _previousFacing != AxEntity.DOWN){
         _head.facing = AxEntity.UP;
@@ -452,6 +453,8 @@ package {
         }
         _timer -= _speed;
       }
+      updateFollowBox();
+
     }
   }
   

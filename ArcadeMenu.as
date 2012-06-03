@@ -463,7 +463,7 @@ package
       SaveGame.saveSpecial(_specialBox);
       Ax.switchState(new Arcade);
     }
-        
+   
   }
-    
+
 }

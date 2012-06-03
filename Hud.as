@@ -3,7 +3,7 @@ package {
   import org.axgl.text.*;
   import org.axgl.util.*;
   
-  public class Hud extends AxGroup{
+  public class Hud extends AxGroup {
     [Embed(source='assets/images/icons/anzeigenbalken.png')] protected var Background:Class;
     [Embed(source='assets/images/icons/icon-combo.png')] protected var Combo:Class;
     [Embed(source='assets/images/icons/icon-lives.png')] protected var Lives:Class;
@@ -111,6 +111,14 @@ package {
 
     public function set eggText(eggAmount:String):void {
       _eggText.text = eggAmount;
+    }
+    
+    override public function draw():void {
+      // HACK! This keeps the HUD from zooming.
+      var tempZoom:Number = Ax.zoom;
+      Ax.zoom = 1;
+      super.draw();
+      Ax.zoom = tempZoom;
     }
   }
 }

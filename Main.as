@@ -9,6 +9,9 @@ package {
       super(MenuState);//, 640, 480);
     }
     override public function create():void {
+      if (Ax.width != 960 || Ax.height != 640) {
+        Ax.zoom = Math.min(Ax.width / 960, Ax.height / 640);
+      }
 			Ax.debuggerEnabled = true;
       Ax.debugger.active = true;
     }

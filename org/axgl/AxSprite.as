@@ -102,7 +102,7 @@ package org.axgl {
 			screen = new AxPoint;
 
 			quad = null;
-			dirty = true;
+			dirty = false;
 
 			animations = new Object;
 
@@ -131,7 +131,7 @@ package org.axgl {
 			pivot.y = height / 2;
 			quad = new AxQuad(this.frameWidth, this.frameHeight, this.frameWidth / texture.width, this.frameHeight / texture.height);
 			frame = 0;
-			dirty = true;
+      buildVertexBuffer(quad);
 			return this;
 		}
 		
