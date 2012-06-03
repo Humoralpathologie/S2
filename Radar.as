@@ -83,6 +83,8 @@ package
       }
       
       var theta:Number;
+      var dx:Number;
+      var dy:Number;
       var sprite:AxSprite;
       
       for each(var egg:Egg in _foodGroup.members) {
@@ -98,9 +100,14 @@ package
           trace("Recycling radar egg.");
           sprite.load(_egg2Radar[egg.type]);
           sprite.exists = true;
-
         }
-        theta = Math.atan2(egg.y - _cameraCenter.y, egg.x - _cameraCenter.x);
+        
+        dx = egg.x - _cameraCenter.x;
+        dy = egg.y - _cameraCenter.y;
+        
+        theta = Math.atan2(dy, dx);
+        
+        sprite.scale.x = sprite.scale.y = 1 + (100 / Math.sqrt(dx * dx + dy * dy));
         
         sprite.x = ((Ax.width - sprite.width) / 2) + (_radius * Math.cos(theta));
         sprite.y = ((Ax.height - sprite.height) / 2) + (_radius * Math.sin(theta));

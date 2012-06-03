@@ -385,7 +385,7 @@ package {
       } 
 
       if(Ax.mouse.pressed(0)){
-        if(Ax.mouse.x > Ax.width / 2){
+        if(Ax.mouse.screen.x > Ax.width / 2){
           switch(_head.facing) {
             case AxEntity.UP:
               _head.facing = AxEntity.RIGHT;

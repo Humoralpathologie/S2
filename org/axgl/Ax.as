@@ -564,6 +564,7 @@ package org.axgl {
 			camera.reset();
 			states.push(state);
 			state.create();
+      state.draw();
 			return state;
 		}
 
