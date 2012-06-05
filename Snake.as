@@ -19,6 +19,7 @@ package {
     private var _nextPos:AxPoint = null;
     //private var _bling:FlxSound = new FlxSound;    
     private var _justAte:Boolean = false;
+    private var _justMoved:Boolean = false;
     private var _alive:Boolean;
     private var _resurrect:Boolean = false;
     private var _cameraHead:AxSprite;
@@ -152,6 +153,19 @@ package {
     public function set justAte(b:Boolean):void {
       _justAte = b;
     }
+ 
+    public function get justMoved():Boolean {
+      if(_justMoved){
+        _justMoved = false;
+        return true;
+      } else {
+        return false;
+      }
+    }
+    
+    public function set justMoved(b:Boolean):void {
+      _justMoved = b;
+    }    
 /*******************************************/
 
     private function tailEgg():Egg {
@@ -448,6 +462,7 @@ package {
             die();
           }
           move();
+          _justMoved = true;
         } else {// if(_resurrect) {
           resurrect();
         }

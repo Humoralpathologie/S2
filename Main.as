@@ -1,5 +1,7 @@
 package {
   import org.axgl.*;
+  import com.sociodox.theminer.TheMiner;
+
 
   [SWF(width='960', height='640', backgroundColor='#000000')]
   [Frame(factoryClass="Preloader")]
@@ -14,6 +16,7 @@ package {
       }
 			Ax.debuggerEnabled = true;
       Ax.debugger.active = true;
+      //Ax.stage2D.addChild(new TheMiner());
     }
   }
 }

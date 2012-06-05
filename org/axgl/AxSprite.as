@@ -429,16 +429,17 @@ package org.axgl {
 
 			Ax.context.setProgram(shader.program);
 			Ax.context.setTextureAt(0, texture.texture);
-			Ax.context.setBlendFactors(Context3DBlendFactor.SOURCE_ALPHA, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
+			Ax.context.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
 			Ax.context.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, matrix, true);
 			Ax.context.setProgramConstantsFromVector(Context3DProgramType.VERTEX, 4, uvOffset);
-			Ax.context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, colorTransform);
+			//Ax.context.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, colorTransform);
 			Ax.context.setVertexBufferAt(0, vertexBuffer, 0, Context3DVertexBufferFormat.FLOAT_2);
 			Ax.context.setVertexBufferAt(1, vertexBuffer, 2, Context3DVertexBufferFormat.FLOAT_2);
 			Ax.context.drawTriangles(indexBuffer, 0, triangles);
 			Ax.context.setTextureAt(0, null);
 			Ax.context.setVertexBufferAt(0, null, 0, Context3DVertexBufferFormat.FLOAT_2);
 			Ax.context.setVertexBufferAt(1, null, 2, Context3DVertexBufferFormat.FLOAT_2);
+      
 			
 			if (countTris) {
 				Ax.debugger.tris += triangles;
@@ -489,17 +490,17 @@ package org.axgl {
 		 * The vertex shader for this sprite.
 		 */
 		private static const VERTEX_SHADER:Array = [
-			"m44 vt0, va0, vc0",
-			"add v1, va1, vc4",
-			"mov op, vt0"
+			"m44 op, va0, vc0",
+			"add v0, va1, vc4"//,
+			//"mov op, vt0"
 		];
 
 		/**
 		 * The fragment shader for this sprite.
 		 */
 		private static const FRAGMENT_SHADER:Array = [
-			"tex ft0, v1, fs0 <2d,nearest,mipnone>",
-			"mul oc, fc0, ft0"
+			"tex oc, v0, fs0 <2d,nearest,mipnone>"//,
+			//"mul oc, fc0, ft0"
 		];
 
 		/**

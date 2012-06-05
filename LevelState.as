@@ -1,5 +1,7 @@
 package {
   import org.axgl.*;
+  import org.axgl.collision.AxCollider;
+  import org.axgl.collision.AxCollisionGroup;
   import org.axgl.collision.AxGrid;
   import org.axgl.sound.*;
   import org.axgl.text.*;
@@ -105,6 +107,8 @@ package {
     protected var _pointPool:AxGroup;
     protected var _white:AxColor;
     
+    protected var _obstacleCollider:AxCollisionGroup;
+    
     public function LevelState() {
       super();
       _startPosition = new AxPoint(10, 10);
@@ -117,6 +121,9 @@ package {
       
       _pointPool = new AxGroup;
       _white = new AxColor(1, 1, 1, 1);
+      
+      //_obstacleCollider = new AxGrid(_levelWidth, _levelHeight);
+      _obstacleCollider = new AxCollider();
 
       //sound effects
       _biteSound = new AxSound(BiteSound);
@@ -355,7 +362,7 @@ package {
       var spr:AxSprite = new AxSprite(_snake.head.tileX * 15, _snake.head.tileY * 15);
       spr.width = 15;
       spr.height = 15;
-      if (_snake.alive && Ax.overlap(spr, _obstacles, null, new AxGrid(_levelWidth, _levelHeight))) {
+      if (_snake.alive && Ax.overlap(spr, _obstacles, null, _obstacleCollider)) {
         _snake.die();
       }
     }
@@ -436,11 +443,13 @@ package {
       updateTimers();
       updateBonusBar();
       
-      collideFood();
-      collideRotten();
-      collideScreen();
-      collideObstacles();
-      
+      if(_snake.justMoved) {
+        collideFood();
+        collideRotten();
+        collideScreen();
+        collideObstacles();
+      }
+          
       if (_spawnRotten) {
         spawnRotten();
       }
